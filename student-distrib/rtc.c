@@ -24,8 +24,6 @@ void rtc_handler(){
     outb(REG_C, REG_SELECT);
     inb(REG_DATA);
     INT_FLAG = 1;
-		//printf("3");
-    /* Signal interrup processing completion by sending EOI */
 	sti();
-	send_eoi(rtc_irq);
+	send_eoi(RTC_IRQ);
 }
