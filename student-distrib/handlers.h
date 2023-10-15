@@ -1,8 +1,8 @@
 #ifndef IRQ_HANDLERS_H
 #define IRQ_HANDLERS_H
 
+#include "lib.h"
 /* Exception Handlers */
-
 
 extern void exception0_handler();
 extern void exception1_handler();

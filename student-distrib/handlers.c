@@ -92,7 +92,3 @@ void irq7_handler(){return;}
 void irq9_handler(){return;}
 // /* System Calls */
 void syscall_handler(){return;}
-
-void handler_dead(){
-    while(1);
-}
