@@ -11,7 +11,7 @@
 #define KERNEL  0x400000 /* the kernel memory is 4 MB */
 #define TWO_BITMASK 0x3 /* the mask for the last 2 bits */
 #define THREE_BITMASK 0x7 /* the mask for the last 3 bits */
-#define MB_BITMASK 0x87 /* the mask for the 4MB */
+#define MB_BITMASK 0x83 /* the mask for the 4MB */
 uint32_t page_directory_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)));
 uint32_t page_table_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)));
 
