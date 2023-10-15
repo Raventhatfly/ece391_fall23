@@ -45,20 +45,22 @@ int idt_test(){
 	return result;
 }
 
-int exception_test(){
+int div_test(){
 	TEST_HEADER;
-	int result = PASS;
-	int i = 1;
-	int j = 0;
-	i = i / j;
-	return result = FAIL;
+	int a = 1;
+	int b = 0;
+	a = a / b;
+	return FAIL;
 }
 
-void dereference_test(){
+int page_dereference_test(){
 	TEST_HEADER;
 	int* ptr = NULL;
 	*ptr = 1;
+	return FAIL;
 }
+
+
 // add more tests here
 
 /* Checkpoint 2 tests */
@@ -71,6 +73,7 @@ void dereference_test(){
 void launch_tests(){
 	TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
-	// TEST_OUTPUT("exception_test", exception_test());
-	dereference_test();
+	// TEST_OUTPUT("div_test",div_test());
+	TEST_OUTPUT("page_derefernece_test",page_dereference_test());
+	
 }
