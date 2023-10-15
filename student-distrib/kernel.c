@@ -147,14 +147,14 @@ void entry(unsigned long magic, unsigned long addr) {
     i8259_init();
 
     /* Init Page */
-    // page_initialize();
+    page_init();
 
 
     /* Initialize devices, memory, filesystem, enable device interrupts on the
      * PIC, any other initialization stuff... */
     
     key_init();
-    rtc_init();
+    // rtc_init();
   
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your

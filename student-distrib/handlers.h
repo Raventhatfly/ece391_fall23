@@ -2,27 +2,6 @@
 #define IRQ_HANDLERS_H
 
 /* Exception Handlers */
-// extern void division_error_handler();
-// extern void NMI_handler();
-// extern void breakpoint_handler();
-// extern void overflow_handler();
-// extern void exception4_handler();
-// extern void exception5_handler();
-// extern void exception6_handler();
-// extern void exception7_handler();
-// extern void exception8_handler();
-// extern void exception9_handler();
-// extern void exception10_handler();
-// extern void seg_not_present_handler();
-// extern void stack_seg_ft_handler(); /* 12 */
-// extern void gen_prot_ft_handler();
-// extern void page_ft_handler();      /* 14 */
-// extern void exception15_handler();
-// extern void exception16_handler();
-// extern void exception17_handler();
-// extern void exception18_handler();
-// extern void exception19_handler();
-// extern void exception20_handler();
 
 
 extern void exception0_handler();

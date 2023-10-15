@@ -1,39 +1,84 @@
 #include "handlers.h"
 void exception0_handler(){
     printf("Exception: divided by 0!\n");
-    handler_dead();
+    while(1);
 }
 void exception1_handler(){
-    printf("Exception: NMI interrupt. \n");
-    handler_dead();
+    printf("Exception: Debug. \n");
+    while(1);
 }
 void exception2_handler(){
-    printf("Exception: Breakpoint. \n");
-    handler_dead();
+    printf("Exception: NMI interrupt. \n");
+    while(1);
 }
 void exception3_handler(){
-    printf("Exception: Overflow ocuured! \n");
-    handler_dead();
+    printf("Exception: Breakpoint. \n");
+    while(1);
 }
-void exception4_handler(){return;}
-void exception5_handler(){return;}
-void exception6_handler(){return;}
-void exception7_handler(){return;}
-void exception8_handler(){return;}
-void exception9_handler(){return;}
-void exception10_handler(){return;}
-void exception11_handler(){return;}
-void exception12_handler(){return;}
-void exception13_handler(){return;}
+void exception4_handler(){
+    printf("Exception: Overflow ocuured! \n");
+    while(1);
+}
+void exception5_handler(){
+    printf("Exception: Bound range exceeded! \n");
+    while(1);
+}
+void exception6_handler(){
+    printf("Exception: Invalid Opcode! \n");
+    while(1);
+}
+void exception7_handler(){
+    printf("Exception: Device not available! \n");
+    while(1);
+}
+void exception8_handler(){
+    printf("Exception: Double fault! \n");
+    while(1);
+}
+void exception9_handler(){
+    printf("Exception: Coprocessor Segment overrun! \n");
+    while(1);
+}
+void exception10_handler(){
+    printf("Exception: Invalid TSS! \n");
+    while(1);
+}
+void exception11_handler(){
+    printf("Exception: Overflow ocuured! \n");
+    while(1);
+}
+void exception12_handler(){
+    printf("Exception: Stack segment fault! \n");
+    while(1);
+}
+void exception13_handler(){
+    printf("Exception: Gereral Protection. \n");
+    while(1);
+}
 void exception14_handler(){
     printf("Exception: Page Fault! \n");
-    // handler_dead();
+    while(1);
 }
-void exception15_handler(){return;}
-void exception16_handler(){return;}
-void exception17_handler(){return;}
-void exception18_handler(){return;}
-void exception19_handler(){return;}
+void exception15_handler(){
+    printf("Eception 15. \n");
+    while(1);
+}
+void exception16_handler(){
+    printf("Eception: Floating point error! \n");
+    while(1);
+}
+void exception17_handler(){
+    printf("Eception: Aligment check. \n");
+    while(1);
+}
+void exception18_handler(){
+    printf("Eception: Machine check. \n");
+    while(1);
+}
+void exception19_handler(){
+    printf("Eception: SIMD floating-point exception. \n");
+    while(1);
+}
 
 void irq0_handler(){return;}
 // void irq1_handler(){return;}   
