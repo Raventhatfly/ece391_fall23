@@ -11,9 +11,8 @@
 
 #define REG_SELECT 0X70
 #define REG_DATA 0x71
-#define rtc_irq 8
+#define RTC_IRQ 8
 
-#define RTC_IRQ         0x8
 
 volatile int INT_FLAG;
 
