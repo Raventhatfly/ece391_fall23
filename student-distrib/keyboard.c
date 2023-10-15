@@ -26,7 +26,9 @@ table from scancode to ascii
 #define f10_press 0x44
 #define f11_press 0x57
 #define f12_press 0x58
-
+/*
+flag for special key
+*/
 int8_t caps=0,shift=0,ctrl=0,alt=0;
 uint8_t scancode[SCANCODE_SIZE]={
     0,0,'1','2','3','4','5','6','7','8','9','0','-','=','\b',
@@ -95,11 +97,17 @@ void irq1_handler(void)
             alt=0;
             break;
     default:
-        if (key<SCANCODE_SIZE) 
+        if (key<SCANCODE_SIZE)  /*if the key is not a special key*/
         {
             uint8_t ascii;
+            /*
+            if shift is pressed, use the scancode_shift table
+            */
             if (shift==1)
                 ascii = scancode_shift[key];
+            /*
+            if caps is pressed, use the scancode_caps table
+            */
             else if (caps==1)
                 ascii = scancode_caps[key];
             else
