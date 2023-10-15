@@ -56,7 +56,7 @@ extern void irq4_handler();
 extern void irq5_handler();
 extern void irq6_handler();
 extern void irq7_handler();
-extern void irq8_handler();         /* rtc handler */
+extern void rtc_handler();         /* rtc handler */
 extern void irq9_handler(); 
 // extern void rtc_irqhandler();   /* IRQ 8, RTC */
 /* System Calls */

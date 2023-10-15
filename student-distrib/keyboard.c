@@ -13,7 +13,7 @@ void key_init(void)
 	/*keyboard is irq1*/
 	enable_irq(KEYBOARD_IRQ);
 }
-void irq8_handler(void)
+void irq1_handler(void)
 {
     cli();
     /*read from keyboard*/

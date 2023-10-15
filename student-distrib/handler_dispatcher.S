@@ -209,7 +209,7 @@ idt_irq_7:
 idt_irq_8:
     pushal
     cld
-    call irq8_handler
+    call rtc_handler
     popal
     iret
 

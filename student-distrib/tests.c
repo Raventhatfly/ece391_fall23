@@ -45,6 +45,13 @@ int idt_test(){
 	return result;
 }
 
+int exception_test(){
+	TEST_HEADER;
+	int i = 1;
+	int j = 0;
+	i = i / j;
+}
+
 // add more tests here
 
 /* Checkpoint 2 tests */
