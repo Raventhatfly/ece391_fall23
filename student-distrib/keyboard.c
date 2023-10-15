@@ -54,11 +54,23 @@ uint8_t scancode_caps[SCANCODE_SIZE]={
     0,0,0,0,0,0,0,0,0,0,'-',0,0,0,0,0,
     0,0,0,0,0,0,0,'7','8','9','-','4','5','6','+','1',
     '2','3','0','.',0,0};
+/*
+key_init
+input: none
+output: none
+side effect: enable the keyboard irq
+*/
 void key_init(void) 
 {
 	/*keyboard is irq1*/
 	enable_irq(KEYBOARD_IRQ);
 }
+/*
+irq1_handler
+input: none
+output: none
+side effect: print the key to screen
+*/
 void irq1_handler(void)
 {
     cli();
