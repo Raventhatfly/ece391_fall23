@@ -20,10 +20,11 @@ void rtc_init() {
 }
 
 void rtc_handler(){
+    /* disable interrupt */
 	cli();
     outb(REG_C, REG_SELECT);
     inb(REG_DATA);
-    INT_FLAG = 1;
-	sti();
-	send_eoi(RTC_IRQ);
+    INT_FLAG = 1;                   /* RTC interrupt has occurred */
+	sti();                          /* re-enable interrupt */
+	send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
 }
