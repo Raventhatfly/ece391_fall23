@@ -47,11 +47,18 @@ int idt_test(){
 
 int exception_test(){
 	TEST_HEADER;
+	int result = PASS;
 	int i = 1;
 	int j = 0;
 	i = i / j;
+	return result = FAIL;
 }
 
+void dereference_test(){
+	TEST_HEADER;
+	int* ptr = NULL;
+	*ptr = 1;
+}
 // add more tests here
 
 /* Checkpoint 2 tests */
@@ -64,4 +71,6 @@ int exception_test(){
 void launch_tests(){
 	TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
+	// TEST_OUTPUT("exception_test", exception_test());
+	dereference_test();
 }
