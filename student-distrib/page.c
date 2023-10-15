@@ -15,10 +15,9 @@ void page_init() {
         page_directory_entries[i] = INITIAL_STATE;
         page_table_entries[i] = INITIAL_STATE;
     }
-
     int video_idx = VIDEO >> 12;    /* get the index of video memory, move 12 bit to the right for reduce 0 */
-    page_table_entries[video_idx] = VIDEO | THREE_BITMASK; /* set the video memory,7 is used as the mask of last 3 bit*/
-    page_directory_entries[0] = ((uint32_t)page_table_entries)| THREE_BITMASK; /* I don't really know */
+    page_table_entries[video_idx] = VIDEO | TWO_BITMASK; /* set the video memory,7 is used as the mask of last 2 bit*/
+    page_directory_entries[0] = ((uint32_t)page_table_entries)| TWO_BITMASK; 
     page_directory_entries[1] = KERNEL | MB_BITMASK; /* set the kernel memory */
     /* use asm to set the control register bits to their proper values */
     /* so tells the hardware where the page directory is located and enables hardware support for paging */
