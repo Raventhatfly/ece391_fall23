@@ -71,9 +71,10 @@ int page_dereference_test(){
 
 /* Test suite entry point */
 void launch_tests(){
+	/* Checkpoint 1 tests */
 	TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
-	// TEST_OUTPUT("div_test",div_test());
+	TEST_OUTPUT("div_test",div_test());
 	TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	
 }
