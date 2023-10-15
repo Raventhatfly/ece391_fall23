@@ -86,7 +86,7 @@ void irq1_handler(void)
             shift=0;
             break;
         case caps_press:    
-            caps=1;
+            caps=caps^1;
             break;
         case alt_press:
             alt=1;
