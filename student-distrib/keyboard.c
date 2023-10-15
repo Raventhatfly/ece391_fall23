@@ -42,6 +42,9 @@ void irq1_handler(void)
     /*read from keyboard*/
     uint8_t key = inb(KEYBOARD_PORT);
     /*print to screen*/
+    /*
+    key>=SCANCODE_SIZE means that the key is just a release
+    */
     if (key<SCANCODE_SIZE) 
     {
         uint8_t ascii = scancode[key];
