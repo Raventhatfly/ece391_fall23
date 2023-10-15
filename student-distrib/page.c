@@ -12,10 +12,8 @@
 void page_init() {
     int i=0;
     for (i=0; i<ENTRIES; i++) {     /* initialize all entries of table and dict to 0 */
-        page_directory_entries[i] = INITIAL_STATE;
-    }
-    for (i=0; i<ENTRIES; i++) {
-    page_table_entries[i] = INITIAL_STATE;
+        page_directory_entries[i] = 0;
+        page_table_entries[i] = 0;
     }
     int video_idx = VIDEO >> 12;    /* get the index of video memory, move 12 bit to the right for reduce 0 */
     page_table_entries[video_idx] = VIDEO | TWO_BITMASK; /* set the video memory,7 is used as the mask of last 2 bit*/
