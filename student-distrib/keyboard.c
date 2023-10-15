@@ -42,7 +42,7 @@ void irq1_handler(void)
     /*read from keyboard*/
     uint8_t key = inb(KEYBOARD_PORT);
     /*print to screen*/
-    if (key<0x59) 
+    if (key<SCANCODE_SIZE) 
     {
         uint8_t ascii = scancode[key];
         putc(ascii);
