@@ -17,6 +17,8 @@ void rtc_init() {
     
     /* Set the interrupt rate while preserving the upper 4 bits of Register A */
     outb((prev & 0xF0) | RTC_RATE, REG_DATA);
+
+    enable_irq(RTC_IRQ);              /* Enable RTC interrupt */
 }
 
 void rtc_handler(){
