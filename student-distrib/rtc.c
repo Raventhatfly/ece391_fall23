@@ -25,6 +25,7 @@ void rtc_handler(){
     outb(REG_C, REG_SELECT);
     inb(REG_DATA);
     INT_FLAG = 1;                   /* RTC interrupt has occurred */
+    send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
 	sti();                          /* re-enable interrupt */
-	send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
 }
+
