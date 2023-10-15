@@ -45,6 +45,14 @@ int idt_test(){
 	return result;
 }
 
+/*
+ * div_test
+ *   DESCRIPTION: test the divide error exception
+ *   INPUTS: none
+ *   OUTPUTS: PASS/FAIL
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
 int div_test(){
 	TEST_HEADER;
 	int a = 1;
@@ -53,9 +61,58 @@ int div_test(){
 	return FAIL;
 }
 
+/*
+ * page_value_test
+ *   DESCRIPTION: test the page value
+ *   INPUTS: none
+ *   OUTPUTS: PASS/FAIL
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
+int page_value_test(){
+	TEST_HEADER;
+	unsigned char* video_mem_start = (unsigned char*) 0xB8000;
+	unsigned char* video_mem_end   = video_mem_start + 0x1000;
+	unsigned char* kernel_start    = (unsigned char*) 0x400000;
+	unsigned char* kernel_end      = (unsigned char*) 0x800000;
+	unsigned char* ptr;
+	unsigned char test;
+	for (ptr = video_mem_start; ptr < video_mem_end; ptr++) { /* test video memory */
+		test = (*ptr);
+	}
+
+	for (ptr = kernel_start; ptr < kernel_end; ptr++) { /* test kernel memory */
+		test = (*ptr);
+	}
+	return FAIL;
+}
+
+/*
+ * page_dereference_test
+ *   DESCRIPTION: test the page dereference
+ *   INPUTS: none
+ *   OUTPUTS: PASS/FAIL
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+*/
 int page_dereference_test(){
 	TEST_HEADER;
 	int* ptr = NULL;
+	*ptr = 1;
+	return FAIL;
+}
+
+/*
+ * page_dereference_dne_test
+ *   DESCRIPTION: test the page dereference does not exist
+ *   INPUTS: none
+ *   OUTPUTS: PASS/FAIL
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+*/
+int page_dereference_dne_test(){
+	TEST_HEADER;
+	int* ptr = (int*)0x800001;
 	*ptr = 1;
 	return FAIL;
 }
@@ -75,6 +132,8 @@ void launch_tests(){
 	TEST_OUTPUT("idt_test", idt_test());
 	// launch your tests here
 	TEST_OUTPUT("div_test",div_test());
+	TEST_OUTPUT("page_value_test",page_value_test());
 	TEST_OUTPUT("page_derefernece_test",page_dereference_test());
+	TEST_OUTPUT("page_derefernece_dne_test",page_dereference_dne_test());
 	
 }
