@@ -138,10 +138,11 @@ void entry(unsigned long magic, unsigned long addr) {
         tss.esp0 = 0x800000;
         ltr(KERNEL_TSS);
     }
-
+    
+    /* Init the IDT */
     idt_init();
     lidt(idt_desc_ptr);
-    
+
     /* Init the PIC */
     i8259_init();
 
@@ -149,6 +150,7 @@ void entry(unsigned long magic, unsigned long addr) {
      * PIC, any other initialization stuff... */
     
     key_init();
+    rtc_init();
   
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
