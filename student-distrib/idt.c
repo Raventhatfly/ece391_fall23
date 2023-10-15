@@ -1,5 +1,21 @@
 #include "idt.h"
 #include "handler_dispatcher.h"
+
+/*
+    *  void idt_init()
+    *    DESCRIPTION: Initializes the Interrupt Descriptor Table (IDT) with exception 
+    *                 handlers, interrupt handlers, and a system call handler. It configures 
+    *                 each entry with the appropriate attributes including present flag, 
+    *                 privilege level, segment selector, and gate type (interrupt or trap).
+    *    INPUT: none
+    *    OUTPUT: none
+    *    SIDE EFFECT: 
+    *                 - Sets up the IDT entries for handling CPU exceptions, hardware 
+    *                   interrupts, and system calls in a controlled manner.
+    *                 - Configures the attributes of each IDT entry.
+    *                 - Modifies the IDT entries in memory, which affects how the CPU 
+    *                   responds to exceptions and interrupts.
+*/
 void idt_init(){
     /* set idt exception */
     SET_IDT_ENTRY(idt[0],idt_exc_0);
