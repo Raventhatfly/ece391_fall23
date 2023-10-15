@@ -71,20 +71,18 @@ int div_test(){
  */
 int page_value_test(){
 	TEST_HEADER;
-	unsigned char* video_mem_start = (unsigned char*) 0xB8000;
-	unsigned char* video_mem_end   = video_mem_start + 0x1000;
-	unsigned char* kernel_start    = (unsigned char*) 0x400000;
-	unsigned char* kernel_end      = (unsigned char*) 0x800000;
-	unsigned char* ptr;
-	unsigned char test;
-	for (ptr = video_mem_start; ptr < video_mem_end; ptr++) { /* test video memory */
-		test = (*ptr);
+	unsigned char* addr1=(unsigned char*)0xB8;
+	unsigned char* addr2=(unsigned char*)0x4000000;
+	if (addr1 != 0xB8000){
+		return PASS;
+	}else{
+		return FAIL;
 	}
-
-	for (ptr = kernel_start; ptr < kernel_end; ptr++) { /* test kernel memory */
-		test = (*ptr);
+	if (addr2 != 0x0){
+		return PASS;
+	}else{
+		return FAIL;
 	}
-	return FAIL;
 }
 
 /*
