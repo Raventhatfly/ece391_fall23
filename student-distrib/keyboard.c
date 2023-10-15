@@ -19,8 +19,11 @@ void irq1_handler(void)
     /*read from keyboard*/
     uint8_t key = inb(KEYBOARD_PORT);
     /*print to screen*/
-    uint8_t ascii = scancode[key];
-    putc(ascii);
+    if (key<59) 
+    {
+        uint8_t ascii = scancode[key];
+        putc(ascii);
+    }
     /*send eoi*/
     send_eoi(KEYBOARD_IRQ);
     sti();
