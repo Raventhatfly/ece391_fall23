@@ -71,18 +71,13 @@ int div_test(){
  */
 int page_value_test(){
 	TEST_HEADER;
-	unsigned char* addr1=(unsigned char*)0xB8;
+	unsigned char* addr1=(unsigned char*)0xB80000;
 	unsigned char* addr2=(unsigned char*)0x4000000;
-	if (addr1 != 0xB8000){
-		return PASS;
-	}else{
-		return FAIL;
-	}
-	if (addr2 != 0x0){
-		return PASS;
-	}else{
-		return FAIL;
-	}
+	unsigned char return_value;
+	return_value = *addr1;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
+	return_value = *addr2;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
+	return PASS;
+
 }
 
 /*
