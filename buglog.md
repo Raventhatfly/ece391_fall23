@@ -28,3 +28,13 @@ the assembly functions.
 **Description**: Can not display info mem. <br>
 **Difficulty**: Five minutes, realize it immediately after gdb<br>
 **Fixing Method**: Wrongly add exception-handle sentence in the tests.c. Actually all code works fine.
+
+**Author**: Liu Xuecheng<br>
+**Description**: RTC does not send interrrupt signal. <br>
+**Difficulty**: ten minutes<br>
+**Fixing Method**: Add enable_irq when initializing.
+
+**Author**: Liu Xuecheng<br>
+**Description**: Synchonization fails some times. <br>
+**Difficulty**: 20 minutes<br>
+**Fixing Method**: Change the place of STI.
