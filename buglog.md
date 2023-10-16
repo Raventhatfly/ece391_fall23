@@ -24,3 +24,7 @@ the assembly functions.
 **Difficulty**: Five minutes, realize if immediately<br>
 **Fixing Method**: I forget to consider the scancode when we release a key on the keyboard. I fix it by ignore the scancode larger than 0x58.
 
+**Author**: Luo Hanjun<br>
+**Description**: Can not display info mem. <br>
+**Difficulty**: Five minutes, realize it immediately after gdb<br>
+**Fixing Method**: Wrongly add exception-handle sentence in the tests.c. Actually all code works fine.
