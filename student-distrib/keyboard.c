@@ -30,6 +30,9 @@ table from scancode to ascii
 flag for special key
 */
 int8_t caps=0,shift=0,ctrl=0,alt=0;
+/*
+table from scancode to ascii
+*/
 uint8_t scancode[SCANCODE_SIZE]={
     0,0,'1','2','3','4','5','6','7','8','9','0','-','=','\b',
     '\t','q','w','e','r','t','y','u','i','o','p','[',']','\n',
@@ -109,18 +112,18 @@ void irq1_handler(void)
             alt=0;
             break;
     default:
-        if (key<SCANCODE_SIZE)  /*if the key is not a special key*/
+        if (key<SCANCODE_SIZE)  /*if the key is not a special key and is the pressing process*/
         {
             uint8_t ascii;
             /*
             if shift is pressed, use the scancode_shift table
             */
-            if (shift==1)
+            if (shift==1) //if shift is pressed
                 ascii = scancode_shift[key];
             /*
             if caps is pressed, use the scancode_caps table
             */
-            else if (caps==1)
+            else if (caps==1) //if caps is set
                 ascii = scancode_caps[key];
             else
                 ascii = scancode[key];

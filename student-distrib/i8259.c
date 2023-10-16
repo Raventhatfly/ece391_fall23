@@ -16,7 +16,7 @@ uint8_t slave_mask;  /* IRQs 8-15 */
 */
 /* Initialize the 8259 PIC */
 void i8259_init(void) {
-    /* initialize the mask*/
+    /* initialize the mask, mask all*/
     master_mask=0xFF;
     slave_mask=0xFF;
 
@@ -49,6 +49,7 @@ void enable_irq(uint32_t irq_num)
     /*if master*/
     if (irq_num<8)  
     {
+        /*change the mask*/
         master_mask&=(~(1<<irq_num));
         outb(master_mask,MASTER_8259_DATA);
         /*change te mask and send it to the data port*/
@@ -56,6 +57,7 @@ void enable_irq(uint32_t irq_num)
     /*if slave*/
     else if (irq_num<16) 
     {
+        /*change the mask*/
         slave_mask&=(~(1<<(irq_num-8)));
         outb(slave_mask,SLAVE_8259_DATA);
         /*change te mask and send it to the data port*/
@@ -75,6 +77,7 @@ void disable_irq(uint32_t irq_num)
     /*if master*/
     if (irq_num<8) 
     {
+        /*change the mask*/
         master_mask|=(1<<irq_num);
         outb(master_mask,MASTER_8259_DATA);
         /*change te mask and send it to the data port*/
@@ -82,6 +85,7 @@ void disable_irq(uint32_t irq_num)
     /*if slave*/
     else if (irq_num<16) 
     {
+        /*change the mask*/
         slave_mask|=(1<<(irq_num-8));
         outb(slave_mask,SLAVE_8259_DATA);
         /*change te mask and send it to the data port*/

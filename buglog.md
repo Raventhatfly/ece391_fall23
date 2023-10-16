@@ -19,5 +19,8 @@ the assembly code `handler_dispatcher.S`, so that other programs are able to cal
 the assembly functions.
 
 
-
+**Author**: Zhang Yucheng<br>
+**Description**: Display one character and a space when press a keyboard <br>
+**Difficulty**: Five minutes, realize if immediately<br>
+**Fixing Method**: I forget to consider the scancode when we release a key on the keyboard. I fix it by ignore the scancode larger than 0x58.
 
