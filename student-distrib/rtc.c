@@ -41,7 +41,6 @@ void rtc_init(void) {
     *    INPUT: none
     *    OUTPUT: none
     *    SIDE EFFECT: 
-    *                 - Set INT_FLAG.
     *                 - Sends an End Of Interrupt (EOI) signal to the PIC.
     *                 - Temporarily disables and then re-enables interrupts to 
     *                   ensure atomic operations.
@@ -51,7 +50,6 @@ void rtc_handler(void){
     cli();
     outb(REG_C, REG_SELECT);
     inb(REG_DATA);
-    INT_FLAG = 1;                   /* RTC interrupt has occurred */
     test_interrupts();
     send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
     sti();                          /* re-enable interrupt */

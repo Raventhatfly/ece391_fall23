@@ -73,7 +73,7 @@ int page_value_test(){
 	TEST_HEADER;
 	unsigned char* addr1=(unsigned char*)0xB8;
 	unsigned char* addr2=(unsigned char*)0x4000000;
-	if (addr1 != 0xB8000){
+	if (addr1 != (unsigned char*) 0xB8000){
 		return PASS;
 	}else{
 		return FAIL;
@@ -96,6 +96,7 @@ int page_value_test(){
 int syscall_test(){
 	TEST_HEADER;
 	asm volatile("int $128");	/* trigger system call */
+	return PASS;
 }
 /*
  * page_dereference_test

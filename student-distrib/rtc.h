@@ -14,8 +14,6 @@
 #define RTC_IRQ 8
 
 
-volatile int INT_FLAG;
-
 /* Initialize RTC */
 extern void rtc_init(void);
 
