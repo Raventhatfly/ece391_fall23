@@ -122,12 +122,12 @@ int page_dereference_test(){
 /* Test suite entry point */
 void launch_tests(){
 	/* Checkpoint 1 tests */
-	// TEST_OUTPUT("idt_test", idt_test());
+	TEST_OUTPUT("idt_test", idt_test());
 	// TEST_OUTPUT("div_test",div_test());
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
-	rtc_init();
+	// rtc_init();
 	// launch your tests here
 	
 	
