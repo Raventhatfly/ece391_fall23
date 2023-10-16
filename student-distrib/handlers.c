@@ -210,4 +210,12 @@ void irq7_handler(){return;}
 // void irq8_handler(){return;}
 void irq9_handler(){return;}
 // /* System Calls */
-void syscall_handler(){return;}
+
+/*
+    *  void syscall_handler()
+    *  DESCRIPTION: Eception: SIMD floating-point exception
+    *  INPUT/OUTPUT: none
+*/
+void syscall_handler(){
+    printf("System Call!\n");
+}

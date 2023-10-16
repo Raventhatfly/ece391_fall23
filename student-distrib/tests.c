@@ -86,6 +86,18 @@ int page_value_test(){
 }
 
 /*
+ * syscall_test
+ *   DESCRIPTION: test the system call
+ *   INPUTS: none
+ *   OUTPUTS: PASS/FAIL
+ *   RETURN VALUE: none
+ *   SIDE EFFECTS: none
+ */
+int syscall_test(){
+	TEST_HEADER;
+	asm volatile("int $128");	/* trigger system call */
+}
+/*
  * page_dereference_test
  *   DESCRIPTION: test the page dereference
  *   INPUTS: none
@@ -96,21 +108,6 @@ int page_value_test(){
 int page_dereference_test(){
 	TEST_HEADER;
 	int* ptr = NULL;
-	*ptr = 1;
-	return FAIL;
-}
-
-/*
- * page_dereference_dne_test
- *   DESCRIPTION: test the page dereference does not exist
- *   INPUTS: none
- *   OUTPUTS: PASS/FAIL
- *   RETURN VALUE: none
- *   SIDE EFFECTS: none
-*/
-int page_dereference_dne_test(){
-	TEST_HEADER;
-	int* ptr = (int*)0x800001;
 	*ptr = 1;
 	return FAIL;
 }
@@ -128,10 +125,12 @@ int page_dereference_dne_test(){
 void launch_tests(){
 	/* Checkpoint 1 tests */
 	TEST_OUTPUT("idt_test", idt_test());
-	// launch your tests here
 	TEST_OUTPUT("div_test",div_test());
 	TEST_OUTPUT("page_value_test",page_value_test());
 	TEST_OUTPUT("page_derefernece_test",page_dereference_test());
-	TEST_OUTPUT("page_derefernece_dne_test",page_dereference_dne_test());
+	TEST_OUTPUT("syscall_test",syscall_test());
+	// rtc_init();
+	// launch your tests here
+	
 	
 }
