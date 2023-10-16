@@ -73,11 +73,24 @@ int page_value_test(){
 	TEST_HEADER;
 	unsigned char* addr1=(unsigned char*)0xB80000;
 	unsigned char* addr2=(unsigned char*)0x4000000;
+<<<<<<< HEAD
 	unsigned char return_value;
 	return_value = *addr1;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
 	return_value = *addr2;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
 	return PASS;
 
+=======
+	if (addr1 != (unsigned char*) 0xB8000){
+		return PASS;
+	}else{
+		return FAIL;
+	}
+	if (addr2 != 0x0){
+		return PASS;
+	}else{
+		return FAIL;
+	}
+>>>>>>> 9f72a455674d287efac71419b6c81eab75c964ca
 }
 
 /*
@@ -91,6 +104,7 @@ int page_value_test(){
 int syscall_test(){
 	TEST_HEADER;
 	asm volatile("int $128");	/* trigger system call */
+	return PASS;
 }
 /*
  * page_dereference_test
