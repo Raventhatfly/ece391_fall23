@@ -11,6 +11,7 @@
 #include "idt.h"
 #include "keyboard.h"
 #include "rtc.h"
+#include "filesystem.h"
 
 #define RUN_TESTS
 
@@ -167,6 +168,7 @@ void entry(unsigned long magic, unsigned long addr) {
      * PIC, any other initialization stuff... */
     
     key_init();
+    filesystem_init(filesys_base);
     // rtc_init();
   
     /* Enable interrupts */
