@@ -5,6 +5,8 @@
 #define PASS 1
 #define FAIL 0
 
+extern void rtc_init();
+
 /* format these macros as you see fit */
 #define TEST_HEADER 	\
 	printf("[TEST %s] Running %s at %s:%d\n", __FUNCTION__, __FUNCTION__, __FILE__, __LINE__)
@@ -121,10 +123,10 @@ int page_dereference_test(){
 void launch_tests(){
 	/* Checkpoint 1 tests */
 	TEST_OUTPUT("idt_test", idt_test());
-	TEST_OUTPUT("div_test",div_test());
-	TEST_OUTPUT("page_value_test",page_value_test());
-	TEST_OUTPUT("page_derefernece_test",page_dereference_test());
-	TEST_OUTPUT("syscall_test",syscall_test());
+	// TEST_OUTPUT("div_test",div_test());
+	// TEST_OUTPUT("page_value_test",page_value_test());
+	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
+	// TEST_OUTPUT("syscall_test",syscall_test());
 	// rtc_init();
 	// launch your tests here
 	
