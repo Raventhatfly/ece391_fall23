@@ -14,6 +14,8 @@
 
 #define RUN_TESTS
 
+int* filesys_base;
+
 /* Macros. */
 /* Check if the bit BIT in FLAGS is set. */
 #define CHECK_FLAG(flags, bit)   ((flags) & (1 << (bit)))
@@ -62,6 +64,13 @@ void entry(unsigned long magic, unsigned long addr) {
         while (mod_count < mbi->mods_count) {
             printf("Module %d loaded at address: 0x%#x\n", mod_count, (unsigned int)mod->mod_start);
             printf("Module %d ends at address: 0x%#x\n", mod_count, (unsigned int)mod->mod_end);
+            
+            char* file_img = "/filesys_img";
+            if(strncmp(mod->string,file_img,12) == 0){      /* Check if the module is the filesystem_img, 12 is the length of the string */
+                printf("Loaded module is %s\n",mod->string);
+                filesys_base = mod->mod_start;
+            }
+            
             printf("First few bytes of module:\n");
             for (i = 0; i < 16; i++) {
                 printf("0x%x ", *((char*)(mod->mod_start+i)));
