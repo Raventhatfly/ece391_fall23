@@ -1,20 +1,13 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
+
 #include "lib.h"
 
-void filesystem_init(int* base_ptr);
-void read_dentry_by_name(char* file_name);
-void read_dentry_by_index(int index);
-void read_data(); 
-
-typedef  enum file_type{
-    USER_ACCESS_RTC_FILE,
-    FILE_DIRECTORY,
-    REGULAR_FILE
-}file_type_t;
+#define FILENAME_LEN 32
+#define BLOCK_SIZE 4096
 
 typedef struct dentry{
-    uint8_t file_name[32];
+    uint8_t file_name[FILENAME_LEN];
     uint32_t file_type;
     uint32_t inode_num;
     uint8_t reserved[24];
@@ -32,6 +25,20 @@ typedef struct inode{
     uint32_t length;
     uint32_t data_block_num[1023];
 }inode_t;
+
+
+void filesystem_init(int* base_ptr);
+int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry);
+int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry);
+int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length);
+
+typedef  enum file_type{
+    USER_ACCESS_RTC_FILE,
+    FILE_DIRECTORY,
+    REGULAR_FILE
+}file_type_t;
+
+
 
 
 #endif

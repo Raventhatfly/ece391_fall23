@@ -69,7 +69,7 @@ void entry(unsigned long magic, unsigned long addr) {
             char* file_img = "/filesys_img";
             if(strncmp(mod->string,file_img,12) == 0){      /* Check if the module is the filesystem_img, 12 is the length of the string */
                 printf("Loaded module is %s\n",mod->string);
-                filesys_base = mod->mod_start;
+                filesys_base = (int*) mod->mod_start;
             }
             
             printf("First few bytes of module:\n");
