@@ -11,7 +11,7 @@ typedef struct termin {
 } termin_t;
 
 extern uint32_t terminal_clear();
-extern uint32_t terminal_init();
+extern void terminal_init();
 extern uint32_t terminal_read(unsigned char input);
 extern void terminal_write();
 extern uint32_t terminal_display(unsigned char input);

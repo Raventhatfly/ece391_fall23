@@ -110,7 +110,7 @@ uint32_t terminal_clear(){
     *   SIDE EFFECTS: initialize the terminal
 */
 void terminal_init(){
-    i = terminal_clear();
+    terminal_clear();
     return;
 }
 
