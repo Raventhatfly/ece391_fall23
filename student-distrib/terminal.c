@@ -110,7 +110,7 @@ uint32_t terminal_clear(){
     *   SIDE EFFECTS: initialize the terminal
 */
 void terminal_init(){
-    terminal_clear();
+    i = terminal_clear();
     return;
 }
 
@@ -145,7 +145,7 @@ uint32_t terminal_delete(){
             return -1;
         }
     }
-    if (my_terminal.buffer_iterator = 0){ /*if the buffer is empty, delete is failed*/
+    if (my_terminal.buffer_iterator == 0){ /*if the buffer is empty, delete is failed*/
         return -1;
     }
     if (screen_x == 0) {      /*if the input is at the beginning of the line, delete the last char of the last line*/
