@@ -97,6 +97,8 @@ uint32_t terminal_clear(){
     i = 0;    //maybe with some problems
     screen_x = i;
     screen_y = i;
+    my_terminal.cursor_x_coord=i;
+    my_terminal.cursor_y_coord=i;
     i = buffer_clear(); //maybe with some problems
     return 0;
 }
