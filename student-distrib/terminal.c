@@ -102,6 +102,19 @@ uint32_t terminal_clear(){
 }
 
 /*
+    * terminal_init
+    *   DESCRIPTION: initialize the terminal by terminal_clear(). This function is used to utilize the syntax.
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: initialize the terminal
+*/
+void terminal_init(){
+    i = terminal_clear();
+    return;
+}
+
+/*
     * terminal_display
     *   DESCRIPTION: display the input to screen
     *   INPUTS: input -- the input from keyboard
