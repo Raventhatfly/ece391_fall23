@@ -15,6 +15,8 @@ void filesystem_init(int* base_ptr){
     dir_cnt = boot_block_ptr->dir_cnt;
     inode_cnt = boot_block_ptr->inode_cnt;
     data_cnt = boot_block_ptr->data_cnt;
+    inode_addr = file_base + BLOCK_SIZE;
+    data_addr = inode_addr + boot_block_ptr->dir_cnt * BLOCK_SIZE;
 }
 
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
