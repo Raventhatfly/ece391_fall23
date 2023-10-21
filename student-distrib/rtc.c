@@ -4,6 +4,18 @@
 #include "lib.h"
 #include "i8259.h"
 
+volatile uint32_t int_counter;
+volatile uint32_t int_flag[10];
+volatile uint32_t rtc_rate;
+
+
+/* 
+ * The int_flag handles rtc frequency from 2 ~ 1024 with the following index:
+ *  index:      0    1    2    3    4    5    6    7    8    9
+ *  freq(Hz):   2    4    8    16   32   64   128  256  512  1024
+*/
+
+
 /*
     *  void rtc_init()
     *    DESCRIPTION: initialize the rtc
@@ -26,7 +38,12 @@ void rtc_init(void) {
     outb(REG_A,REG_SELECT);
     
     /* Set the interrupt rate while preserving the upper 4 bits of Register A */
-    outb((prev & 0xF0) | RTC_RATE, REG_DATA);
+    outb((prev & 0xF0) | BASE_RATE, REG_DATA);
+
+    int i;
+    for (i=0; i<10; i++) {int_flag[i]=0;}
+    int_counter=0;
+    rtc_rate=9;
 
     enable_irq(RTC_IRQ);              /* Enable RTC interrupt */
 }
@@ -50,7 +67,48 @@ void rtc_handler(void){
     cli();
     outb(REG_C, REG_SELECT);
     inb(REG_DATA);
-    test_interrupts();
+    int_counter++;
+    int i;
+    for (i=0; i<10; i++) {
+        if ( int_counter % (BASE_RATE / (2 << i)) ) {
+            int_flag[i]=1;
+        }
+    }
+    // test_interrupts();
     send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
     sti();                          /* re-enable interrupt */
 }
+
+int rtc_open(const uint8_t* filename) {
+    rtc_rate=0;
+    int_flag[rtc_rate]=0;
+	return 0;
+}
+
+int rtc_close(int32_t fd) {
+	return 0;
+}
+
+int log_2(uint32_t n) {
+    int ans=0;
+    while (n) {
+        ans++;
+        n>>=1;
+    }
+    return ans;
+}
+
+int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
+    uint32_t freq = *(uint32_t*) buf;
+    if (freq<=0 || freq>BASE_RATE) {return -1;}     /* check if between 1~1024 */
+    if ((freq & (freq-1)) != 0) {return -1;}        /* check if power of 2 */
+    rtc_rate=log_2(freq)-1;
+    return 0;
+}
+
+int rtc_read(int32_t fd, void* buf, int32_t nbytes) {
+    while (int_flag[rtc_rate]==0) {}
+    int_flag[rtc_rate]=0;
+    return 0;
+}
+
