@@ -2,6 +2,7 @@
 #include "x86_desc.h"
 #include "lib.h"
 #include "filesystem.h"
+#include "terminal.h"
 
 #define PASS 1
 #define FAIL 0
@@ -138,5 +139,11 @@ void launch_tests(){
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	read_dentry_by_index(1,&dentry);
-	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+
+	/* terminal clear */
+	terminal_clear();
+	
+
+
 }

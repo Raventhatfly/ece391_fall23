@@ -5,7 +5,7 @@
 #define ROWS    25  /* Number of rows in terminal */
 
 
-typedef struct termin_t {
+typedef struct termin {
 	unsigned char terminal_buffer[128];  //define the buffer of 128 bytes according to the requirement
 	uint32_t buffer_iterator;
 } termin_t;
