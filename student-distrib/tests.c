@@ -137,6 +137,6 @@ void launch_tests(){
 	read_dentry_by_name(str,&dentry);
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
-	// read_dentry_by_index(1,&dentry);
-	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+	read_dentry_by_index(1,&dentry);
+	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 }

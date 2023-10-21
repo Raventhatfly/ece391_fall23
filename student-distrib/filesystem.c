@@ -42,13 +42,14 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
             if(file_name_len != fname_len){
                 continue;
             }
-            if(strncpy(boot_block_ptr->direntries[i].file_name, fname, fname_len)==0){
+            if(strncmp(boot_block_ptr->direntries[i].file_name, fname, fname_len)==0){
                 return read_dentry_by_index(i, dentry);
             }
         }
     }
     return -1;      /* return -1 on failure */
 }
+
 /*
     int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry);
     Inputs: uint32_t index, dentry_t* dentry
@@ -63,6 +64,7 @@ int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry){
     *dentry = boot_block_ptr->direntries[index];
     return 0;      /* return -1 on failure */
 }
+
 /*
     int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length);
     Inputs: uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
@@ -78,9 +80,7 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     inode_t* index_node; 
 
     index_node  = (inode_t*) file_base[(inode + 1) * BLOCK_SIZE];
-    /*
-    calculate the current data block, block offset, length remain and buffer offset
-    */
+    /* calculate the current data block, block offset, length remain and buffer offset */
     curr_data_block = offset / BLOCK_SIZE;
     block_offset = offset - curr_data_block * BLOCK_SIZE;
     length_remain = length;
@@ -89,29 +89,23 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     if(inode >= 63){
         return -1;
     }
-    /*
-    test if the offset is larger than the length of the file
-    */
+    /* test if the offset is larger than the length of the file */
     if (index_node->length < offset){
         return 0;
     }
     while(length_remain >= BLOCK_SIZE){
         memcpy(buf+buf_offset, file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset]
-            , BLOCK_SIZE - block_offset); //copy the data
-        length_remain -= BLOCK_SIZE; //update the length remain
+            , BLOCK_SIZE - block_offset);       /* copy data into the buffer */
+        length_remain -= BLOCK_SIZE;            /* update the length remain */
         buf_offset += (BLOCK_SIZE-block_offset);
         curr_data_block++;
         block_offset = 0;
-        /*
-        test if the data block is larger than 1023
-        */
+        /* test if the data block is larger than 1023 */
         if(curr_data_block>=1023){
             return 0;
         }
     }
-    /*
-    copy the remaining data
-    */
+    /* copy the remaining data */
     if (curr_data_block<1023)
         memcpy(buf+buf_offset,file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset],length_remain);
     return length;
