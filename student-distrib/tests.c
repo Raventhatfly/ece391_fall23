@@ -145,6 +145,6 @@ void launch_tests(){
 	terminal_clear();
 	
 
-
+	printf("%d\n",filesys_base);
 	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, ((inode_t*)(filesys_base+(1+dentry.inode_num)*4096))->length);
 }
