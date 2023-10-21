@@ -8,6 +8,13 @@ int dir_cnt;
 int inode_cnt;
 int data_cnt;
 
+/*
+    void filesystem_init(int* base_ptr);
+    Inputs: int* base_ptr
+    Return Value: none
+    Function: initialize the file system
+    Side effect: none
+*/
 
 void filesystem_init(int* base_ptr){
     file_base = base_ptr;
@@ -16,7 +23,13 @@ void filesystem_init(int* base_ptr){
     inode_cnt = boot_block_ptr->inode_cnt;
     data_cnt = boot_block_ptr->data_cnt;
 }
-
+/*
+    int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry);
+    Inputs: const uint8_t* fname, dentry_t* dentry
+    Return Value: 0 on success, -1 on failure
+    Function: read the dentry by name
+    Side effect: none
+*/
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
@@ -34,7 +47,13 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     }
     return -1;      /* return -1 on failure */
 }
-
+/*
+    int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry);
+    Inputs: uint32_t index, dentry_t* dentry
+    Return Value: 0 on success, -1 on failure
+    Function: read the dentry by index
+    Side effect: none
+*/
 int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry){
     if(index >= boot_block_ptr->dir_cnt){
         return -1;
@@ -42,7 +61,13 @@ int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry){
     *dentry = boot_block_ptr->direntries[index];
     return 0;      /* return -1 on failure */
 }
-
+/*
+    int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length);
+    Inputs: uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
+    Return Value: 0 on success, -1 on failure
+    Function: read the data
+    Side effect: none
+*/
 int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){
     uint32_t curr_data_block;
     uint32_t block_offset;
@@ -51,6 +76,9 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     inode_t* index_node; 
 
     index_node  = (inode_t*) file_base[(inode + 1) * BLOCK_SIZE];
+    /*
+    calculate the current data block, block offset, length remain and buffer offset
+    */
     curr_data_block = offset / BLOCK_SIZE;
     block_offset = offset - curr_data_block * BLOCK_SIZE;
     length_remain = length;
@@ -67,15 +95,22 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     }
     while(length_remain >= BLOCK_SIZE){
         memcpy(buf+buf_offset, file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset]
-            , BLOCK_SIZE - block_offset);
-        length_remain -= BLOCK_SIZE;
+            , BLOCK_SIZE - block_offset); //copy the data
+        length_remain -= BLOCK_SIZE; //update the length remain
         buf_offset += (BLOCK_SIZE-block_offset);
         curr_data_block++;
         block_offset = 0;
-        if(curr_data_block>=index_node->data_block_num){
+        /*
+        test if the data block is larger than 1023
+        */
+        if(curr_data_block>=1023){
             return 0;
         }
     }
-    memcpy(buf+buf_offset,file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset],length_remain);
+    /*
+    copy the remaining data
+    */
+    if (curr_data_block<1023)
+        memcpy(buf+buf_offset,file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset],length_remain);
     return length;
 }
