@@ -1,0 +1,19 @@
+#ifndef _TERMINAL_H
+#define _TERMINAL_H
+#include "lib.h"
+#define COLS    80
+#define ROWS    25
+
+
+typedef struct termin_t {
+	unsigned char terminal_buffer[128];  //define the buffer of 128 bytes according to the requirement
+	uint32_t buffer_iterator;
+} termin_t;
+
+extern uint32_t terminal_clear();
+extern uint32_t terminal_read(unsigned char input);
+extern void terminal_write();
+extern uint32_t terminal_display(unsigned char input);
+extern uint32_t terminal_delete();
+
+#endif 
