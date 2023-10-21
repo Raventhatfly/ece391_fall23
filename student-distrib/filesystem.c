@@ -59,11 +59,17 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     if(inode >= inode_cnt){
         return -1;
     }
+    /*
+    test if the offset is larger than the length of the file
+    */
+    if (index_node->length < offset){
+        return 0;
+    }
     while(length_remain >= BLOCK_SIZE){
         memcpy(buf+buf_offset, file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset]
             , BLOCK_SIZE - block_offset);
         length_remain -= BLOCK_SIZE;
-        buf_offset += BLOCK_SIZE;
+        buf_offset += (BLOCK_SIZE-block_offset);
         curr_data_block++;
         block_offset = 0;
         if(curr_data_block>=index_node->data_block_num){
