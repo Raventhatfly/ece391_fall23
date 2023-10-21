@@ -1,8 +1,8 @@
 #include "filesystem.h"
 
-int* file_base;
-int* inode_addr;
-int* data_addr;
+uint8_t* file_base;
+uint8_t* inode_addr;
+uint8_t* data_addr;
 boot_block_t* boot_block_ptr;
 int dir_cnt;
 int inode_cnt;
