@@ -15,7 +15,7 @@
 
 #define RUN_TESTS
 
-extern uint8_t* filesys_base;
+extern int* filesys_base;
 
 /* Macros. */
 /* Check if the bit BIT in FLAGS is set. */
