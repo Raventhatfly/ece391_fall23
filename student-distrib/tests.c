@@ -8,7 +8,7 @@
 #define FAIL 0
 
 extern void rtc_init();
-
+extern int* filesys_base;
 /* format these macros as you see fit */
 #define TEST_HEADER 	\
 	printf("[TEST %s] Running %s at %s:%d\n", __FUNCTION__, __FUNCTION__, __FILE__, __LINE__)
@@ -146,4 +146,6 @@ void launch_tests(){
 	
 
 
+	int num=0,i=0;
+	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, filesys_base);//((inode_t*)filesys_base[ (1+dentry.inode_num)*4096])->length);
 }
