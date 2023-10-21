@@ -1,10 +1,13 @@
 #include "filesystem.h"
 
 int* file_base;
+int* inode_addr;
+int* data_addr;
 boot_block_t* boot_block_ptr;
 int dir_cnt;
 int inode_cnt;
 int data_cnt;
+
 
 void filesystem_init(int* base_ptr){
     file_base = base_ptr;
@@ -17,7 +20,7 @@ void filesystem_init(int* base_ptr){
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
-    fname_len = strlen(fname_len);
+    fname_len = strlen(fname);
     if(fname != NULL && dentry != NULL){    
         for(i = 0; i < 63; i++){            /* 63 files, including dir '.' */
             file_name_len = strlen(boot_block_ptr->direntries[i].file_name);
@@ -33,12 +36,13 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
 }
 
 int32_t read_dentry_by_index (uint32_t index, dentry_t* dentry){
-    if(dentry == NULL || index > 63){
+    if(index >= boot_block_ptr->dir_cnt){
         return -1;
     }
     *dentry = boot_block_ptr->direntries[index];
     return 0;      /* return -1 on failure */
 }
+
 int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){
     uint32_t curr_data_block;
     uint32_t block_offset;
@@ -52,6 +56,9 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     length_remain = length;
     buf_offset = 0;
 
+    if(inode >= inode_cnt){
+        return -1;
+    }
     while(length_remain >= BLOCK_SIZE){
         memcpy(buf+buf_offset, file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset]
             , BLOCK_SIZE - block_offset);
