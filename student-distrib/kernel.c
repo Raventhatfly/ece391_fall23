@@ -15,7 +15,7 @@
 
 #define RUN_TESTS
 
-extern int* filesys_base;
+int* filesys_base;
 
 /* Macros. */
 /* Check if the bit BIT in FLAGS is set. */
