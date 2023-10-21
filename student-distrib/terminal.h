@@ -1,8 +1,8 @@
 #ifndef _TERMINAL_H
 #define _TERMINAL_H
 #include "lib.h"
-#define COLS    80
-#define ROWS    25
+#define COLS    80  /* Number of columns in terminal */
+#define ROWS    25  /* Number of rows in terminal */
 
 
 typedef struct termin_t {
