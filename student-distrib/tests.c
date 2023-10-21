@@ -1,6 +1,7 @@
 #include "tests.h"
 #include "x86_desc.h"
 #include "lib.h"
+#include "filesystem.h"
 
 #define PASS 1
 #define FAIL 0
@@ -122,13 +123,20 @@ int page_dereference_test(){
 /* Test suite entry point */
 void launch_tests(){
 	/* Checkpoint 1 tests */
-	TEST_OUTPUT("idt_test", idt_test());
+	// TEST_OUTPUT("idt_test", idt_test());
 	// TEST_OUTPUT("div_test",div_test());
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
 	// rtc_init();
 	// launch your tests here
-	
-	
+
+	/* Checkpoint 2 tests */
+	dentry_t dentry;
+	char* str = "sigtest";
+	read_dentry_by_name(str,&dentry);
+	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+
+	// read_dentry_by_index(1,&dentry);
+	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 }
