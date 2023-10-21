@@ -21,8 +21,8 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
     fname_len = strlen(fname);
-    if(fname != NULL && dentry != NULL){    
-        for(i = 0; i < 63; i++){            /* 63 files, including dir '.' */
+    if(fname != NULL && fname_len <= 32){    
+        for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
             file_name_len = strlen(boot_block_ptr->direntries[i].file_name);
             if(file_name_len != fname_len){
                 continue;
