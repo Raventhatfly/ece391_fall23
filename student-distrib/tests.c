@@ -282,7 +282,7 @@ void launch_tests(){
 	// terminal_nul_test();
 	// read_by_name_test();
 	// read_by_index_test();
-	// read_data_test1();
+	 read_data_test1();
 	// read_data_test2();
 	// read_data_test3();
 
