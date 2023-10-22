@@ -132,19 +132,19 @@ int page_dereference_test(){
     *                   RTC's operation at different frequencies.
     */
 int rtc_driver_test() {
- TEST_HEADER;
- int freq, i;
- for (freq = 2; freq <= 1024; freq <<= 1) {
-  rtc_write(0, &freq, 4);
-  /* the number of 1's printed
-      * is five times the frequency value */
-  for (i=0; i<5*freq; i++) {
-   rtc_read(0, 0, 0);
-   printf("%d", 1);
-  }
-  printf("\n");
- }
- return PASS;
+	TEST_HEADER;
+	int freq, i;
+ 	for (freq = 2; freq <= 1024; freq <<= 1) {
+	rtc_write(0, &freq, 4);
+	/* the number of 1's printed
+     * is five times the frequency value */
+	for (i=0; i<5*freq; i++) {
+		rtc_read(0, 0, 0);
+		printf("%d", 1);
+	}
+	printf("\n");
+	}
+	return PASS;
 }
 
 /* Checkpoint 3 tests */
@@ -160,23 +160,25 @@ void launch_tests(){
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
-	// rtc_init();
+	rtc_init();
 	// launch your tests here
 
 	/* Checkpoint 2 tests */
+	
 	dentry_t dentry;
 	char* str = "sigtest";
-	read_dentry_by_name(str,&dentry);
+	//read_dentry_by_name(str,&dentry);
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
-	read_dentry_by_index(1,&dentry);
+	//read_dentry_by_index(1,&dentry);
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	/* terminal clear */
-	terminal_clear();
+	// terminal_clear();
 	
+	// rtc_driver_test();
 
-	printf("%d\n",filesys_base);
-	printf("%d\n",dentry.inode_num);
-	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	//printf("%d\n",filesys_base);
+	//printf("%d\n",dentry.inode_num);
+	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
 }
