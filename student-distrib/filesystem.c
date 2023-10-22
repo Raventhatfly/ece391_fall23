@@ -38,11 +38,11 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     fname_len = strlen((int8_t*)fname);
     if(fname != NULL && fname_len <= 32){    
         for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
-            file_name_len = strlen(boot_block_ptr->direntries[i].file_name);
+            file_name_len = strlen((int8_t*)(boot_block_ptr->direntries[i].file_name));
             if(file_name_len != fname_len){
                 continue;
             }
-            if(strncmp(boot_block_ptr->direntries[i].file_name, fname, fname_len)==0){
+            if(strncmp((int8_t*)boot_block_ptr->direntries[i].file_name, (int8_t*)fname, fname_len)==0){
                 return read_dentry_by_index(i, dentry);
             }
         }
