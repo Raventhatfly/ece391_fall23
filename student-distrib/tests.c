@@ -126,8 +126,7 @@ int page_dereference_test(){
     *    INPUT: None.
     *    OUTPUT: Returns PASS if the function operates without crashing, otherwise returns FAIL 
     *    SIDE EFFECTS: 
-    *                 - Prints a series of 1's to the console, with the number of 1's printed
-    *                   at each frequency being five times the frequency value.
+    *                 - Prints a series of 1's to the console, with the speed increment each line
     *                 - The print output provides a rough visual representation of the 
     *                   RTC's operation at different frequencies.
     */
@@ -138,7 +137,8 @@ int rtc_driver_test() {
 	rtc_write(0, &freq, 4);
 	/* the number of 1's printed
      * is five times the frequency value */
-	for (i=0; i<5*freq; i++) {
+	/* speed increment each line */
+	for (i=0; i<79; i++) {
 		rtc_read(0, 0, 0);
 		printf("%d", 1);
 	}
@@ -160,7 +160,7 @@ void launch_tests(){
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
-	rtc_init();
+	// rtc_init();
 	// launch your tests here
 
 	/* Checkpoint 2 tests */
@@ -174,9 +174,9 @@ void launch_tests(){
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	/* terminal clear */
-	// terminal_clear();
+	terminal_clear();
 	
-	rtc_driver_test();
+	// rtc_driver_test();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);

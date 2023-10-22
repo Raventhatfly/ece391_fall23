@@ -25,7 +25,10 @@ typedef struct inode{
     uint32_t length;
     uint32_t data_block_num[1023];
 }inode_t;
-
+typedef struct data_block
+{
+    uint8_t data[BLOCK_SIZE];
+}data_block_t;
 
 void filesystem_init(int* base_ptr);
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry);

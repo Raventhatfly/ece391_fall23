@@ -79,7 +79,7 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     uint32_t buf_offset;
     inode_t* index_node; 
 
-    index_node  = (inode_t*) file_base[(inode + 1) * BLOCK_SIZE];
+    index_node  = (((inode_t*)((boot_block_t*)file_base+1))+inode);
     /* calculate the current data block, block offset, length remain and buffer offset */
     curr_data_block = offset / BLOCK_SIZE;
     block_offset = offset - curr_data_block * BLOCK_SIZE;
@@ -93,10 +93,11 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     if (index_node->length < offset){
         return 0;
     }
+    data_block_t* data_block_ptr = (data_block_t*)(((inode_t*)((boot_block_t*)file_base+1))+inode_cnt);
     while(length_remain >= BLOCK_SIZE){
-        memcpy(buf+buf_offset, file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset]
+        memcpy(buf+buf_offset, (void*)(&data_block_ptr[index_node->data_block_num[curr_data_block]]) + block_offset
             , BLOCK_SIZE - block_offset);       /* copy data into the buffer */
-        length_remain -= BLOCK_SIZE;            /* update the length remain */
+        length_remain -= BLOCK_SIZE-block_offset;            /* update the length remain */
         buf_offset += (BLOCK_SIZE-block_offset);
         curr_data_block++;
         block_offset = 0;
@@ -107,6 +108,6 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     }
     /* copy the remaining data */
     if (curr_data_block<1023)
-        memcpy(buf+buf_offset,file_base[(index_node->data_block_num[curr_data_block] + 1 + inode_cnt) * BLOCK_SIZE + block_offset],length_remain);
+        memcpy(buf+buf_offset,(void*)(&data_block_ptr[index_node->data_block_num[curr_data_block]]),length_remain);
     return length;
 }
