@@ -177,10 +177,10 @@ void launch_tests(){
 	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
-	uint8_t buffer[187];
-    int i = 0;
-    read_data(dentry.inode_num,0,buffer,187);
-    for(i = 0; i< 187; i++){
+	uint8_t buffer[1870];
+    int i = 0,num;
+    num=read_data(dentry.inode_num,0,buffer,1870);
+    for(i = 0; i< num; i++){
         putc(buffer[i]);
     }
 	
