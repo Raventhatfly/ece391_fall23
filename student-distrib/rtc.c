@@ -38,7 +38,7 @@ void rtc_init(void) {
     outb(REG_A,REG_SELECT);
     
     /* Set the interrupt rate while preserving the upper 4 bits of Register A */
-    outb((prev & 0xF0) | 6, REG_DATA);
+    outb((prev & 0xF0) | 6, REG_DATA);      /* set base freq to 1024 */
 
     int i;
     for (i=0; i<10; i++) {int_flag[i]=0;}
@@ -72,6 +72,7 @@ void rtc_handler(void){
     int i;
     for (i=0; i<10; i++) {
         /* if any rate can divide base rate */
+        /* 2 << i same as 1 << (i+1) */
         if ( int_counter % (BASE_RATE / (2 << i)) == 0 ) {
             int_flag[i]=1;
         }
@@ -89,7 +90,7 @@ void rtc_handler(void){
     *    SIDE EFFECTS: Resets the RTC frequency to the default value.
 */
 int rtc_open(const uint8_t* filename) {
-    /* default rate = 2 */
+    /* default freq = 2 */
     rtc_rate_off=0;
     int_flag[rtc_rate_off]=0;
 	return 0;
@@ -135,7 +136,7 @@ int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
     uint32_t freq = *(uint32_t*) buf;
     if (freq<=0 || freq>BASE_RATE) {return -1;}     /* check if between 1~1024 */
     if ((freq & (freq-1)) != 0) {return -1;}        /* check if power of 2 */
-    rtc_rate_off=log_2(freq)-1;
+    rtc_rate_off=log_2(freq)-1;         /* calculae offset */
     return 0;
 }
 
