@@ -79,6 +79,7 @@ uint32_t terminal_read(unsigned char input){
 */
 void terminal_write(){
     printf("%c", my_terminal.terminal_buffer[my_terminal.buffer_iterator]); /*print the current char*/
+    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
     my_terminal.buffer_iterator++;
 }
 
@@ -152,7 +153,7 @@ uint32_t terminal_clear(){
     my_terminal.cursor_x_coord=i;
     my_terminal.cursor_y_coord=i;
     i = buffer_clear(); //maybe with some problems
-    enable_cursor(0, 14); /* maybe some problems */
+    /*enable_cursor(0, 14);  maybe some problems */
     draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
     return 0;
 }
@@ -213,11 +214,11 @@ uint32_t terminal_delete(){
     }
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2)) = ' '; /*initialize the char as blank and ATTRIB*/
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = 0x7;
-    my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ' '; /*initialize the buffer as blank*/
+    my_terminal.cursor_x_coord=screen_x;
+    my_terminal.cursor_y_coord=screen_y;
+    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
+    /*my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ' '; initialize the buffer as blank*/
     my_terminal.buffer_iterator--;
     return 0;
 }
-
-
-
 
