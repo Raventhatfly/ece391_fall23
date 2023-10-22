@@ -117,18 +117,7 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
             , length_remain);    
     return length;
 }
-<<<<<<< HEAD
 int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
-=======
-/*
-    int32_t directory_read(uint32_t index,uint8_t* buf);
-    Inputs: uint32_t index,uint8_t* buf
-    Return Value: 0 on success, -1 on failure
-    Function: read the directory name
-    Side effect: none
-*/
-int32_t directory_read(uint32_t index,uint8_t* buf)
->>>>>>> c0aa6ac332784dc507f9c501834b42c559e262cc
 {
     uint8_t zeros[32] = {'\0'};
     memcpy(buf, zeros, 32);

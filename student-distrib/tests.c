@@ -326,7 +326,7 @@ void launch_tests(){
 	// read_data_test2();
 	// read_data_test3();
 	// TEST_OUTPUT("show_file_on_terminal_test",show_file_on_terminal_test());
-	// TEST_OUTPUT("directory_read_test",directory_read_test());
+	// TEST_OUTPUT("directory_read_test",directory_read_test());					/* Check Point 3.2 # TEST 1 */
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
 	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
