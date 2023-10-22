@@ -272,6 +272,28 @@ int show_file_on_terminal_test(){
     }
 	return PASS;
 }
+int directory_read_test(){
+	TEST_HEADER;
+	int i;
+	int j;
+	int length;
+	uint8_t buffer[33];
+	dentry_t dentry;
+	buffer[33] = '\0';
+	for(i=0;i<63;i++){
+		if((length = directory_read(i,buffer,&dentry)) == -1){
+			break;
+		}
+		printf("file_name: ");
+		for(j = 0; j< 32 - length; j++){
+			printf(" ");
+		}
+		printf((uint8_t*) buffer);
+		printf(", file_type: %d, file_size: %d\n", dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	}
+	return PASS;
+	
+}
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -303,7 +325,8 @@ void launch_tests(){
 	// read_data_test1();
 	// read_data_test2();
 	// read_data_test3();
-	TEST_OUTPUT("show_file_on_terminal_test",show_file_on_terminal_test());
+	// TEST_OUTPUT("show_file_on_terminal_test",show_file_on_terminal_test());
+	// TEST_OUTPUT("directory_read_test",directory_read_test());
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
 	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);

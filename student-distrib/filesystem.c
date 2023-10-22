@@ -117,12 +117,16 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
             , length_remain);    
     return length;
 }
-int32_t directory_read(uint32_t index,uint8_t* buf)
+int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
 {
+    uint8_t zeros[32] = {'\0'};
+    memcpy(buf, zeros, 32);
+    int length;
     if(index>=boot_block_ptr->dir_cnt) return -1;
-    memcpy(buf,boot_block_ptr->direntries[index].file_name,32);
-    int32_t length=strlen((int8_t*)boot_block_ptr->direntries[index].file_name);
+    read_dentry_by_index(index, dentry);
+    length = strlen(dentry->file_name);
     if (length>32) length=32;
+    memcpy(buf, dentry->file_name, length);
     return length;
 }
 int32_t file_open(const uint8_t *fname)
