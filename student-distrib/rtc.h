@@ -20,7 +20,7 @@ extern int rtc_open(const uint8_t* filename);
 extern int rtc_close(int32_t fd);
 extern int rtc_read(int32_t fd, void* buf, int32_t nbytes);
 extern int rtc_write(int32_t fd, const void* buf, int32_t nbytes);
-extern void rtc_handler(void)
+extern void rtc_handler(void);
 
 #endif /* _I8259_H */
 
