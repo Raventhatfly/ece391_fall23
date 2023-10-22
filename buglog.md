@@ -38,3 +38,20 @@ the assembly functions.
 **Description**: Synchonization fails some times. <br>
 **Difficulty**: 20 minutes<br>
 **Fixing Method**: Change the place of STI.
+
+### Checkpoint 2
+
+**Author**: Luo Hanjun<br>
+**Description**: Can not delete when we input more than 128 chars. We can only delete to the char that the overflow starts. <br>
+**Difficulty**: 30 minutes<br>
+**Fixing Method**: Delete a wrongly-added sentence about end the delete when iterator=0 and add a mod-128 for the overflow. <br>
+
+**Author**: Liu Xuecheng<br>
+**Description**: Can not input more than 128 chars in one time. <br>
+**Difficulty**: 10 minutes<br>
+**Fixing Method**: Add a mod-128 for the overflow. When the overflow starts, the iterator will come back to 0. <br>
+
+**Author**: Liu Xuecheng<br>
+**Description**: When we delete characters and start typing again, the cursor is not displayed until the cursor reaches the position of the first deleted character. <br>
+**Difficulty**: 25 minutes<br>
+**Fixing Method**: Add a sentence that give the value of ATTRIB to the last screen place in the delete. <br>
