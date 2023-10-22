@@ -132,19 +132,19 @@ int page_dereference_test(){
     *                   RTC's operation at different frequencies.
     */
 int rtc_driver_test() {
- TEST_HEADER;
- int freq, i;
- for (freq = 2; freq <= 1024; freq <<= 1) {
-  rtc_write(0, &freq, 4);
-  /* the number of 1's printed
-      * is five times the frequency value */
-  for (i=0; i<5*freq; i++) {
-   rtc_read(0, 0, 0);
-   printf("%d", 1);
-  }
-  printf("\n");
- }
- return PASS;
+	TEST_HEADER;
+	int freq, i;
+ 	for (freq = 2; freq <= 1024; freq <<= 1) {
+	rtc_write(0, &freq, 4);
+	/* the number of 1's printed
+     * is five times the frequency value */
+	for (i=0; i<5*freq; i++) {
+		rtc_read(0, 0, 0);
+		printf("%d", 1);
+	}
+	printf("\n");
+	}
+	return PASS;
 }
 
 /* Checkpoint 3 tests */
@@ -164,6 +164,8 @@ void launch_tests(){
 	// launch your tests here
 
 	/* Checkpoint 2 tests */
+	TEST_OUTPUT("rtc_driver_test", rtc_driver_test());
+	
 	dentry_t dentry;
 	char* str = "sigtest";
 	read_dentry_by_name(str,&dentry);
