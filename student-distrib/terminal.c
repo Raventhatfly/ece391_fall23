@@ -19,7 +19,7 @@ termin_t my_terminal;
     *   SIDE EFFECTS: clear the buffer
 */
 uint32_t buffer_clear(){
-    for (i = 0; i < 512; i++) my_terminal.terminal_buffer[i] = ' '; /*this sentence may cause bugs*/
+    for (i = 0; i < 128; i++) my_terminal.terminal_buffer[i] = ' '; /*this sentence may cause bugs*/
     my_terminal.buffer_iterator = 0;
     return 0;
 }
@@ -82,6 +82,58 @@ void terminal_write(){
     my_terminal.buffer_iterator++;
 }
 
+/* The following cursor functions are developing from https://wiki.osdev.org/Text_Mode_Cursor */
+
+/*
+    * vga_enable_cursor
+    *   DESCRIPTION: enable the cursor
+    *   INPUTS: cursor_start -- the start position of the cursor
+    *           cursor_end -- the end position of the cursor
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: enable the cursor
+*/
+/*maybe should be uint8*/
+void enable_cursor(uint32_t cursor_start, uint32_t cursor_end) {
+	outb(0x0A, 0x3D4);					
+	outb((inb(0x3D5) & 0xC0) | cursor_start, 0x3D5);	
+	outb(0x0B, 0x3D4);						
+	outb((inb(0x3D5) & 0xE0) | cursor_end, 0x3D5);		
+}
+
+
+/*
+    * vga_disable_cursor
+    *   DESCRIPTION: disable the cursor
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: disable the cursor
+*/
+void disable_cursor() {
+	outb(0x0A, 0x3D4);						
+	outb(0x20, 0x3D5);						
+}
+
+
+/*
+    * vga_update_cursor
+    *   DESCRIPTION: update the cursor
+    *   INPUTS: x -- the x position of the cursor
+    *           y -- the y position of the cursor
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: update the cursor
+*/
+void draw_cursor(uint32_t x, uint32_t y) {	
+    /*uint16_t pos = y * COLS + x;*/	
+	outb(0x0F, 0x3D4);						
+	outb((uint8_t) ( (COLS * y + x) & 0xFF), 0x3D5);
+	outb(0x0E, 0x3D4);						
+	outb((uint8_t) (((COLS * y + x) >> 8) & 0xFF), 0x3D5);
+}
+
+
 /* the following functions are functional functions */
 /*
     * terminal_clear
@@ -100,6 +152,8 @@ uint32_t terminal_clear(){
     my_terminal.cursor_x_coord=i;
     my_terminal.cursor_y_coord=i;
     i = buffer_clear(); //maybe with some problems
+    enable_cursor(0, 14); /* maybe some problems */
+    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
     return 0;
 }
 
@@ -126,7 +180,7 @@ void terminal_init(){
 */
 uint32_t terminal_display(unsigned char input){
     int flag;
-    if (my_terminal.buffer_iterator >= 512) return -1; /*if the buffer is full, return -1 to inform the failure*/
+    if (my_terminal.buffer_iterator >= 128) return -1; /*if the buffer is full, return -1 to inform the failure*/
     flag = terminal_read(input);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/
     terminal_write();                               /*if the input is not enter, write the input to screen*/

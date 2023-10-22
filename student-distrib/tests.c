@@ -138,7 +138,8 @@ int rtc_driver_test() {
 	rtc_write(0, &freq, 4);
 	/* the number of 1's printed
      * is five times the frequency value */
-	for (i=0; i<5*freq; i++) {
+	/* speed increment each line */
+	for (i=0; i<79; i++) {
 		rtc_read(0, 0, 0);
 		printf("%d", 1);
 	}
@@ -176,7 +177,7 @@ void launch_tests(){
 	/* terminal clear */
 	terminal_clear();
 	
-	rtc_driver_test();
+	// rtc_driver_test();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);

@@ -38,7 +38,7 @@ void rtc_init(void) {
     outb(REG_A,REG_SELECT);
     
     /* Set the interrupt rate while preserving the upper 4 bits of Register A */
-    outb((prev & 0xF0) | BASE_RATE, REG_DATA);
+    outb((prev & 0xF0) | 6, REG_DATA);
 
     int i;
     for (i=0; i<10; i++) {int_flag[i]=0;}
