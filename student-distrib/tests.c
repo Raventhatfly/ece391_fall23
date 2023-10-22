@@ -203,7 +203,33 @@ int terminal_nul_test(){
 	terminal_display('n');
 	return PASS;
 }
-
+int read_by_name_test()
+{
+	dentry_t dentry;
+	char* str = "sigtest";
+	read_dentry_by_name((uint8_t*)str,&dentry);
+	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	return PASS;
+}
+int read_by_index_test()
+{
+	dentry_t dentry;
+	read_dentry_by_index(10,&dentry);
+	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	return PASS;
+}
+int read_data_test()
+{
+	dentry_t dentry;
+	read_dentry_by_index(10,&dentry);
+	uint8_t buffer[6000];
+    int i = 0,num;
+    num=read_data(dentry.inode_num,0,buffer,6000);
+    for(i = 0; i< num; i++){
+        putc(buffer[i]);
+    }
+	return PASS;
+}
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
@@ -225,23 +251,14 @@ void launch_tests(){
 	/* terminal clear */
 	terminal_clear();
 
-	dentry_t dentry;
-	char* str = "sigtest";
-	read_dentry_by_name(str,&dentry);
-	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
-
-	read_dentry_by_index(11,&dentry);
-	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
-
-	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
-	uint8_t buffer[6000];
-    int i = 0,num;
-    num=read_data(dentry.inode_num,0,buffer,6000);
-    for(i = 0; i< num; i++){
-        putc(buffer[i]);
-    }
 	
 	// rtc_driver_test();
+	// terminal_keyboard_test();
+	// terminal_clear_test();
+	// terminal_nul_test();
+	// read_by_name_test();
+	// read_by_index_test();
+	// read_data_test();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
