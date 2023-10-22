@@ -108,6 +108,6 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     }
     /* copy the remaining data */
     if (curr_data_block<1023)
-        memcpy(buf+buf_offset,(void*)(&data_block_ptr[index_node->data_block_num[curr_data_block]]),length_remain);
+        memcpy(buf+buf_offset,(void*)(&data_block_ptr[index_node->data_block_num[curr_data_block]]+block_offset),length_remain);
     return length;
 }
