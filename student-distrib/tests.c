@@ -147,6 +147,63 @@ int rtc_driver_test() {
 	return PASS;
 }
 
+/*
+ * terminal_keyboard_test
+ *   DESCRIPTION: test the keyboard input and the overflow by 130 inputs
+ *  INPUTS: none
+ * OUTPUTS: PASS/FAIL
+ * RETURN VALUE: none
+ * SIDE EFFECTS: none
+*/
+int terminal_keyboard_test(){
+	TEST_HEADER;
+	uint32_t buffer_test[40]={
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+		'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+		'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+	};
+	int i,j;
+	terminal_init();
+	for(i=0;i<130;i++){   /* 130 > 128, so we can test overflow*/
+		j = i % 40;
+		terminal_display(buffer_test[j]);
+	}
+	return PASS;
+}
+
+/*
+ * terminal_clear_test
+ *   DESCRIPTION: test the terminal clear
+ *  INPUTS: none
+ * OUTPUTS: PASS/FAIL
+ * RETURN VALUE: none
+ * SIDE EFFECTS: none
+*/
+int terminal_clear_test(){
+	TEST_HEADER;
+	terminal_init();
+	return PASS;
+}
+
+/*
+ * terminal_nul_test
+ *   DESCRIPTION: test the terminal of input nul
+ *  INPUTS: none
+ * OUTPUTS: PASS/FAIL
+ * RETURN VALUE: none
+ * SIDE EFFECTS: none
+*/
+int terminal_nul_test(){
+	TEST_HEADER;
+	terminal_init();
+	terminal_display(0);
+	terminal_display('w');  /* if the input is nul, we win if we still can input*/
+	terminal_display('i');
+	terminal_display('n');
+	return PASS;
+}
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
