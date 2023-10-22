@@ -1,8 +1,8 @@
 #include "filesystem.h"
 
-uint8_t* file_base;
-uint8_t* inode_addr;
-uint8_t* data_addr;
+int* file_base;
+int* inode_addr;
+int* data_addr;
 boot_block_t* boot_block_ptr;
 int dir_cnt;
 int inode_cnt;
@@ -35,7 +35,7 @@ void filesystem_init(int* base_ptr){
 int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
-    fname_len = strlen(fname);
+    fname_len = strlen((int8_t*)fname);
     if(fname != NULL && fname_len <= 32){    
         for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
             file_name_len = strlen(boot_block_ptr->direntries[i].file_name);
@@ -98,8 +98,10 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
     length_remain = length;
     data_block_t* data_block_ptr = (data_block_t*)(((inode_t*)((boot_block_t*)file_base+1))+inode_cnt);
     while(length_remain >= BLOCK_SIZE){
-        memcpy(buf+buf_offset, (void*)(&(data_block_ptr[index_node->data_block_num[curr_data_block]])) + block_offset
-            , BLOCK_SIZE - block_offset);       /* copy data into the buffer */
+        //memcpy(buf+buf_offset, (void*)(&(data_block_ptr[index_node->data_block_num[curr_data_block]])) + block_offset
+          //  , BLOCK_SIZE - block_offset);       /* copy data into the buffer */
+         memcpy(buf+buf_offset,((void*)(data_block_ptr+index_node->data_block_num[curr_data_block]))+block_offset
+            , BLOCK_SIZE - block_offset);  
         length_remain -= BLOCK_SIZE-block_offset;            /* update the length remain */
         buf_offset += (BLOCK_SIZE-block_offset);
         curr_data_block++;
