@@ -76,7 +76,7 @@ void rtc_handler(void){
             int_flag[i]=1;
         }
     }
-    test_interrupts();
+    // test_interrupts();
     send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
     sti();                          /* re-enable interrupt */
 }
