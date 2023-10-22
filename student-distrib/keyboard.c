@@ -146,7 +146,7 @@ void irq1_handler(void)
                 terminal_delete();
                 break;
             } else {
-                terminal_write(ascii);
+                terminal_display(ascii);
                 break;
             }
             //putc(ascii);
