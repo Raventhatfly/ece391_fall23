@@ -126,8 +126,7 @@ int page_dereference_test(){
     *    INPUT: None.
     *    OUTPUT: Returns PASS if the function operates without crashing, otherwise returns FAIL 
     *    SIDE EFFECTS: 
-    *                 - Prints a series of 1's to the console, with the number of 1's printed
-    *                   at each frequency being five times the frequency value.
+    *                 - Prints a series of 1's to the console, with the speed increment each line
     *                 - The print output provides a rough visual representation of the 
     *                   RTC's operation at different frequencies.
     */
