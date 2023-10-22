@@ -160,7 +160,7 @@ void launch_tests(){
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
-	rtc_init();
+	// rtc_init();
 	// launch your tests here
 
 	/* Checkpoint 2 tests */
@@ -174,9 +174,9 @@ void launch_tests(){
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	/* terminal clear */
-	// terminal_clear();
+	terminal_clear();
 	
-	rtc_driver_test();
+	// rtc_driver_test();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
