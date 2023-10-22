@@ -182,7 +182,7 @@ void launch_tests(){
 	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	/* terminal clear */
-	terminal_clear();
+	//terminal_clear();
 	
 	// rtc_driver_test();
 
