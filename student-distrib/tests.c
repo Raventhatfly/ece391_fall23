@@ -164,25 +164,25 @@ void launch_tests(){
 	// launch your tests here
 
 	/* Checkpoint 2 tests */
-	
+
+	/* terminal clear */
+	terminal_clear();
+
 	dentry_t dentry;
 	char* str = "sigtest";
 	read_dentry_by_name(str,&dentry);
-	 printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
-	uint8_t buffer[10000];
+	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+
+	read_dentry_by_index(10,&dentry);
+	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
+
+	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	uint8_t buffer[10];
     int i = 0;
-    for(i=0;i<10000; i++){
-        buffer[i] = '1';
-    }
     read_data(10,0,buffer,10);
     for(i = 0; i< 10; i++){
-        printf("%d, ",buffer[i]);
+        putc(buffer[i]);
     }
-	//read_dentry_by_index(1,&dentry);
-	// printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
-
-	/* terminal clear */
-	//terminal_clear();
 	
 	// rtc_driver_test();
 
