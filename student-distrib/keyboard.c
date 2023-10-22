@@ -1,6 +1,7 @@
 #include "keyboard.h"
 #include "lib.h"
 #include "i8259.h"
+#include "terminal.h"
 /*
 table from scancode to ascii
 */
@@ -138,7 +139,12 @@ void irq1_handler(void)
                 ascii = scancode_caps[key];
             else
                 ascii = scancode[key];
-            putc(ascii);
+            if (ctrl && (ascii=='l' || ascii=='L'))
+            {
+                terminal_clear();
+                break; 
+            }
+            //putc(ascii);
             break;
         }
     }
@@ -146,7 +152,6 @@ void irq1_handler(void)
     /*
     key>=SCANCODE_SIZE means that the key is just a release
     */
-    
     /*send eoi*/
     send_eoi(KEYBOARD_IRQ);
     sti();
