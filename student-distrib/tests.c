@@ -218,10 +218,34 @@ int read_by_index_test()
 	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
 	return PASS;
 }
-int read_data_test()
+int read_data_test1()
 {
 	dentry_t dentry;
 	read_dentry_by_index(10,&dentry);
+	uint8_t buffer[6000];
+    int i = 0,num;
+    num=read_data(dentry.inode_num,0,buffer,6000);
+    for(i = 0; i< num; i++){
+        putc(buffer[i]);
+    }
+	return PASS;
+}
+int read_data_test2()
+{
+	dentry_t dentry;
+	read_dentry_by_index(11,&dentry);
+	uint8_t buffer[6000];
+    int i = 0,num;
+    num=read_data(dentry.inode_num,0,buffer,6000);
+    for(i = 0; i< num; i++){
+        putc(buffer[i]);
+    }
+	return PASS;
+}
+int read_data_test3()
+{
+	dentry_t dentry;
+	read_dentry_by_index(12,&dentry);
 	uint8_t buffer[6000];
     int i = 0,num;
     num=read_data(dentry.inode_num,0,buffer,6000);
@@ -258,7 +282,9 @@ void launch_tests(){
 	// terminal_nul_test();
 	// read_by_name_test();
 	// read_by_index_test();
-	// read_data_test();
+	// read_data_test1();
+	// read_data_test2();
+	// read_data_test3();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
