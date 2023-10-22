@@ -67,7 +67,7 @@ void entry(unsigned long magic, unsigned long addr) {
             printf("Module %d ends at address: 0x%#x\n", mod_count, (unsigned int)mod->mod_end);
             
             char* file_img = "/filesys_img";
-            if(strncmp(mod->string,file_img,12) == 0){      /* Check if the module is the filesystem_img, 12 is the length of the string */
+            if(strncmp((int8_t*)mod->string,file_img,12) == 0){      /* Check if the module is the filesystem_img, 12 is the length of the string */
                 // printf("Loaded module is %s\n",mod->string);
                 filesys_base = (int*) mod->mod_start;
             }
