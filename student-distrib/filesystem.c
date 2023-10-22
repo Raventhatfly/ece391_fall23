@@ -38,11 +38,11 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     fname_len = strlen((int8_t*)fname);
     if(fname != NULL && fname_len <= 32){    
         for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
-            file_name_len = strlen(boot_block_ptr->direntries[i].file_name);
+            file_name_len = strlen((int8_t*)(boot_block_ptr->direntries[i].file_name));
             if(file_name_len != fname_len){
                 continue;
             }
-            if(strncmp(boot_block_ptr->direntries[i].file_name, fname, fname_len)==0){
+            if(strncmp((int8_t*)boot_block_ptr->direntries[i].file_name, (int8_t*)fname, fname_len)==0){
                 return read_dentry_by_index(i, dentry);
             }
         }
@@ -117,7 +117,18 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
             , length_remain);    
     return length;
 }
+<<<<<<< HEAD
 int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
+=======
+/*
+    int32_t directory_read(uint32_t index,uint8_t* buf);
+    Inputs: uint32_t index,uint8_t* buf
+    Return Value: 0 on success, -1 on failure
+    Function: read the directory name
+    Side effect: none
+*/
+int32_t directory_read(uint32_t index,uint8_t* buf)
+>>>>>>> c0aa6ac332784dc507f9c501834b42c559e262cc
 {
     uint8_t zeros[32] = {'\0'};
     memcpy(buf, zeros, 32);
@@ -129,35 +140,91 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
     memcpy(buf, dentry->file_name, length);
     return length;
 }
+/*
+    int32_t file_open(const uint8_t *fname);
+    Inputs: const uint8_t *fname
+    Return Value: 0 on success, -1 on failure
+    Function: open the file
+    Side effect: none
+*/
 int32_t file_open(const uint8_t *fname)
 {
     dentry_t dentry;
     return read_dentry_by_name(fname,&dentry)==-1;
 }
+/*
+    int32_t file_read(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: read the file
+    Side effect: none
+*/
 int32_t file_read(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t file_write(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: write the file
+    Side effect: none
+*/
 int32_t file_write(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t file_close(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: close the file
+    Side effect: none
+*/
 int32_t file_close(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t dir_open(const uint8_t *fname);
+    Inputs: const uint8_t *fname
+    Return Value: 0 on success, -1 on failure
+    Function: open the directory
+    Side effect: none
+*/
 int32_t dir_open(const uint8_t *fname)
 {
     return 0;
 }
+/*
+    int32_t dir_read(int32_t fd,uint8_t* buf);
+    Inputs: int32_t fd,uint8_t* buf
+    Return Value: 0 on success, -1 on failure
+    Function: read the directory
+    Side effect: none
+*/
 int32_t dir_read(int32_t fd,uint8_t* buf)
 {
     return 0;
 }
+/*
+    int32_t dir_write(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: write the directory
+    Side effect: none
+*/
 int32_t dir_write(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t dir_close(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: close the directory
+    Side effect: none
+*/
 int32_t dir_close(int32_t fd)
 {
     return 0;

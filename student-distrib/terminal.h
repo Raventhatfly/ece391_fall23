@@ -3,10 +3,12 @@
 #include "lib.h"
 #define COLS    80  /* Number of columns in terminal */
 #define ROWS    25  /* Number of rows in terminal */
-
+#define ATTRIB  0x7 /* Attribute for terminal */
+#define BUFFER_SIZE   128 /* Video memory address */
+#define ENTER_ASC2	0xA /* Ascii code for enter */
 /* the cursor coordinates is reserved for future use, now they are completely the same as the screen_x and screen_y */
 typedef struct termin {
-	unsigned char terminal_buffer[128];  //define the buffer of 128 bytes according to the requirement
+	unsigned char terminal_buffer[128];  /*define the buffer of 128 bytes according to the requirement*/
 	uint32_t buffer_iterator;
 	uint32_t  cursor_x_coord;          /* x_axis coordinate of cursor */
 	uint32_t  cursor_y_coord;          /* y_axis coordinate of cursor */
