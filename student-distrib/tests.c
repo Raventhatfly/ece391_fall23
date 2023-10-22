@@ -176,7 +176,7 @@ void launch_tests(){
 	/* terminal clear */
 	terminal_clear();
 	
-	rtc_driver_test();
+	// rtc_driver_test();
 
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);

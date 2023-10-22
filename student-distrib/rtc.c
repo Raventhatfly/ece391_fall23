@@ -74,6 +74,7 @@ void rtc_handler(void){
         /* if any rate can divide base rate */
         if ( int_counter % (BASE_RATE / (2 << i)) == 0 ) {
             int_flag[i]=1;
+            printf("1");
         }
     }
     // test_interrupts();
