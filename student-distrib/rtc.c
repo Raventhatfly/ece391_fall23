@@ -70,7 +70,7 @@ void rtc_handler(void){
     int_counter++;
     int i;
     for (i=0; i<10; i++) {
-        if ( int_counter % (BASE_RATE / (2 << i)) ) {
+        if ( int_counter % (BASE_RATE / (2 << i)) == 0 ) {
             int_flag[i]=1;
         }
     }
