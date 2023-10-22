@@ -4,7 +4,7 @@
 #define COLS    80  /* Number of columns in terminal */
 #define ROWS    25  /* Number of rows in terminal */
 
-
+/* the cursor coordinates is reserved for future use, now they are completely the same as the screen_x and screen_y */
 typedef struct termin {
 	unsigned char terminal_buffer[128];  //define the buffer of 128 bytes according to the requirement
 	uint32_t buffer_iterator;
@@ -19,9 +19,9 @@ extern void terminal_write();
 extern uint32_t terminal_display(unsigned char input);
 extern uint32_t terminal_delete();
 extern uint32_t buffer_clear();
-extern void enable_cursor(uint32_t cursor_start, uint32_t cursor_end);
-extern void disable_cursor();
 extern void draw_cursor(uint32_t x, uint32_t y);
+extern uint32_t terminal_open();
+extern uint32_t terminal_close();
 
 #endif 
 

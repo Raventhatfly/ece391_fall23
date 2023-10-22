@@ -8,7 +8,6 @@ extern char* video_mem;  /* can the extern be used to link the variables in lib.
 static int32_t i;
 termin_t my_terminal;
 
-/*maybe the uint32_t * should be uint8*/
 /* the following four function are helper functions */
 /*
     * buffer_clear
@@ -116,6 +115,30 @@ void draw_cursor(uint32_t x, uint32_t y) {
 	outb((uint8_t) (((COLS * y + x) >> 8) & 0xFF), 0x3D5); 
 }
 
+/*the following two are useless functions for utliizing the syntax*/
+/*
+    * terminal_open
+    *   DESCRIPTION: open the terminal, actually do nothing
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: open the terminal
+*/
+uint32_t terminal_open(){
+    return 0;
+}
+
+/*
+    * terminal_close
+    *   DESCRIPTION: close the terminal, actually do nothing
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: close the terminal
+*/
+uint32_t terminal_close(){
+    return 0;
+}
 
 /* the following functions are functional functions */
 /*
