@@ -3,6 +3,7 @@
 #include "lib.h"
 #include "filesystem.h"
 #include "terminal.h"
+#include "rtc.h"
 
 #define PASS 1
 #define FAIL 0
@@ -116,6 +117,36 @@ int page_dereference_test(){
 // add more tests here
 
 /* Checkpoint 2 tests */
+
+/*
+    *  int rtc_driver_test()
+    *    DESCRIPTION: Tests the functionality of the RTC driver by iterating through 
+    *                 a range of frequencies and checking the behavior of the rtc_write 
+    *                 and rtc_read functions.
+    *    INPUT: None.
+    *    OUTPUT: Returns PASS if the function operates without crashing, otherwise returns FAIL 
+    *    SIDE EFFECTS: 
+    *                 - Prints a series of 1's to the console, with the number of 1's printed
+    *                   at each frequency being five times the frequency value.
+    *                 - The print output provides a rough visual representation of the 
+    *                   RTC's operation at different frequencies.
+    */
+int rtc_driver_test() {
+ TEST_HEADER;
+ int freq, i;
+ for (freq = 2; freq <= 1024; freq <<= 1) {
+  rtc_write(0, &freq, 4);
+  /* the number of 1's printed
+      * is five times the frequency value */
+  for (i=0; i<5*freq; i++) {
+   rtc_read(0, 0, 0);
+   printf("%d", 1);
+  }
+  printf("\n");
+ }
+ return PASS;
+}
+
 /* Checkpoint 3 tests */
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
