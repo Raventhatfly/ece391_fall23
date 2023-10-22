@@ -94,8 +94,7 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
         return 0;
     }
     if (index_node->length<offset+length)
-        length=index_node->length=offset;
-    printf("%d\n",index_node->length);
+        length=index_node->length-offset;
     length_remain = length;
     data_block_t* data_block_ptr = (data_block_t*)(((inode_t*)((boot_block_t*)file_base+1))+inode_cnt);
     while(length_remain >= BLOCK_SIZE){
