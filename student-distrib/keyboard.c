@@ -145,6 +145,9 @@ void irq1_handler(void)
             } else if (ascii=='\b'){
                 terminal_delete();
                 break;
+            }else if (ascii=='\t'){
+                terminal_display(' ');
+                terminal_display(' ');
             } else {
                 terminal_display(ascii);
                 break;
