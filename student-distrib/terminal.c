@@ -19,7 +19,7 @@ termin_t my_terminal;
     *   SIDE EFFECTS: clear the buffer
 */
 uint32_t buffer_clear(){
-    for (i = 0; i < 128; i++) my_terminal.terminal_buffer[i] = ' '; /*this sentence may cause bugs*/
+    for (i = 0; i < 512; i++) my_terminal.terminal_buffer[i] = ' '; /*this sentence may cause bugs*/
     my_terminal.buffer_iterator = 0;
     return 0;
 }
@@ -126,7 +126,7 @@ void terminal_init(){
 */
 uint32_t terminal_display(unsigned char input){
     int flag;
-    if (my_terminal.buffer_iterator >= 128) return -1; /*if the buffer is full, return -1 to inform the failure*/
+    if (my_terminal.buffer_iterator >= 512) return -1; /*if the buffer is full, return -1 to inform the failure*/
     flag = terminal_read(input);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/
     terminal_write();                               /*if the input is not enter, write the input to screen*/
