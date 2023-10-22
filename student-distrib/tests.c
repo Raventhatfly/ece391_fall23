@@ -288,7 +288,7 @@ int directory_read_test(){
 		for(j = 0; j< 32 - length; j++){
 			printf(" ");
 		}
-		printf((uint8_t*) buffer);
+		printf((int8_t*) buffer);
 		printf(", file_type: %d, file_size: %d\n", dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
 	}
 	return PASS;

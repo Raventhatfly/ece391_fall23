@@ -123,10 +123,10 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
     memcpy(buf, zeros, 32);
     int length;
     if(index>=boot_block_ptr->dir_cnt) return -1;
-    read_dentry_by_index(index, dentry);
-    length = strlen(dentry->file_name);
+    read_dentry_by_index(index, dentry); //get the dentry by index
+    length = strlen((int8_t*)dentry->file_name);
     if (length>32) length=32;
-    memcpy(buf, dentry->file_name, length);
+    memcpy(buf, dentry->file_name, length); //copy the file name to the buffer
     return length;
 }
 /*
@@ -139,7 +139,7 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
 int32_t file_open(const uint8_t *fname)
 {
     dentry_t dentry;
-    return read_dentry_by_name(fname,&dentry)==-1;
+    return read_dentry_by_name(fname,&dentry)==-1; //return -1 on failure
 }
 /*
     int32_t file_read(int32_t fd);
