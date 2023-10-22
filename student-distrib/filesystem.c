@@ -117,6 +117,13 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
             , length_remain);    
     return length;
 }
+/*
+    int32_t directory_read(uint32_t index,uint8_t* buf);
+    Inputs: uint32_t index,uint8_t* buf
+    Return Value: 0 on success, -1 on failure
+    Function: read the directory name
+    Side effect: none
+*/
 int32_t directory_read(uint32_t index,uint8_t* buf)
 {
     if(index>=boot_block_ptr->dir_cnt) return -1;
@@ -125,35 +132,91 @@ int32_t directory_read(uint32_t index,uint8_t* buf)
     if (length>32) length=32;
     return length;
 }
+/*
+    int32_t file_open(const uint8_t *fname);
+    Inputs: const uint8_t *fname
+    Return Value: 0 on success, -1 on failure
+    Function: open the file
+    Side effect: none
+*/
 int32_t file_open(const uint8_t *fname)
 {
     dentry_t dentry;
     return read_dentry_by_name(fname,&dentry)==-1;
 }
+/*
+    int32_t file_read(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: read the file
+    Side effect: none
+*/
 int32_t file_read(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t file_write(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: write the file
+    Side effect: none
+*/
 int32_t file_write(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t file_close(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: close the file
+    Side effect: none
+*/
 int32_t file_close(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t dir_open(const uint8_t *fname);
+    Inputs: const uint8_t *fname
+    Return Value: 0 on success, -1 on failure
+    Function: open the directory
+    Side effect: none
+*/
 int32_t dir_open(const uint8_t *fname)
 {
     return 0;
 }
+/*
+    int32_t dir_read(int32_t fd,uint8_t* buf);
+    Inputs: int32_t fd,uint8_t* buf
+    Return Value: 0 on success, -1 on failure
+    Function: read the directory
+    Side effect: none
+*/
 int32_t dir_read(int32_t fd,uint8_t* buf)
 {
     return 0;
 }
+/*
+    int32_t dir_write(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: write the directory
+    Side effect: none
+*/
 int32_t dir_write(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t dir_close(int32_t fd);
+    Inputs: int32_t fd
+    Return Value: 0 on success, -1 on failure
+    Function: close the directory
+    Side effect: none
+*/
 int32_t dir_close(int32_t fd)
 {
     return 0;
