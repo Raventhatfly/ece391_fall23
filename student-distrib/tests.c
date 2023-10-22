@@ -230,13 +230,13 @@ void launch_tests(){
 	read_dentry_by_name(str,&dentry);
 	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
-	read_dentry_by_index(10,&dentry);
+	read_dentry_by_index(11,&dentry);
 	printf("File Name: %s, File Type: %d, File Inode: %d\n", dentry.file_name, dentry.file_type, dentry.inode_num);
 
 	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
-	uint8_t buffer[1870];
+	uint8_t buffer[6000];
     int i = 0,num;
-    num=read_data(dentry.inode_num,0,buffer,1870);
+    num=read_data(dentry.inode_num,0,buffer,6000);
     for(i = 0; i< num; i++){
         putc(buffer[i]);
     }
