@@ -127,7 +127,9 @@ void irq1_handler(void)
             /*
             if shift is pressed, use the scancode_shift table
             */
-            if (shift==1) //if shift is pressed
+            if (shift==1 && caps==1) //if shift and caps are pressed
+                ascii = scancode_shiftcaps[key];
+            else if (shift==1) //if shift is pressed
                 ascii = scancode_shift[key];
             /*
             if caps is pressed, use the scancode_caps table
