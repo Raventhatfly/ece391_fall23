@@ -66,7 +66,6 @@ uint8_t scancode_shiftcaps[SCANCODE_SIZE]={
     0,0,0,0,0,0,0,0,0,0,'_',0,0,0,0,0,
     0,0,0,0,0,0,0,'7','8','9','-','4','5','6','+','1',
     '2','3','0','.',0,0};
-};
 /*
 key_init
 input: none
@@ -143,6 +142,12 @@ void irq1_handler(void)
             {
                 terminal_clear();
                 break; 
+            } else if (ascii=='\b'){
+                terminal_delete();
+                break;
+            } else {
+                terminal_write(ascii);
+                break;
             }
             //putc(ascii);
             break;

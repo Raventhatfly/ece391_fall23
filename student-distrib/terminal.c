@@ -159,6 +159,7 @@ uint32_t terminal_delete(){
     }
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2)) = ' '; /*initialize the char as blank and ATTRIB*/
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = 0x7;
+    my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ' '; /*initialize the buffer as blank*/
     my_terminal.buffer_iterator--;
     return 0;
 }
