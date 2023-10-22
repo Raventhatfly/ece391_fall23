@@ -52,6 +52,7 @@ void rtc_init(void) {
     *  void rtc_handler()
     *    DESCRIPTION: Handles the RTC (Real-Time Clock) interrupt by reading 
     *                 from the RTC to clear the interrupt flag, setting a flag 
+    *                 for each different frequencies in the int_flag[10]
     *                 to indicate an interrupt has occurred, and sending an 
     *                 End Of Interrupt (EOI) signal to the Programmable 
     *                 Interrupt Controller (PIC).
@@ -79,16 +80,37 @@ void rtc_handler(void){
     sti();                          /* re-enable interrupt */
 }
 
+/*
+    *  int rtc_open(const uint8_t* filename)
+    *    DESCRIPTION: Opens the RTC with a default frequency.
+    *    INPUT: filename - Not used.
+    *    OUTPUT: Returns 0 on success.
+    *    SIDE EFFECTS: Resets the RTC frequency to the default value.
+*/
 int rtc_open(const uint8_t* filename) {
     rtc_rate=0;
     int_flag[rtc_rate]=0;
 	return 0;
 }
 
+/*
+    *  int rtc_close(int32_t fd)
+    *    DESCRIPTION: Closes the RTC.
+    *    INPUT: fd - File descriptor, not used.
+    *    OUTPUT: Returns 0.
+    *    SIDE EFFECTS: None.
+*/
 int rtc_close(int32_t fd) {
 	return 0;
 }
 
+/*
+    *  int log_2(uint32_t n)
+    *    DESCRIPTION: Calculates the base-2 logarithm of n.
+    *    INPUT: n - The value to compute the logarithm for.
+    *    OUTPUT: Returns the base-2 logarithm of n.
+    *    SIDE EFFECTS: None.
+*/
 int log_2(uint32_t n) {
     int ans=0;
     while (n) {
@@ -98,6 +120,15 @@ int log_2(uint32_t n) {
     return ans;
 }
 
+/*
+    *  int rtc_write(int32_t fd, const void* buf, int32_t nbytes)
+    *    DESCRIPTION: Sets the RTC frequency.
+    *    INPUT: fd - Not used.
+    *            buf - Pointer to a buffer containing the new frequency.
+    *            nbytes - Not used.
+    *    OUTPUT: Returns 0 on success, -1 on failure.
+    *    SIDE EFFECTS: Updates the RTC frequency.
+*/
 int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
     uint32_t freq = *(uint32_t*) buf;
     if (freq<=0 || freq>BASE_RATE) {return -1;}     /* check if between 1~1024 */
@@ -106,6 +137,15 @@ int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
     return 0;
 }
 
+/*
+    *  int rtc_read(int32_t fd, void* buf, int32_t nbytes)
+    *    DESCRIPTION: Blocks until the next RTC interrupt occurs.
+    *    INPUT: fd - Not used.
+    *            buf - Not used.
+    *            nbytes - Not used.
+    *    OUTPUT: Returns 0.
+    *    SIDE EFFECTS: Resets the interrupt flag for the current frequency.
+*/
 int rtc_read(int32_t fd, void* buf, int32_t nbytes) {
     while (int_flag[rtc_rate]==0) {}
     int_flag[rtc_rate]=0;
