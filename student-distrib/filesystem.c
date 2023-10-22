@@ -125,3 +125,36 @@ int32_t directory_read(uint32_t index,uint8_t* buf)
     if (length>32) length=32;
     return length;
 }
+int32_t file_open(const uint8_t *fname)
+{
+    dentry_t dentry;
+    return read_dentry_by_name(fname,&dentry)==-1;
+}
+int32_t file_read(int32_t fd)
+{
+    return 0;
+}
+int32_t file_write(int32_t fd)
+{
+    return 0;
+}
+int32_t file_close(int32_t fd)
+{
+    return 0;
+}
+int32_t dir_open(const uint8_t *fname)
+{
+    return 0;
+}
+int32_t dir_read(int32_t fd,uint8_t* buf)
+{
+    return 0;
+}
+int32_t dir_write(int32_t fd)
+{
+    return 0;
+}
+int32_t dir_close(int32_t fd)
+{
+    return 0;
+}
