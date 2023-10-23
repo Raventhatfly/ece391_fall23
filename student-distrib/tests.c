@@ -207,9 +207,15 @@ int read_by_name_test()
 {
 	TEST_HEADER;
 	dentry_t dentry;
-	char* str = "sigtest";
+	char* str = "frame0.txt";
 	read_dentry_by_name((uint8_t*)str,&dentry);
 	printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+	uint8_t buffer[6000];
+    int i = 0,num;
+    num=read_data(dentry.inode_num,0,buffer,6000);
+    for(i = 0; i< num; i++){
+        putc(buffer[i]);
+    }
 	return PASS;
 }
 int read_by_index_test()
@@ -320,7 +326,7 @@ void launch_tests(){
 	// terminal_keyboard_test();
 	// terminal_clear_test();
 	// terminal_nul_test();
-	// read_by_name_test();
+	// read_by_name_test();															/* Check Point 3.2 # TEST 2*/
 	// read_by_index_test();
 	// read_data_test1();
 	// read_data_test2();
