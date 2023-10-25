@@ -10,6 +10,7 @@
 
 extern void rtc_init();
 extern int* filesys_base;
+
 /* format these macros as you see fit */
 #define TEST_HEADER 	\
 	printf("[TEST %s] Running %s at %s:%d\n", __FUNCTION__, __FUNCTION__, __FILE__, __LINE__)
@@ -21,8 +22,9 @@ static inline void assertion_failure(){
 	   reserved by Intel */
 	asm volatile("int $15");
 }
-
-
+unsigned char buf[128];	
+static int32_t fd=0;
+static int32_t nbytes=1;
 /* Checkpoint 1 tests */
 
 /* IDT Test - Example
@@ -167,7 +169,8 @@ int terminal_keyboard_test(){
 	terminal_init();
 	for(i=0;i<130;i++){   /* 130 > 128, so we can test overflow*/
 		j = i % 40;
-		terminal_display(buffer_test[j]);
+		buf[0]=buffer_test[j];
+		terminal_display(fd, buf, nbytes);
 	}
 	return PASS;
 }
@@ -197,10 +200,14 @@ int terminal_clear_test(){
 int terminal_nul_test(){
 	TEST_HEADER;
 	terminal_init();
-	terminal_display(0);
-	terminal_display('w');  /* if the input is nul, we win if we still can input*/
-	terminal_display('i');
-	terminal_display('n');
+	buf[0]=0;
+	terminal_display(fd, buf, nbytes);
+	buf[0]='w';
+	terminal_display(fd, buf, nbytes);  /* if the input is nul, we win if we still can input*/
+	buf[0]='i';
+	terminal_display(fd, buf, nbytes);
+	buf[0]='n';
+	terminal_display(fd, buf, nbytes);
 	return PASS;
 }
 int read_by_name_test()
@@ -274,7 +281,8 @@ int show_file_on_terminal_test(){
     num=read_data(dentry.inode_num,0,buffer,6000);
 	terminal_init();
     for(i = 0; i< num; i++){
-        terminal_display(buffer[i]);
+		buf[0]=buffer[i];
+        terminal_display(fd, buf, nbytes);
     }
 	return PASS;
 }
