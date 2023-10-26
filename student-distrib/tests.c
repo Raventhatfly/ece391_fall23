@@ -355,4 +355,5 @@ void launch_tests(){
 	:
 	:"eax"
 	);
+	*/
 }
