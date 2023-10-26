@@ -36,9 +36,12 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
     fname_len = strlen((int8_t*)fname);
+    uint8_t file_name_ending[FILENAME_LEN+1];
     if(fname != NULL && fname_len <= 32){    
-        for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
-            file_name_len = strlen((int8_t*)(boot_block_ptr->direntries[i].file_name));
+        for(i = 0; i < boot_block_ptr->dir_cnt; i++){    
+            strncpy((int8_t*)file_name_ending, (int8_t*)(boot_block_ptr->direntries[i].file_name), FILENAME_LEN);
+            file_name_ending[FILENAME_LEN] = '\0';        
+            file_name_len = strlen((int8_t*)(file_name_ending));
             if(file_name_len != fname_len){
                 continue;
             }
@@ -124,7 +127,10 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
     int length;
     if(index>=boot_block_ptr->dir_cnt) return -1;
     read_dentry_by_index(index, dentry); //get the dentry by index
-    length = strlen((int8_t*)dentry->file_name);
+    uint8_t file_name_ending[FILENAME_LEN+1];
+    strncpy((int8_t*)file_name_ending, (int8_t*)(dentry->file_name), FILENAME_LEN);
+    file_name_ending[FILENAME_LEN] = '\0';
+    length = strlen((int8_t*)(file_name_ending));
     if (length>32) length=32;
     memcpy(buf, dentry->file_name, length); //copy the file name to the buffer
     return length;
