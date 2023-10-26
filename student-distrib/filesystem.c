@@ -127,7 +127,10 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
     int length;
     if(index>=boot_block_ptr->dir_cnt) return -1;
     read_dentry_by_index(index, dentry); //get the dentry by index
-    length = strlen((int8_t*)dentry->file_name);
+    uint8_t file_name_ending[FILENAME_LEN+1];
+    strncpy((int8_t*)file_name_ending, (int8_t*)(dentry->file_name), FILENAME_LEN);
+    file_name_ending[FILENAME_LEN] = '\0';
+    length = strlen((int8_t*)(file_name_ending));
     if (length>32) length=32;
     memcpy(buf, dentry->file_name, length); //copy the file name to the buffer
     return length;
