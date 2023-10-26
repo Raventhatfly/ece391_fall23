@@ -36,9 +36,12 @@ int32_t read_dentry_by_name(const uint8_t* fname, dentry_t* dentry){
     int i;
     int fname_len, file_name_len;
     fname_len = strlen((int8_t*)fname);
+    uint8_t file_name_ending[FILENAME_LEN+1];
     if(fname != NULL && fname_len <= 32){    
-        for(i = 0; i < boot_block_ptr->dir_cnt; i++){            
-            file_name_len = strlen((int8_t*)(boot_block_ptr->direntries[i].file_name));
+        for(i = 0; i < boot_block_ptr->dir_cnt; i++){    
+            strncpy((int8_t*)file_name_ending, (int8_t*)(boot_block_ptr->direntries[i].file_name), FILENAME_LEN);
+            file_name_ending[FILENAME_LEN] = '\0';        
+            file_name_len = strlen((int8_t*)(file_name_ending));
             if(file_name_len != fname_len){
                 continue;
             }
