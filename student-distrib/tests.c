@@ -353,6 +353,6 @@ void launch_tests(){
 	"
 	:
 	:
-	:"eax","ebx"
+	:"eax"
 	);
 }
