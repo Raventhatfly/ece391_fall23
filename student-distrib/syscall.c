@@ -38,9 +38,9 @@ int32_t execute (const uint8_t* command){
     }
     read_dentry_by_name(cmd,&dentry);
     read_data(dentry.inode_num,0,buf,4);
-    if(buf[0] == ){
+    // if(buf[0] == ){
 
-    }
+    // }
     return 0;
 }
 
