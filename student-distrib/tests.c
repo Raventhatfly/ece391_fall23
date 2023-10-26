@@ -293,7 +293,7 @@ int directory_read_test(){
 	int length;
 	uint8_t buffer[33];
 	dentry_t dentry;
-	buffer[33] = '\0';
+	buffer[32] = '\0';
 	for(i=0;i<63;i++){
 		if((length = directory_read(i,buffer,&dentry)) == -1){
 			break;
@@ -334,7 +334,7 @@ void launch_tests(){
 	// terminal_keyboard_test();
 	// terminal_clear_test();
 	// terminal_nul_test();
-	// read_by_name_test();															/* Check Point 3.2 # TEST 2*/
+	 read_by_name_test();															/* Check Point 3.2 # TEST 2*/
 	// read_by_index_test();
 	// read_data_test1();
 	// read_data_test2();
@@ -346,13 +346,13 @@ void launch_tests(){
 	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
 
 	/* Checkpoint 3 tests */
-	asm volatile(
+	/*asm volatile(
 	"				\n\
 	movl $3, %%eax; \n\
 	int $0x80;		\n\
 	"
 	:
 	:
-	:"eax","ebx"
+	:"eax"
 	);
 }
