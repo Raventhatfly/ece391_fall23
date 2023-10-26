@@ -344,4 +344,15 @@ void launch_tests(){
 	//printf("%d\n",filesys_base);
 	//printf("%d\n",dentry.inode_num);
 	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
+
+	/* Checkpoint 3 tests */
+	asm volatile(
+	"				\n\
+	movl $3, %%eax; \n\
+	int $0x80;		\n\
+	"
+	:
+	:
+	:"eax","ebx"
+	);
 }
