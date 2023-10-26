@@ -55,3 +55,8 @@ the assembly functions.
 **Description**: When we delete characters and start typing again, the cursor is not displayed until the cursor reaches the position of the first deleted character. <br>
 **Difficulty**: 25 minutes<br>
 **Fixing Method**: Add a sentence that give the value of ATTRIB to the last screen place in the delete. <br>
+
+**Author**: Wu Feiyang<br>
+**Description**: The characters appear on the screen are random rubbish characters.<br>
+**Difficulty**: 15 minutes <br>
+**Fixing Method**: Using array of `uint32_t` instead of `uint8_t` when printing the characters. <br>

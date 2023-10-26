@@ -216,7 +216,30 @@ idt_irq_8:
 idt_syscall:
     pushal
     cld
-    call syscall_handler
+    
+    # check the syscall number
+    decl %eax
+    cmpl $9, %eax
+    ja .invalid_call 
+
+    pushl %edx
+    pushl %ecx
+    pushl %ebx
+    call *idt_syscall_jmp_table(,%eax,4)
+    addl $12, %esp
+
+    .invalid_call:
     popal
     iret
 
+idt_syscall_jmp_table:
+    .long halt
+    .long execute
+    .long read
+    .long write
+    .long open
+    .long close
+    .long getargs
+    .long vidmap
+    .long set_handler
+    .long sigreturn

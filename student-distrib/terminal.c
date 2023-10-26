@@ -50,7 +50,8 @@ void screen_cpy(){
     *   RETURN VALUE: -1 if the input is enter and nothing to print, 0 if the input is not enter
     *   SIDE EFFECTS: read the input from keyboard
 */
-uint32_t terminal_read(unsigned char input){
+uint32_t terminal_read(int32_t fd, unsigned char* buf, int32_t nbytes){
+    unsigned char input = *(unsigned char *)buf;    /*get the input*/
     if (input == ENTER_ASC2){             /* if the input is enter, clear the buffer and copy the screen as moving to next line*/
         my_terminal.buffer_iterator=buffer_clear();  
         screen_cpy();
@@ -82,15 +83,15 @@ uint32_t terminal_read(unsigned char input){
     *   RETURN VALUE: none
     *   SIDE EFFECTS: write the input to screen
 */
-void terminal_write(){
-    
+void terminal_write(int32_t fd, unsigned char* buf, int32_t nbytes){
     printf("%c", my_terminal.terminal_buffer[my_terminal.buffer_iterator]); /*print the current char*/
     my_terminal.cursor_x_coord=screen_x;
     my_terminal.cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
     draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
     my_terminal.buffer_iterator++;
-    my_terminal.buffer_iterator= my_terminal.buffer_iterator % BUFFER_SIZE; /*if the buffer is full, set the iterator to 0*/
+    nbytes = my_terminal.buffer_iterator;
+    /*my_terminal.buffer_iterator= my_terminal.buffer_iterator % BUFFER_SIZE; if the buffer is full, set the iterator to 0*/
 }
 
 /* The following cursor functions are developing from https://wiki.osdev.org/Text_Mode_Cursor */
@@ -183,12 +184,12 @@ void terminal_init(){
     *   RETURN VALUE: -1 if the input is enter and nothing to print, 0 if the input is not enter
     *   SIDE EFFECTS: display the input to screen
 */
-uint32_t terminal_display(unsigned char input){
+uint32_t terminal_display(int32_t fd, unsigned char* buf, int32_t nbytes){
     int flag;
     if (my_terminal.buffer_iterator >= BUFFER_SIZE) return -1; /*if the buffer is full, return -1 to inform the failure*/
-    flag = terminal_read(input);                    /*read the input, flag shows wthether succeed*/
+    flag = terminal_read(fd,buf,nbytes);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/
-    terminal_write();                               /*if the input is not enter, write the input to screen*/
+    terminal_write(fd,buf,nbytes);                               /*if the input is not enter, write the input to screen*/
     return 0;
 }
 
