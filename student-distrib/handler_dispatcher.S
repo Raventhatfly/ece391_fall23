@@ -217,7 +217,7 @@ idt_syscall:
     pushal
     cld
     
-    # check the syscall number
+    # check the syscall number. Unsighed number must not be bigger than 10
     decl %eax
     cmpl $9, %eax
     ja .invalid_call 
