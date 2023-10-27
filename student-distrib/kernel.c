@@ -14,7 +14,6 @@
 #include "filesystem.h"
 #include "page.h"
 #include "terminal.h"
-#include "syscall.h"
 #define RUN_TESTS
 
 int* filesys_base;
