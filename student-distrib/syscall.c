@@ -8,39 +8,97 @@ int32_t halt (uint8_t status){
 
 int32_t execute (const uint8_t* command){
     printf("Execte!\n");
-    uint8_t cmd[MAX_CMD];
     uint8_t buf[4];         
     dentry_t dentry;
+    uint32_t program_entry;
     int cmd_len = 0;
     int i = 0;
+    int j = 0;
     int leading = 1;
-    
-
-    
+    int curr_arg = 0;
+    /* 
+    *  state 0, waiting for command at the leading spaces
+    *  state 1, reading the command
+    *  state 2, waiting for the next arg
+    *  state 3, reading the current arg
+    */
+    int state = 0;  
     while(command[i] != '\0'){
-        /* Get rid of leading spaces */
-        if(command[i] == ' '){
-            i++;
-            continue;
-        }
-        leading = 0;    /* leading sapce end */
-        if(command[i] != ' '){
-            cmd[cmd_len] = command[i];
-            cmd_len++;
-        }else{
-            /* TODO: do not support args passed into the executale yet */
+        switch (state)
+        {
+        case 0:
+            if(command[i] == ' '){
+                i++;
+            }else{
+                state = 1;
+            }
+            break;
+        case 1:
+            if(command[i] == ' '){
+                state = 2;
+                i++;
+            }else{
+                if(cmd_len >= MAX_CMD)    return -1;
+                cmd[cmd_len] = command[i];
+                cmd_len++; i++;
+            }
+            break;
+        case 2:
+            if(command[i] != ' '){
+                state = 3;
+            }else{
+                i++;
+            }
+            break;
+        case 3: 
+            if(command[i] == ' '){
+                state = 2;
+                curr_arg++;
+                if(curr_arg >= MAX_ARGS)    return -1;
+                j = 0;
+                i++;
+            }else if(j >= MAX_ARG_LEN){
+                return -1;
+            }else{
+                args[curr_arg][j] = command[i];
+                j++; i++;
+            }
+            break;
+        default:
+            state = 0;
             break;
         }
+        
     }
-    cmd[cmd_len] = '\0';
+    /* 
+     * Boundary condition. If arg not ended with space then increment curr_arg 
+     * so that it becomes the number of total args.
+     */
+    if(state == 3 && j != 0){
+        curr_arg++;         
+    }
+
     if(cmd_len == 0){
         return -1;      /* no executable input */
     }
-    read_dentry_by_name(cmd,&dentry);
-    read_data(dentry.inode_num,0,buf,4);
-    // if(buf[0] == ){
+    if(read_dentry_by_name(cmd,&dentry) == -1){
+        return -1;
+    }
+    if(read_data(dentry.inode_num,0,buf,4) != 4){
+        return -1;
+    }
+    
+    /* Executble check: ELF magic number */
+    if(buf[0] != 0x7f || buf[1] != 0x4f || buf[2] != 0x4c || buf[3] != 0x46){
+        return -1;
+    }
 
-    // }
+    /* TODO: set up paging */
+
+    /* User-Level Program Loader, 24-27 */
+    read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
+
+
     return 0;
 }
 
