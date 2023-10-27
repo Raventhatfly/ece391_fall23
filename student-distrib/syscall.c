@@ -144,12 +144,20 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes){
     int32_t cur_pid = fetch_curr_pid();
     pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
     if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
-    
-    return 0;
+    int32_t numread=cur_pcb->file_desc_arr[fd].file_op_table_ptr->read(fd,buf,nbytes);
+    cur_pcb->file_desc_arr[fd].file_pos+=numread;
+    return numread;
 }
 
 int32_t write (int32_t fd, const void* buf, int32_t nbytes){
     printf("Write!\n");
+    if (fd < 0 || fd > 7) return -1; /* invalid fd */
+    if (buf == NULL) return -1;      /* invalid buf */
+    if (nbytes < 0) return -1;       /* invalid nbytes */
+    int32_t cur_pid = fetch_curr_pid();
+    pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
+    if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
+    return cur_pcb->file_desc_arr[fd].file_op_table_ptr->write(fd,buf,nbytes);
     return 0;
 }
 
