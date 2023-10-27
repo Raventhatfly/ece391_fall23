@@ -16,8 +16,12 @@ void page_init() {
         page_table_entries[i] = 0;
     }
     int video_idx = VIDEO >> 12;    /* get the index of video memory, move 12 bit to the right for reduce 0 */
-    page_table_entries[video_idx] = VIDEO | TWO_BITMASK; /* set the video memory,7 is used as the mask of last 2 bit*/
-    page_directory_entries[0] = ((uint32_t)page_table_entries)| TWO_BITMASK; 
+    page_table_entries[video_idx] = VIDEO | PRESENT_MASK; /* set the video memory*/
+    page_table_entries[video_idx] |= R_AND_W_MASK;
+    page_table_entries[video_idx] |= USER_MASK;
+    page_directory_entries[0] = ((uint32_t)page_table_entries)| PRESENT_MASK; /* set the page directory entries */
+    page_directory_entries[0] |= R_AND_W_MASK; 
+    page_directory_entries[0] |= USER_MASK; 
     page_directory_entries[1] = KERNEL | MB_BITMASK; /* set the kernel memory */
     /* use asm to set the control register bits to their proper values */
     /* so tells the hardware where the page directory is located and enables hardware support for paging */
@@ -36,3 +40,27 @@ void page_init() {
     : "eax");
 }
 
+/*
+    *  void program_page_init(uint32_t program_addr)
+    *    DESCRIPTION: initialize the page for program
+    *    INPUT: program_addr -- the address of the program
+    *    OUTPUT: none
+    *    SIDE EFFECT: set the page directory and page table for program
+*/
+void program_page_init(uint32_t program_id){
+    uint32_t pg_dir_index = USER_START_PLACE >> ADDR_SEARCH; /* get the index of page directory */
+    page_directory_entries[pg_dir_index] = 0; /* initialize the page directory entries */
+    page_directory_entries[pg_dir_index] |= PRESENT_MASK;
+    page_directory_entries[pg_dir_index] |= R_AND_W_MASK;
+    page_directory_entries[pg_dir_index] |= USER_MASK;
+    page_directory_entries[pg_dir_index] |= MB_BITMASK; /* set the page directory entries */
+    page_directory_entries[pg_dir_index] |= (EIGHT_MBYTE + program_id * FOUR_MBYTE) >> 12; /* set physical base address*/
+    uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
+    asm volatile("     \n\
+    movl %0, %%eax     \n\
+    movl %%eax, %%cr3  \n\
+    "    
+    :
+    : "r" (page_dir_addr)
+    : "%eax");
+}
