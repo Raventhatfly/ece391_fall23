@@ -158,7 +158,6 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes){
     pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
     if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
     return cur_pcb->file_desc_arr[fd].file_op_table_ptr->write(fd,buf,nbytes);
-    return 0;
 }
 
 int32_t open (const uint8_t* filename){
@@ -168,7 +167,12 @@ int32_t open (const uint8_t* filename){
 
 int32_t close (int32_t fd){
     printf("Close!\n");
-    return  0;
+    if (fd < 0 || fd > 7) return -1; /* invalid fd */
+    int32_t cur_pid = fetch_curr_pid();
+    pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
+    if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
+    cur_pcb->file_desc_arr[fd].flags=0;
+    return cur_pcb->file_desc_arr[fd].file_op_table_ptr->close(fd);
 }
 
 int32_t getargs (uint8_t* buf, int32_t nbytes){
