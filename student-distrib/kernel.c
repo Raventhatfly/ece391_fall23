@@ -12,7 +12,9 @@
 #include "keyboard.h"
 #include "rtc.h"
 #include "filesystem.h"
-
+#include "page.h"
+#include "terminal.h"
+#include "syscall.h"
 #define RUN_TESTS
 
 int* filesys_base;
@@ -169,6 +171,7 @@ void entry(unsigned long magic, unsigned long addr) {
     
     key_init();
     filesystem_init(filesys_base);
+    file_op_table_init();
     // rtc_init();
   
     /* Enable interrupts */

@@ -50,7 +50,7 @@ void screen_cpy(){
     *   RETURN VALUE: -1 if the input is enter and nothing to print, 0 if the input is not enter
     *   SIDE EFFECTS: read the input from keyboard
 */
-uint32_t terminal_read(int32_t fd, unsigned char* buf, int32_t nbytes){
+int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     unsigned char input = *(unsigned char *)buf;    /*get the input*/
     if (input == ENTER_ASC2){             /* if the input is enter, clear the buffer and copy the screen as moving to next line*/
         my_terminal.buffer_iterator=buffer_clear();  
@@ -83,7 +83,7 @@ uint32_t terminal_read(int32_t fd, unsigned char* buf, int32_t nbytes){
     *   RETURN VALUE: none
     *   SIDE EFFECTS: write the input to screen
 */
-void terminal_write(int32_t fd, unsigned char* buf, int32_t nbytes){
+int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes){
     printf("%c", my_terminal.terminal_buffer[my_terminal.buffer_iterator]); /*print the current char*/
     my_terminal.cursor_x_coord=screen_x;
     my_terminal.cursor_y_coord=screen_y;
@@ -91,6 +91,7 @@ void terminal_write(int32_t fd, unsigned char* buf, int32_t nbytes){
     draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
     my_terminal.buffer_iterator++;
     nbytes = my_terminal.buffer_iterator;
+    return nbytes;
     /*my_terminal.buffer_iterator= my_terminal.buffer_iterator % BUFFER_SIZE; if the buffer is full, set the iterator to 0*/
 }
 
@@ -125,7 +126,7 @@ void draw_cursor(uint32_t x, uint32_t y) {
     *   RETURN VALUE: 0
     *   SIDE EFFECTS: open the terminal
 */
-uint32_t terminal_open(){
+int32_t terminal_open(const uint8_t *fname){
     return 0;
 }
 
@@ -137,7 +138,7 @@ uint32_t terminal_open(){
     *   RETURN VALUE: 0
     *   SIDE EFFECTS: close the terminal
 */
-uint32_t terminal_close(){
+int32_t terminal_close(int32_t fd){
     return 0;
 }
 

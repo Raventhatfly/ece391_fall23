@@ -154,7 +154,7 @@ int32_t file_open(const uint8_t *fname)
     Function: read the file
     Side effect: none
 */
-int32_t file_read(int32_t fd)
+int32_t file_read(int32_t fd, void* buf, int32_t nbytes)
 {
     return 0;
 }
@@ -165,7 +165,7 @@ int32_t file_read(int32_t fd)
     Function: write the file
     Side effect: none
 */
-int32_t file_write(int32_t fd)
+int32_t file_write(int32_t fd, const void* buf, int32_t nbytes)
 {
     return 0;
 }
@@ -198,7 +198,7 @@ int32_t dir_open(const uint8_t *fname)
     Function: read the directory
     Side effect: none
 */
-int32_t dir_read(int32_t fd,uint8_t* buf)
+int32_t dir_read(int32_t fd, void* buf, int32_t nbytes)
 {
     return 0;
 }
@@ -209,7 +209,7 @@ int32_t dir_read(int32_t fd,uint8_t* buf)
     Function: write the directory
     Side effect: none
 */
-int32_t dir_write(int32_t fd)
+int32_t dir_write(int32_t fd, const void* buf, int32_t nbytes)
 {
     return 0;
 }

@@ -1,6 +1,9 @@
 #include "syscall.h"
 #include "filesystem.h"
-
+#include "page.h"
+#include "filesystem.h"
+#include "rtc.h"
+#include "terminal.h"
 int32_t halt (uint8_t status){
     printf("Halt!\n");
     return 0;
@@ -168,5 +171,53 @@ int32_t allocate_pid(){
             return i;
         }
     }
+    return -1;
+}
+void file_op_table_init()
+{
+    rtc_op_table.open = rtc_open;
+    rtc_op_table.read = rtc_read;
+    rtc_op_table.write = rtc_write;
+    rtc_op_table.close = rtc_close;
+
+    dir_op_table.open = dir_open;
+    dir_op_table.read = dir_read;
+    dir_op_table.write = dir_write;
+    dir_op_table.close = dir_close;
+
+    file_op_table.open = file_open;
+    file_op_table.read = file_read;
+    file_op_table.write = file_write;
+    file_op_table.close = file_close;
+
+    stdin_op_table.open = terminal_open;
+    stdin_op_table.read = terminal_read;
+    stdin_op_table.write =null_write;
+    stdin_op_table.close =terminal_close ;
+
+    stdout_op_table.open =terminal_open ;
+    stdout_op_table.read =null_read ;
+    stdout_op_table.write =terminal_write ;
+    stdout_op_table.close = terminal_close;
+
+    null_op_table.open = null_open;
+    null_op_table.read = null_read;
+    null_op_table.write = null_write;
+    null_op_table.close = null_close;
+}
+int null_read(int32_t fd, void* buf, int32_t nbytes)
+{
+    return -1;
+}
+int null_write(int32_t fd, const void* buf, int32_t nbytes)
+{
+    return -1;
+}
+int null_open(const uint8_t *fname)
+{
+    return -1;
+}
+int null_close(int32_t fd)
+{
     return -1;
 }

@@ -16,14 +16,14 @@ typedef struct termin {
 
 extern uint32_t terminal_clear();
 extern void terminal_init();
-extern uint32_t terminal_read(int32_t fd, unsigned char* buf, int32_t nbytes);
-extern void terminal_write(int32_t fd, unsigned char* buf, int32_t nbytes);
+extern int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes);
+extern int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes);
 extern uint32_t terminal_display(int32_t fd, unsigned char* buf, int32_t nbytes);
 extern uint32_t terminal_delete();
 extern uint32_t buffer_clear();
 extern void draw_cursor(uint32_t x, uint32_t y);
-extern uint32_t terminal_open();
-extern uint32_t terminal_close();
+extern int32_t terminal_open(const uint8_t *fname);
+extern int32_t terminal_close(int32_t fd);
 
 #endif 
 

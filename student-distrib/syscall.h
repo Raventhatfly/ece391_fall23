@@ -11,9 +11,20 @@
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
 uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
 int8_t process_id_arr[MAX_PROCESS] = {0};
-
+typedef struct file_op_table{
+    int32_t (*open)(const uint8_t *fname);
+    int32_t (*read)(int32_t fd, void* buf, int32_t nbytes);
+    int32_t (*write)(int32_t fd, const void* buf, int32_t nbytes);
+    int32_t (*close)(int32_t fd);
+}file_op_table_t;
+file_op_table_t rtc_op_table;
+file_op_table_t dir_op_table;
+file_op_table_t file_op_table;
+file_op_table_t stdin_op_table;
+file_op_table_t stdout_op_table;
+file_op_table_t null_op_table;
 typedef struct file_desc{
-    uint32_t file_op_table_ptr;
+    file_op_table_t* file_op_table_ptr;
     uint32_t inode;
     uint32_t file_pos;
     uint32_t flags;
@@ -36,5 +47,9 @@ extern int32_t getargs (uint8_t* buf, int32_t nbytes);
 extern int32_t vidmap (uint8_t** screen_start);
 extern int32_t set_handler (int32_t signum, void* handler_address);
 extern int32_t sigreturn (void);
-
+extern void file_op_table_init();
+int null_read(int32_t fd, void* buf, int32_t nbytes);
+int null_write(int32_t fd, const void* buf, int32_t nbytes);
+int null_open(const uint8_t *fname);
+int null_close(int32_t fd);
 #endif
