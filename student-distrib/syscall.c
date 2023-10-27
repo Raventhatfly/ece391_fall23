@@ -109,18 +109,29 @@ int32_t execute (const uint8_t* command){
     /* TODO: Copy file data into memory */
 
     /* Set up PCB */
-    pcb_t execute_pcb;
-    execute_pcb.arg_cnt = curr_arg;     /* arg number */
-    execute_pcb.pid = pid;
-    execute_pcb.parent_pid = -1;        /* No parent */
-    strcpy(execute_pcb.cmd, cmd);
-    for(i = 0; i < curr_arg; i++ ){
-        strcpy(execute_pcb.args[i], args[i]);
+    pcb_t* execute_pcb = fetch_pcb_addr(pid);
+    execute_pcb->arg_cnt = curr_arg;     /* arg number */
+    execute_pcb->pid = pid;
+    if(pid == 0){
+        execute_pcb->parent_pid = -1;        /* No parent */
+    }else{
+        execute_pcb->parent_pid = fetch_curr_pid();
     }
+    strcpy(execute_pcb->cmd, cmd);
+    for(i = 0; i < curr_arg; i++ ){
+        strcpy(execute_pcb->args[i], args[i]);
+    }
+    /* TODO: reinspect here */
+    execute_pcb->file_desc_arr[0].file_op_table_ptr = &stdin_op_table;
+    execute_pcb->file_desc_arr[0].flags = 1;
+    execute_pcb->file_desc_arr[0].file_pos = 0;
+    execute_pcb->file_desc_arr[0].inode = 0;
+
+    execute_pcb->file_desc_arr[1].file_op_table_ptr = &stdout_op_table;
+    execute_pcb->file_desc_arr[0].flags = 1;
+    execute_pcb->file_desc_arr[0].file_pos = 0;
+    execute_pcb->file_desc_arr[0].inode = 0;
     
-   
-
-
 
     return 0;
 }
