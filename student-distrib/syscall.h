@@ -5,10 +5,12 @@
 #define MAX_CMD 32
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
+#define MAX_PROCESS 2
 
 /* commands and args */
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
 uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
+int8_t process_id_arr[MAX_PROCESS] = {0};
 
 typedef struct file_desc{
     uint32_t file_op_table_ptr;
@@ -19,7 +21,10 @@ typedef struct file_desc{
 
 typedef struct pcb{
     file_desc_t file_desc_arr[8];
+    int32_t pid;
 }pcb_t;
+
+int32_t allocate_pid();
 
 extern int32_t halt (uint8_t status);
 extern int32_t execute (const uint8_t* command);

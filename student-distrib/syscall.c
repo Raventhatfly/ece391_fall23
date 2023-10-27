@@ -11,10 +11,10 @@ int32_t execute (const uint8_t* command){
     uint8_t buf[4];         
     dentry_t dentry;
     uint32_t program_entry;
+    int pid;
     int cmd_len = 0;
     int i = 0;
     int j = 0;
-    int leading = 1;
     int curr_arg = 0;
     /* 
     *  state 0, waiting for command at the leading spaces
@@ -98,6 +98,15 @@ int32_t execute (const uint8_t* command){
     /* User-Level Program Loader, 24-27 */
     read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
 
+    /* Allocate PID */
+    if((pid = allocate_pid()) == -1){
+        return -1;
+    }
+
+    /* */
+
+
+
 
     return 0;
 }
@@ -140,4 +149,24 @@ int32_t set_handler (int32_t signum, void* handler_address){
 int32_t sigreturn (void){
     printf("Sig Return!\n");
     return 0;
+}
+
+
+/*
+    * allocate_pid
+    *   DESCRIPTION: allocate a process ID
+    *   INPUTS: none
+    *   OUTPUTS: set process_id_arr
+    *   RETURN VALUE: The available process ID. Return -1 if not availalble.
+    *   SIDE EFFECTS: none
+*/
+int32_t allocate_pid(){
+    int i;
+    for(i = 0;i < MAX_PROCESS; i++){
+        if(process_id_arr[i] != 0){
+            process_id_arr[i] = 1;
+            return i;
+        }
+    }
+    return -1;
 }
