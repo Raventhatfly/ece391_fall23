@@ -35,9 +35,6 @@ int8_t caps=0,shift=0,ctrl=0,alt=0;
 table from scancode to ascii
 */
 
-int32_t fd = 0;
-int32_t nbytes = 1;
-static unsigned char buf[128];
 uint8_t scancode[SCANCODE_SIZE]={
     0,0,'1','2','3','4','5','6','7','8','9','0','-','=','\b',
     '\t','q','w','e','r','t','y','u','i','o','p','[',']','\n',
@@ -150,12 +147,10 @@ void irq1_handler(void)
                 terminal_delete();
                 break;
             }else if (ascii=='\t'){
-                buf[0]=' ';
-                terminal_display(fd,buf,nbytes);
-                terminal_display(fd,buf,nbytes);
+                terminal_display(' ');
+                terminal_display(' ');
             } else {
-                buf[0]=ascii;
-                terminal_display(fd,buf,nbytes);
+                terminal_display(ascii);
                 break;
             }
             //putc(ascii);

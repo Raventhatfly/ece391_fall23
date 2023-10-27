@@ -18,7 +18,7 @@ extern uint32_t terminal_clear();
 extern void terminal_init();
 extern int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes);
 extern int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes);
-extern uint32_t terminal_display(int32_t fd, unsigned char* buf, int32_t nbytes);
+extern uint32_t terminal_display(unsigned char input);
 extern uint32_t terminal_delete();
 extern uint32_t buffer_clear();
 extern void draw_cursor(uint32_t x, uint32_t y);
