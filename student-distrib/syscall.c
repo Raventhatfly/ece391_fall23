@@ -112,6 +112,7 @@ int32_t execute (const uint8_t* command){
     pcb_t execute_pcb;
     execute_pcb.arg_cnt = curr_arg;
     execute_pcb.pid = pid;
+    memcpy();
    
 
 

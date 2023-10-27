@@ -5,7 +5,7 @@
 #define MAX_CMD 32
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
-#define MAX_PROCESS 2
+#define MAX_PROCESS 10
 #define KERNEL_STACK_ADDR 0x8000000     /* 128 MB */
 #define PCB_SIZE 0x2000                 /* 8kB */
 
@@ -37,6 +37,7 @@ typedef struct file_desc{
 typedef struct pcb{
     file_desc_t file_desc_arr[8];
     int32_t pid;
+    int32_t parent_pid;
     int32_t arg_cnt;
     uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
 }pcb_t;
