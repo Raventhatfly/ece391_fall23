@@ -38,6 +38,7 @@ typedef struct pcb{
     file_desc_t file_desc_arr[8];
     int32_t pid;
     int32_t parent_pid;
+    uint8_t cmd[MAX_CMD + 1];
     int32_t arg_cnt;
     uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
 }pcb_t;

@@ -110,9 +110,14 @@ int32_t execute (const uint8_t* command){
 
     /* Set up PCB */
     pcb_t execute_pcb;
-    execute_pcb.arg_cnt = curr_arg;
+    execute_pcb.arg_cnt = curr_arg;     /* arg number */
     execute_pcb.pid = pid;
-    memcpy();
+    execute_pcb.parent_pid = -1;        /* No parent */
+    strcpy(execute_pcb.cmd, cmd);
+    for(i = 0; i < curr_arg; i++ ){
+        strcpy(execute_pcb.args[i], args[i]);
+    }
+    
    
 
 
@@ -122,6 +127,13 @@ int32_t execute (const uint8_t* command){
 
 int32_t read (int32_t fd, void* buf, int32_t nbytes){
     printf("Read!\n");
+    if (fd < 0 || fd > 7) return -1; /* invalid fd */
+    if (buf == NULL) return -1;      /* invalid buf */
+    if (nbytes < 0) return -1;       /* invalid nbytes */
+    int32_t cur_pid = fetch_curr_pid();
+    pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
+    if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
+    
     return 0;
 }
 
@@ -185,6 +197,14 @@ pcb_t * fetch_pcb_addr(int32_t pid){
     return_addr = (pcb_t *) (KERNEL_STACK_ADDR - (pid + 1) * PCB_SIZE);
     return return_addr;
 }
+
+int32_t fetch_curr_pid(){
+    register int32_t espv asm ("esp");
+    return (KERNEL_STACK_ADDR-espv)/PCB_SIZE;
+}
+
+
+    
 
 void file_op_table_init()
 {
