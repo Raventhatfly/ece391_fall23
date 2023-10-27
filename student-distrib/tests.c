@@ -7,7 +7,7 @@
 
 #define PASS 1
 #define FAIL 0
-
+#define USER_START_PLACE  0x8000000
 extern void rtc_init();
 extern int* filesys_base;
 
@@ -22,9 +22,6 @@ static inline void assertion_failure(){
 	   reserved by Intel */
 	asm volatile("int $15");
 }
-unsigned char buf[128];	
-static int32_t fd=0;
-static int32_t nbytes=1;
 /* Checkpoint 1 tests */
 
 /* IDT Test - Example
@@ -84,8 +81,9 @@ int page_value_test(){
 	return_value = *addr1;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
 	return_value = *addr2;		/*read the value of the video memory, if there is no page fault, then should be PASS*/
 	return PASS;
-
 }
+
+
 
 /*
  * syscall_test
@@ -169,8 +167,7 @@ int terminal_keyboard_test(){
 	terminal_init();
 	for(i=0;i<130;i++){   /* 130 > 128, so we can test overflow*/
 		j = i % 40;
-		buf[0]=buffer_test[j];
-		terminal_display(fd, buf, nbytes);
+		terminal_display(buffer_test[j]);
 	}
 	return PASS;
 }
@@ -200,14 +197,10 @@ int terminal_clear_test(){
 int terminal_nul_test(){
 	TEST_HEADER;
 	terminal_init();
-	buf[0]=0;
-	terminal_display(fd, buf, nbytes);
-	buf[0]='w';
-	terminal_display(fd, buf, nbytes);  /* if the input is nul, we win if we still can input*/
-	buf[0]='i';
-	terminal_display(fd, buf, nbytes);
-	buf[0]='n';
-	terminal_display(fd, buf, nbytes);
+	terminal_display(0);
+	terminal_display('w');  /* if the input is nul, we win if we still can input*/
+	terminal_display('i');
+	terminal_display('n');
 	return PASS;
 }
 int read_by_name_test()
@@ -281,8 +274,7 @@ int show_file_on_terminal_test(){
     num=read_data(dentry.inode_num,0,buffer,6000);
 	terminal_init();
     for(i = 0; i< num; i++){
-		buf[0]=buffer[i];
-        terminal_display(fd, buf, nbytes);
+        terminal_display(buffer[i]);
     }
 	return PASS;
 }
@@ -323,18 +315,17 @@ void launch_tests(){
 	// TEST_OUTPUT("syscall_test",syscall_test());
 	// rtc_init();
 	// launch your tests here
-
+	
 	/* Checkpoint 2 tests */
 
 	/* terminal clear */
 	terminal_clear();
 
-	
 	// rtc_driver_test();
 	// terminal_keyboard_test();
 	// terminal_clear_test();
 	// terminal_nul_test();
-	 read_by_name_test();															/* Check Point 3.2 # TEST 2*/
+	// read_by_name_test();															/* Check Point 3.2 # TEST 2*/
 	// read_by_index_test();
 	// read_data_test1();
 	// read_data_test2();
