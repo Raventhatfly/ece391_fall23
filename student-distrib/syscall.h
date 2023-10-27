@@ -6,6 +6,8 @@
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
 #define MAX_PROCESS 2
+#define KERNEL_STACK_ADDR 0x8000000     /* 128 MB */
+#define PCB_SIZE 0x2000                 /* 8kB */
 
 /* commands and args */
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
@@ -17,12 +19,14 @@ typedef struct file_op_table{
     int32_t (*write)(int32_t fd, const void* buf, int32_t nbytes);
     int32_t (*close)(int32_t fd);
 }file_op_table_t;
+
 file_op_table_t rtc_op_table;
 file_op_table_t dir_op_table;
 file_op_table_t file_op_table;
 file_op_table_t stdin_op_table;
 file_op_table_t stdout_op_table;
 file_op_table_t null_op_table;
+
 typedef struct file_desc{
     file_op_table_t* file_op_table_ptr;
     uint32_t inode;
@@ -33,9 +37,12 @@ typedef struct file_desc{
 typedef struct pcb{
     file_desc_t file_desc_arr[8];
     int32_t pid;
+    int32_t arg_cnt;
+    uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
 }pcb_t;
 
 int32_t allocate_pid();
+pcb_t * fetch_pcb_addr(int32_t pid);
 
 extern int32_t halt (uint8_t status);
 extern int32_t execute (const uint8_t* command);

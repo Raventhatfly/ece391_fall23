@@ -95,18 +95,24 @@ int32_t execute (const uint8_t* command){
         return -1;
     }
 
-    /* TODO: set up paging */
-
-    /* User-Level Program Loader, 24-27 */
-    read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
-
     /* Allocate PID */
     if((pid = allocate_pid()) == -1){
         return -1;
     }
 
-    /* */
+    /* Set up paging */
+    program_page_init(pid);
 
+    /* User-Level Program Loader, 24-27 */
+    read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
+
+    /* TODO: Copy file data into memory */
+
+    /* Set up PCB */
+    pcb_t execute_pcb;
+    execute_pcb.arg_cnt = curr_arg;
+    execute_pcb.pid = pid;
+   
 
 
 
@@ -172,6 +178,13 @@ int32_t allocate_pid(){
     }
     return -1;
 }
+
+pcb_t * fetch_pcb_addr(int32_t pid){
+    pcb_t * return_addr;
+    return_addr = (pcb_t *) (KERNEL_STACK_ADDR - (pid + 1) * PCB_SIZE);
+    return return_addr;
+}
+
 void file_op_table_init()
 {
     rtc_op_table.open = rtc_open;
