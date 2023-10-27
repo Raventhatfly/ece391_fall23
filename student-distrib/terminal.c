@@ -43,7 +43,7 @@ void screen_cpy(){
 }
 
 /*
-    * terminal_read
+    * terminal_input
     *   DESCRIPTION: read the input from keyboard
     *   INPUTS: input -- the input from keyboard
     *   OUTPUTS: none
@@ -75,7 +75,7 @@ int32_t terminal_input(unsigned char input){
 }
 
 /*
-    * terminal_write
+    * terminal_output
     *   DESCRIPTION: write the input to screen
     *   INPUTS: none
     *   OUTPUTS: none
@@ -94,27 +94,53 @@ void terminal_output(){
 /*
     * terminal_read
     *   DESCRIPTION: read the input from keyboard
-    *   INPUTS: input -- the input from keyboard
+    *   INPUTS: fd -- file descriptor, ignored
+    *           buf -- buffer to read into
+    *           nbytes -- number of bytes to read
     *   OUTPUTS: none
-    *   RETURN VALUE: -1 if the input is enter and nothing to print, 0 if the input is not enter
+    *   RETURN VALUE: number of bytes read
     *   SIDE EFFECTS: read the input from keyboard
 */
 int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
-    return nbytes;  
+    int32_t i = 0;
+    int32_t j = 0;
+	if (buf == NULL) return 0;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
+    if (nbytes <= 0) return 0;  
+	memset(my_terminal.terminal_buffer, 0, BUFFER_SIZE);	/*clear the buffer*/
+	my_terminal.buffer_iterator = 0;	  
+    if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
+        j = BUFFER_SIZE;
+    }else{
+        j = nbytes;
+    }									
+	for (i = 0; i < j && my_terminal.terminal_buffer[i] != '\0'; i++) ((char*)buf)[i] = my_terminal.terminal_buffer[i];
+	return i;
 }
 
 /*
     * terminal_write
     *   DESCRIPTION: write the input to screen
-    *   INPUTS: none
-    *   OUTPUTS: none
-    *   RETURN VALUE: none
-    *   SIDE EFFECTS: write the input to screen
+    *  INPUTS: fd -- file descriptor, ignored
+    *         buf -- buffer to write from
+    *        nbytes -- number of bytes to write
+    * OUTPUTS: none
+    * RETURN VALUE: number of bytes written
+    * SIDE EFFECTS: write the input to screen
 */
-int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes){
-    return nbytes;
-    /*my_terminal.buffer_iterator= my_terminal.buffer_iterator % BUFFER_SIZE; if the buffer is full, set the iterator to 0*/
+int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
+    if (buf == NULL) return 0; /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
+    if (nbytes <= 0) return 0;
+    const char* pointer = (const char*)buf;
+    int32_t char_written = 0; 
+    /* Write nbytes bytes of buf to the terminal */
+    while (char_written < nbytes && *pointer != '\0') { /*maybe cause some problems*/
+        putc(*pointer);
+        pointer++;
+        char_written++;
+    }
+    return char_written;
 }
+
 
 /* The following cursor functions are developing from https://wiki.osdev.org/Text_Mode_Cursor */
 /* the following two are added according to the document, but not used*/
