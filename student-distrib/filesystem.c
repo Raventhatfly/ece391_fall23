@@ -224,6 +224,13 @@ int32_t dir_close(int32_t fd)
 {
     return 0;
 }
+/*
+    int32_t get_file_size(int32_t inode);
+    Inputs: int32_t inode
+    Return Value: the size of the file
+    Function: get the size of the file
+    Side effect: none
+*/
 int32_t get_file_size(int32_t inode)
 {
     return (((inode_t*)((boot_block_t*)file_base+1))+inode)->length;
