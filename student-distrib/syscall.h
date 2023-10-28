@@ -45,6 +45,7 @@ typedef struct pcb{
 
 int32_t allocate_pid();
 pcb_t * fetch_pcb_addr(int32_t pid);
+void push_pcb();
 
 extern int32_t halt (uint8_t status);
 extern int32_t execute (const uint8_t* command);

@@ -1,4 +1,5 @@
 #include "syscall.h"
+#include "x86_desc.h"
 #include "filesystem.h"
 #include "page.h"
 #include "rtc.h"
@@ -100,15 +101,15 @@ int32_t execute (const uint8_t* command){
         return -1;
     }
 
-    /* Set up paging */
+    /* Set up prgram paging (4MB) */
     program_page_init(pid);
 
-    /* User-Level Program Loader, 24-27 */
+    /* User-Level Program Loader, bit 24-27 */
     read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
+    // memcpy();
 
-    /* TODO: Copy file data into memory */
 
-    /* Set up PCB */
+    /* Create up PCB */
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
@@ -132,6 +133,7 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[0].file_pos = 0;
     execute_pcb->file_desc_arr[0].inode = 0;
     
+    /* Context Switch */
 
     return 0;
 }
@@ -162,12 +164,46 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes){
 
 int32_t open (const uint8_t* filename){
     printf("Open!\n");
-    return 0;
+    dentry_t dentry;
+    if (read_dentry_by_name(filename,&dentry)==-1) return -1;
+    int32_t cur_pid = fetch_curr_pid();
+    pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
+    int32_t fd;
+    for (fd=2;fd<8;fd++)
+    {
+        if (cur_pcb->file_desc_arr[fd].flags==0) break;
+    } //find the first available fd
+    if (fd==8) return -1; //no available fd
+    if (dentry.file_type==0) //rtc
+    {
+        cur_pcb->file_desc_arr[fd].file_op_table_ptr=&rtc_op_table;
+        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].file_pos=0;
+        cur_pcb->file_desc_arr[fd].inode=0;
+        return fd;
+    }
+    else if (dentry.file_type==1) //directory
+    {
+        cur_pcb->file_desc_arr[fd].file_op_table_ptr=&dir_op_table;
+        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].file_pos=0;
+        cur_pcb->file_desc_arr[fd].inode=0;
+        return fd;
+    }
+    else if (dentry.file_type==2) //regular file
+    {
+        cur_pcb->file_desc_arr[fd].file_op_table_ptr=&file_op_table;
+        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].file_pos=0;
+        cur_pcb->file_desc_arr[fd].inode=dentry.inode_num;
+        return fd;
+    }
+    else return -1; //invalid file type
 }
 
 int32_t close (int32_t fd){
     printf("Close!\n");
-    if (fd < 0 || fd > 7) return -1; /* invalid fd */
+    if (fd <= 1 || fd > 7) return -1;                   /* invalid fd */
     int32_t cur_pid = fetch_curr_pid();
     pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
     if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
