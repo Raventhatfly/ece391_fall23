@@ -4,6 +4,13 @@
 #include "page.h"
 #include "rtc.h"
 #include "terminal.h"
+
+/* commands and args */
+uint8_t cmd[MAX_CMD + 1] = {'\0'};
+uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
+int8_t process_id_arr[MAX_PROCESS] = {0};
+int32_t kernel_stack_ptr = KERNEL_STACK_ADDR;
+
 int32_t halt (uint8_t status){
     printf("Halt!\n");
     return 0;
@@ -14,6 +21,7 @@ int32_t execute (const uint8_t* command){
     uint8_t buf[4];         
     dentry_t dentry;
     uint32_t program_entry;
+    int32_t old_esp, old_ebp;
     int pid;
     int cmd_len = 0;
     int i = 0;
@@ -126,6 +134,7 @@ int32_t execute (const uint8_t* command){
     for(i = 0; i < curr_arg; i++ ){
         strcpy(execute_pcb->args[i], args[i]);
     }
+    
     /* TODO: reinspect here */
     execute_pcb->file_desc_arr[0].file_op_table_ptr = &stdin_op_table;
     execute_pcb->file_desc_arr[0].flags = 1;
@@ -136,11 +145,32 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[0].flags = 1;
     execute_pcb->file_desc_arr[0].file_pos = 0;
     execute_pcb->file_desc_arr[0].inode = 0;
-    
-    /* Context Switch */
-    tss.ss0 = KERNEL_DS;
-    tss.esp0 = kernel_stack_ptr;
 
+    /* save ebp and esp register */
+    asm volatile(
+        "movl %%esp, %0\n"
+        "movl %%ebp, %1\n"
+        : "=r" (old_esp), "=r" (old_ebp)
+    );
+    execute_pcb->esp  = old_esp;
+    execute_pcb->ebp = old_ebp;
+
+    /* Context Switch */
+    sti();
+    tss.ss0 = KERNEL_DS;
+    tss.esp0 = kernel_stack_ptr;            /* TODO: esp0 not sure. */
+    asm volatile(
+        "pushl %0\n"
+        "pushl %1\n"
+        "pushfl\n"
+        "pushl %2\n"
+        "pushl %3\n"
+        "iret\n"
+        : 
+        : "r" (USER_DS), "r" (USER_PROGRAM_ADDR),"r" (USER_CS), "r" (program_entry)         /* TODO: second parameter not sure. */
+        : "memory"
+    );
+    
     return 0;
 }
 

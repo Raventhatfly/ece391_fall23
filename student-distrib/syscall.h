@@ -10,11 +10,7 @@
 #define USER_PROGRAM_ADDR 0x8048000     
 #define PCB_SIZE 0x2000                 /* 8kB */
 
-/* commands and args */
-uint8_t cmd[MAX_CMD + 1] = {'\0'};
-uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
-int8_t process_id_arr[MAX_PROCESS] = {0};
-int32_t kernel_stack_ptr = KERNEL_STACK_ADDR;
+
 
 typedef struct file_op_table{
     int32_t (*open)(const uint8_t *fname);
@@ -43,6 +39,8 @@ typedef struct pcb{
     uint8_t cmd[MAX_CMD + 1];
     int32_t arg_cnt;
     uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
+    int32_t esp;
+    int32_t ebp;
 }pcb_t;
 
 int32_t allocate_pid();
