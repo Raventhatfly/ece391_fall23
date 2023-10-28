@@ -291,11 +291,6 @@ void file_op_table_init()
     stdout_op_table.read =null_read ;
     stdout_op_table.write =terminal_write ;
     stdout_op_table.close = terminal_close;
-
-    null_op_table.open = null_open;
-    null_op_table.read = null_read;
-    null_op_table.write = null_write;
-    null_op_table.close = null_close;
 }
 int null_read(int32_t fd, void* buf, int32_t nbytes)
 {

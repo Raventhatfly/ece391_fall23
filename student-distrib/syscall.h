@@ -25,7 +25,6 @@ file_op_table_t dir_op_table;
 file_op_table_t file_op_table;
 file_op_table_t stdin_op_table;
 file_op_table_t stdout_op_table;
-file_op_table_t null_op_table;
 
 typedef struct file_desc{
     file_op_table_t* file_op_table_ptr;
