@@ -6,7 +6,7 @@
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
 #define MAX_PROCESS 10
-#define KERNEL_STACK_ADDR 0x8000000     /* 128 MB */
+#define KERNEL_STACK_ADDR 0x800000     /* 8 MB */
 #define USER_PROGRAM_ADDR 0x8048000     
 #define PCB_SIZE 0x2000                 /* 8kB */
 

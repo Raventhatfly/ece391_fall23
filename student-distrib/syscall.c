@@ -9,11 +9,49 @@
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
 uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
 int8_t process_id_arr[MAX_PROCESS] = {0};
-int32_t kernel_stack_ptr = KERNEL_STACK_ADDR;
 
 int32_t halt (uint8_t status){
     printf("Halt!\n");
-    return 0;
+
+    int32_t pid=fetch_curr_pid();
+    pcb_t* pcb=fetch_pcb_addr(pid);
+    if(pcb->parent_pid == -1){
+        printf("Fail to halt base shell");
+        execute((uint8_t*)"shell");
+        return -1;
+    }
+
+    int32_t i;
+    for (i=2; i<8; i++) {
+        if (pcb->file_desc_arr[i].flags==1) {
+            close(i);
+            pcb->file_desc_arr[i].flags=0;
+        }
+    }
+    process_id_arr[pid]=0;
+
+    pcb_t* prev_pcb=fetch_pcb_addr(pcb->parent_pid);
+    program_page_init(pcb->parent_pid);
+    
+    tss.ss0 = KERNEL_DS;
+    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE;
+    int32_t ebp,esp;
+    ebp = pcb->ebp;
+    esp = pcb->esp;
+    // asm volatile("
+    //             movl %0, %%ebp \n\
+    //             movl %1, %%esp \n\
+    //             movl %2, %%eax \n\
+                  
+    //             leave          \n\
+    //             ret            \n\
+    //             "
+    //             :
+    //             : "r" (cur_pcb->ebp), \
+    //               "r" (cur_pcb->esp), \
+    //               "r" (status)
+    //             : "ebp", "esp", "eax");
+    // return -1;
 }
 
 int32_t execute (const uint8_t* command){
@@ -35,6 +73,9 @@ int32_t execute (const uint8_t* command){
     *  state 3, reading the current arg
     */
     int state = 0;  
+    if(command == NULL){
+        return -1;
+    }
     while(command[i] != '\0'){
         switch (state)
         {
@@ -121,7 +162,6 @@ int32_t execute (const uint8_t* command){
     read_data(dentry.inode_num, 0, USER_PROGRAM_ADDR, file_len);
 
     /* Create up PCB */
-    kernel_stack_ptr -= PCB_SIZE;
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
@@ -130,9 +170,9 @@ int32_t execute (const uint8_t* command){
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
     }
-    strcpy(execute_pcb->cmd, cmd);
+    strcpy((int8_t *)execute_pcb->cmd, (int8_t *)cmd);
     for(i = 0; i < curr_arg; i++ ){
-        strcpy(execute_pcb->args[i], args[i]);
+        strcpy((int8_t *)execute_pcb->args[i], (int8_t *)args[i]);
     }
     
     /* TODO: reinspect here */
@@ -158,7 +198,7 @@ int32_t execute (const uint8_t* command){
     /* Context Switch */
     sti();
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = kernel_stack_ptr;            /* TODO: esp0 not sure. */
+    tss.esp0 = KERNEL_STACK_ADDR - (pid + 1) * PCB_SIZE;            /* TODO: esp0 not sure. */
     asm volatile(
         "pushl %0\n"
         "pushl %1\n"
