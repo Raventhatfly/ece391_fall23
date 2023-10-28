@@ -145,7 +145,7 @@ int32_t directory_read(uint32_t index,uint8_t* buf, dentry_t* dentry)
 int32_t file_open(const uint8_t *fname)
 {
     dentry_t dentry;
-    return read_dentry_by_name(fname,&dentry)==-1; //return -1 on failure
+    return read_dentry_by_name(fname,&dentry); //return -1 on failure
 }
 /*
     int32_t file_read(int32_t fd);
