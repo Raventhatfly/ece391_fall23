@@ -1,5 +1,5 @@
 #include "filesystem.h"
-
+#include "syscall.h"
 int* file_base;
 int* inode_addr;
 int* data_addr;
@@ -156,7 +156,10 @@ int32_t file_open(const uint8_t *fname)
 */
 int32_t file_read(int32_t fd, void* buf, int32_t nbytes)
 {
-    return 0;
+    pcb_t * cur_pcb= fetch_pcb_addr(fetch_curr_pid());
+    int32_t inode=cur_pcb->file_desc_arr[fd].inode;
+    int32_t offset=cur_pcb->file_desc_arr[fd].file_pos;
+    return read_data(inode,offset,buf,nbytes);
 }
 /*
     int32_t file_write(int32_t fd);
@@ -200,7 +203,14 @@ int32_t dir_open(const uint8_t *fname)
 */
 int32_t dir_read(int32_t fd, void* buf, int32_t nbytes)
 {
-    return 0;
+    pcb_t * cur_pcb= fetch_pcb_addr(fetch_curr_pid());
+    int length;
+    if (cur_pcb->file_desc_arr[fd].file_pos>=boot_block_ptr->dir_cnt) return 0; //reach the end of the directory
+    dentry_t dentry;
+    read_dentry_by_index(cur_pcb->file_desc_arr[fd].file_pos,&dentry); //get the dentry by index
+    length=directory_read(cur_pcb->file_desc_arr[fd].file_pos,buf,&dentry);
+    cur_pcb->file_desc_arr[fd].file_pos++;
+    return length;
 }
 /*
     int32_t dir_write(int32_t fd);
