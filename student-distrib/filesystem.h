@@ -43,6 +43,7 @@ int32_t dir_open(const uint8_t *fname);
 int32_t dir_read(int32_t fd, void* buf, int32_t nbytes);
 int32_t dir_write(int32_t fd, const void* buf, int32_t nbytes);
 int32_t dir_close(int32_t fd);
+extern int32_t get_file_size(int32_t inode);
 typedef  enum file_type{
     USER_ACCESS_RTC_FILE,
     FILE_DIRECTORY,
