@@ -19,6 +19,7 @@ int32_t execute (const uint8_t* command){
     int i = 0;
     int j = 0;
     int curr_arg = 0;
+    int file_len;
     /* 
     *  state 0, waiting for command at the leading spaces
     *  state 1, reading the command
@@ -104,12 +105,15 @@ int32_t execute (const uint8_t* command){
     /* Set up prgram paging (4MB) */
     program_page_init(pid);
 
-    /* User-Level Program Loader, bit 24-27 */
+    /* load user program entry, bit 24 - 27 */
     read_data(dentry.inode_num,24, (uint8_t*) &program_entry, 4);
-    // memcpy();
 
+    /* User-Level Program Loader */
+    file_len = get_file_size(dentry.inode_num);
+    read_data(dentry.inode_num, 0, USER_PROGRAM_ADDR, file_len);
 
     /* Create up PCB */
+    kernel_stack_ptr -= PCB_SIZE;
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
@@ -134,6 +138,8 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[0].inode = 0;
     
     /* Context Switch */
+    tss.ss0 = KERNEL_DS;
+    tss.esp0 = kernel_stack_ptr;
 
     return 0;
 }
