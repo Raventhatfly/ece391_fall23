@@ -300,11 +300,3 @@ int null_write(int32_t fd, const void* buf, int32_t nbytes)
 {
     return -1;
 }
-int null_open(const uint8_t *fname)
-{
-    return -1;
-}
-int null_close(int32_t fd)
-{
-    return -1;
-}

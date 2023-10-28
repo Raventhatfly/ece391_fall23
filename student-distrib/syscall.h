@@ -60,6 +60,4 @@ extern void file_op_table_init();
 int32_t fetch_curr_pid();
 int null_read(int32_t fd, void* buf, int32_t nbytes);
 int null_write(int32_t fd, const void* buf, int32_t nbytes);
-int null_open(const uint8_t *fname);
-int null_close(int32_t fd);
 #endif
