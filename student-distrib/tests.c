@@ -348,7 +348,8 @@ void launch_tests(){
 	// );
 	asm volatile(
         "movl %0, %%ebx\n"  
-        "movl $1, %%eax"     
+        "movl $2, %%eax\n"  
+		"int $0x80\n"   
         :      
         : "r" (cmd)         
     );

@@ -16,11 +16,11 @@ int32_t halt (uint8_t status){
     int32_t ret;
     int32_t i;
 
-    int32_t pid=fetch_curr_pid();
-    pcb_t* pcb=fetch_pcb_addr(pid);
+    ret = 0;
+    int32_t pid = fetch_curr_pid();
+    pcb_t* pcb = fetch_pcb_addr(pid);
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process");
-        execute((uint8_t*)"shell");
         return -1;
     }
     
@@ -51,7 +51,7 @@ int32_t halt (uint8_t status){
         : "r" (esp), "r" (ebp),"r"(ret)
         : "esp", "ebp", "eax"
     );
-    return -1;
+    return 0;
 }
 
 int32_t execute (const uint8_t* command){
@@ -142,13 +142,15 @@ int32_t execute (const uint8_t* command){
     }
     
     /* Executble check: ELF magic number */
-    if(buf[0] != 0x7f || buf[1] != 0x4f || buf[2] != 0x4c || buf[3] != 0x46){
+    if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4c || buf[3] != 0x46){
+        printf(" ELF Magic: %x, %x, %x, %x\n", buf[0],buf[1],buf[2],buf[3]);
         printf("Unrecoginzed Executble!");
         return -1;
     }
 
     /* Allocate PID */
     if((pid = allocate_pid()) == -1){
+        printf("Process ID allocation failed!\n");
         return -1;
     }
 
@@ -320,7 +322,7 @@ int32_t sigreturn (void){
 int32_t allocate_pid(){
     int i;
     for(i = 0;i < MAX_PROCESS; i++){
-        if(process_id_arr[i] != 0){
+        if(process_id_arr[i] == 0){
             process_id_arr[i] = 1;
             return i;
         }
