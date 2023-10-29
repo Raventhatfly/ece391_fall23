@@ -21,6 +21,8 @@ int32_t halt (uint8_t status){
     pcb_t* pcb = fetch_pcb_addr(pid);
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process");
+        process_id_arr[pcb->pid] = 0;
+        execute("shell");
         return -1;
     }
     
@@ -185,9 +187,9 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[0].inode = 0;
 
     execute_pcb->file_desc_arr[1].file_op_table_ptr = &stdout_op_table;
-    execute_pcb->file_desc_arr[0].flags = 1;
-    execute_pcb->file_desc_arr[0].file_pos = 0;
-    execute_pcb->file_desc_arr[0].inode = 0;
+    execute_pcb->file_desc_arr[1].flags = 1;
+    execute_pcb->file_desc_arr[1].file_pos = 0;
+    execute_pcb->file_desc_arr[1].inode = 0;
 
     /* save ebp and esp register */
     asm volatile(
@@ -201,7 +203,7 @@ int32_t execute (const uint8_t* command){
     /* Context Switch */
     sti();
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - (pid + 1) * PCB_SIZE - 1;          
+    tss.esp0 = KERNEL_STACK_ADDR - pid * PCB_SIZE - 1;          
     asm volatile(
         "pushl %0\n"
         "pushl %1\n"
@@ -210,7 +212,7 @@ int32_t execute (const uint8_t* command){
         "pushl %3\n"
         "iret\n"
         : 
-        : "r" (USER_DS), "r" (USER_PROGRAM_ADDR),"r" (USER_CS), "r" (program_entry)         /* TODO: second parameter not sure. */
+        : "r" (USER_DS), "r" (USER_PROGRAM_ADDR),"r" (USER_CS), "r" (program_entry)   
         : "memory"
     );
     
@@ -218,7 +220,7 @@ int32_t execute (const uint8_t* command){
 }
 
 int32_t read (int32_t fd, void* buf, int32_t nbytes){
-    printf("Read!\n");
+    // printf("Read!\n");
     if (fd < 0 || fd > 7) return -1; /* invalid fd */
     if (buf == NULL) return -1;      /* invalid buf */
     if (nbytes < 0) return -1;       /* invalid nbytes */
@@ -231,7 +233,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes){
 }
 
 int32_t write (int32_t fd, const void* buf, int32_t nbytes){
-    printf("Write!\n");
+    // printf("Write!\n");
     if (fd < 0 || fd > 7) return -1; /* invalid fd */
     if (buf == NULL) return -1;      /* invalid buf */
     if (nbytes < 0) return -1;       /* invalid nbytes */
