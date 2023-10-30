@@ -52,7 +52,8 @@ void screen_cpy(){
 */
 int32_t terminal_input(unsigned char input){
     if (input == ENTER_ASC2){             /* if the input is enter, clear the buffer and copy the screen as moving to next line*/
-        my_terminal.buffer_iterator=buffer_clear();  
+        my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ENTER_ASC2;
+        my_terminal.buffer_iterator++;
         screen_cpy();
         my_terminal.cursor_x_coord=screen_x;
         my_terminal.cursor_y_coord=screen_y;
