@@ -7,7 +7,7 @@ extern char* video_mem;  /* can the extern be used to link the variables in lib.
 
 static int32_t i;
 termin_t my_terminal;
-
+int32_t read_flag=0;
 /* the following four function are helper functions */
 /*
     * buffer_clear
@@ -57,6 +57,7 @@ int32_t terminal_input(unsigned char input){
         my_terminal.cursor_x_coord=screen_x;
         my_terminal.cursor_y_coord=screen_y;
         draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
+        read_flag=1;
         return -1;
     }
     if (input == 0x0){
@@ -106,8 +107,9 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     int32_t j = 0;
 	if (buf == NULL) return 0;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
     if (nbytes <= 0) return 0;  
-	memset(my_terminal.terminal_buffer, 0, BUFFER_SIZE);	/*clear the buffer*/
+    read_flag=0;
 	my_terminal.buffer_iterator = 0;	  
+    while (!read_flag);  /*wait until the enter is pressed*/
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
         j = BUFFER_SIZE;
     }else{
@@ -207,6 +209,7 @@ uint32_t terminal_clear(){
     my_terminal.cursor_x_coord=i;
     my_terminal.cursor_y_coord=i;
     i = buffer_clear();  /*clear the buffer*/
+    read_flag=0;
     draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
     return 0;
 }
