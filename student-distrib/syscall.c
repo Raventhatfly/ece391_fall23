@@ -57,7 +57,6 @@ int32_t halt (uint8_t status){
 }
 
 int32_t execute (const uint8_t* command){
-    printf("Execte!\n");
     uint8_t buf[4];         
     dentry_t dentry;
     uint32_t program_entry;

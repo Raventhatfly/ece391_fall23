@@ -105,8 +105,8 @@ void terminal_output(){
 int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     int32_t i = 0;
     int32_t j = 0;
-	if (buf == NULL) return 0;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
-    if (nbytes <= 0) return 0;  
+	if (buf == NULL) return -1;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
+    if (nbytes <= 0) return -1;  
     read_flag=0;
 	my_terminal.buffer_iterator = 0;	  
     while (!read_flag);  /*wait until the enter is pressed*/
