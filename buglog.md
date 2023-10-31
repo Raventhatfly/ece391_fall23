@@ -60,3 +60,10 @@ the assembly functions.
 **Description**: The characters appear on the screen are random rubbish characters.<br>
 **Difficulty**: 15 minutes <br>
 **Fixing Method**: Using array of `uint32_t` instead of `uint8_t` when printing the characters. <br>
+
+### Checkpoint 3
+
+**Author**: Zhang Yucheng<br>
+**Description**: ls only shows part of the filename in the directory <br>
+**Difficulty**: Half an hour<br>
+**Fixing Method**: I find that I add the number of bytes into the file_pos, while we should only add 1 for ls because we read directory one by one.
