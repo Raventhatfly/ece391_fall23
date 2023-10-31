@@ -207,9 +207,10 @@ int32_t dir_read(int32_t fd, void* buf, int32_t nbytes)
     int length;
     if (cur_pcb->file_desc_arr[fd].file_pos>=boot_block_ptr->dir_cnt) return 0; //reach the end of the directory
     dentry_t dentry;
-    read_dentry_by_index(cur_pcb->file_desc_arr[fd].file_pos,&dentry); //get the dentry by index
+    // read_dentry_by_index(cur_pcb->file_desc_arr[fd].file_pos,&dentry); //get the dentry by index
     length=directory_read(cur_pcb->file_desc_arr[fd].file_pos,buf,&dentry);
     cur_pcb->file_desc_arr[fd].file_pos++;
+    if(length==-1) cur_pcb->file_desc_arr[fd].file_pos = 0;
     return length;
 }
 /*

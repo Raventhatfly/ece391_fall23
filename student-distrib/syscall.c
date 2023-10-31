@@ -40,8 +40,8 @@ int32_t halt (uint8_t status){
     tss.ss0 = KERNEL_DS;
     tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 1;
     
-    ebp = pcb->ebp;
-    esp = pcb->esp;
+    ebp = prev_pcb->ebp;    /* TODO: Not sure here */
+    esp = prev_pcb->esp;
     ret = (int32_t) status;
     asm volatile(
         "movl %0, %%esp\n"
@@ -82,14 +82,14 @@ int32_t execute (const uint8_t* command){
         switch (state)
         {
         case 0:
-            if(command[i] == ' '){
+            if(command[i] == ' ' || command[i] == '\n'){
                 i++;
             }else{
                 state = 1;
             }
             break;
         case 1:
-            if(command[i] == ' '){
+            if(command[i] == ' ' || command[i] == '\n'){
                 state = 2;
                 i++;
             }else{
@@ -99,14 +99,14 @@ int32_t execute (const uint8_t* command){
             }
             break;
         case 2:
-            if(command[i] != ' '){
+            if(command[i] != ' ' || command[i] == '\n'){
                 state = 3;
             }else{
                 i++;
             }
             break;
         case 3: 
-            if(command[i] == ' '){
+            if(command[i] == ' '|| command[i] == '\n'){
                 state = 2;
                 curr_arg++;
                 if(curr_arg >= MAX_ARGS)    return -1;
@@ -136,7 +136,7 @@ int32_t execute (const uint8_t* command){
     if(cmd_len == 0){
         return -1;      /* no executable input */
     }
-    retval = read_dentry_by_name(cmd,&dentry) == -1;
+    retval = read_dentry_by_name(cmd,&dentry);
     memset(cmd,'\0',MAX_CMD + 1);
     if(retval == -1){
         return -1;

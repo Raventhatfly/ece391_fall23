@@ -226,11 +226,16 @@ idt_syscall:
     pushl %ecx
     pushl %ebx
     call *idt_syscall_jmp_table(,%eax,4)
+    movl %eax, .ret_val
     addl $12, %esp
 
     .invalid_call:
     popal
+    movl .ret_val, %eax
     iret
+
+    .ret_val:
+    .long 0
 
 idt_syscall_jmp_table:
     .long halt
