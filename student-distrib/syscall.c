@@ -38,10 +38,10 @@ int32_t halt (uint8_t status){
     program_page_init(pcb->parent_pid);
     
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 1;
+    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 4;
     
-    ebp = prev_pcb->ebp;    /* TODO: Not sure here */
-    esp = prev_pcb->esp;
+    ebp = pcb->ebp;    /* TODO: Not sure here */
+    esp = pcb->esp;
     ret = (int32_t) status;
     asm volatile(
         "movl %0, %%esp\n"
@@ -205,7 +205,7 @@ int32_t execute (const uint8_t* command){
     /* Context Switch */
     sti();
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - pid * PCB_SIZE - 1;          
+    tss.esp0 = KERNEL_STACK_ADDR - pid * PCB_SIZE - 4;          
     asm volatile(
         "pushl %0\n"
         "pushl %1\n"
@@ -214,7 +214,7 @@ int32_t execute (const uint8_t* command){
         "pushl %3\n"
         "iret\n"
         : 
-        : "r" (USER_DS), "r" (USER_PROGRAM_ADDR),"r" (USER_CS), "r" (program_entry)   
+        : "r" (USER_DS), "r" (USER_STACK_ADDR - 4),"r" (USER_CS), "r" (program_entry)   
         : "memory"
     );
     

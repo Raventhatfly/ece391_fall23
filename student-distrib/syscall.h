@@ -8,6 +8,7 @@
 #define MAX_PROCESS 10
 #define KERNEL_STACK_ADDR 0x800000     /* 8 MB */
 #define USER_PROGRAM_ADDR 0x8048000     
+#define USER_STACK_ADDR   0x8400000     /* 132 MB */
 #define PCB_SIZE 0x2000                 /* 8kB */
 
 
