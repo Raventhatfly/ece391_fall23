@@ -338,6 +338,7 @@ void launch_tests(){
 
 	/* Checkpoint 3 tests */
 	uint8_t* cmd = "shell";
+	uint8_t* cmd_shell = "ls";
 	// asm volatile(
 	// "movl $2, %%eax\n"
 	// "movl %0, %%ebx"

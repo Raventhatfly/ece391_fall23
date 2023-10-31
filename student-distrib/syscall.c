@@ -67,6 +67,7 @@ int32_t execute (const uint8_t* command){
     int j = 0;
     int curr_arg = 0;
     int file_len;
+    int retval;
     /* 
     *  state 0, waiting for command at the leading spaces
     *  state 1, reading the command
@@ -135,7 +136,9 @@ int32_t execute (const uint8_t* command){
     if(cmd_len == 0){
         return -1;      /* no executable input */
     }
-    if(read_dentry_by_name(cmd,&dentry) == -1){
+    retval = read_dentry_by_name(cmd,&dentry) == -1;
+    memset(cmd,'\0',MAX_CMD + 1);
+    if(retval == -1){
         return -1;
     }
     if(read_data(dentry.inode_num,0,buf,4) != 4){
