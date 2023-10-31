@@ -230,7 +230,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes){
     pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
     if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
     int32_t numread=cur_pcb->file_desc_arr[fd].file_op_table_ptr->read(fd,buf,nbytes);
-    cur_pcb->file_desc_arr[fd].file_pos+=numread;
+    if (cur_pcb->file_desc_arr[fd].inode!=0) cur_pcb->file_desc_arr[fd].file_pos+=numread; //update file position only for regular file
     return numread;
 }
 
