@@ -22,7 +22,7 @@ int32_t halt (uint8_t status){
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process\n");
         process_id_arr[pcb->pid] = 0;
-        execute("shell");
+        execute((uint8_t*)("shell"));
         return -1;
     }
     
@@ -167,7 +167,7 @@ int32_t execute (const uint8_t* command){
 
     /* User-Level Program Loader */
     file_len = get_file_size(dentry.inode_num);
-    read_data(dentry.inode_num, 0, USER_PROGRAM_ADDR, file_len);
+    read_data(dentry.inode_num, 0, (uint8_t*)USER_PROGRAM_ADDR, file_len);
 
     /* Create PCB */
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
