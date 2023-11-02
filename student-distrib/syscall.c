@@ -296,25 +296,25 @@ int32_t open (const uint8_t* filename){
     if (dentry.file_type==0) //rtc
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&rtc_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=0;
+        cur_pcb->file_desc_arr[fd].inode=0; //inode is 0 for rtc
         return fd;
     }
     else if (dentry.file_type==1) //directory
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&dir_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=0;
+        cur_pcb->file_desc_arr[fd].inode=0; //inode is 0 for directory
         return fd;
     }
     else if (dentry.file_type==2) //regular file
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&file_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=dentry.inode_num;
+        cur_pcb->file_desc_arr[fd].inode=dentry.inode_num; //inode is 0 for directory
         return fd;
     }
     else return -1; //invalid file type
