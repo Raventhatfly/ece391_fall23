@@ -11,7 +11,7 @@ uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0','\0','\0','\0','\0','\0','\0','\
 int8_t process_id_arr[MAX_PROCESS] = {0};
 /*
     * halt
-    *   DESCRIPTION: halt the current process
+    *   DESCRIPTION: halt the current process and return to the previous process
     *   INPUTS: status
     *   OUTPUTS: none
     *   RETURN VALUE: 0
@@ -32,7 +32,7 @@ int32_t halt (uint8_t status){
         execute((uint8_t*)("shell"));
         return -1;
     }
-    
+    /* 0~1 are stdin and stdout, cannot be closed */
     for (i=2; i<8; i++) {
         if (pcb->file_desc_arr[i].flags==1) {
             close(i);
@@ -50,7 +50,7 @@ int32_t halt (uint8_t status){
     ebp = pcb->ebp;    /* TODO: Not sure here */
     esp = pcb->esp;
     ret = (int32_t) status;
-    if (status==255) ret=256;
+    if (status==255) ret=256;         /* exception */
     asm volatile(
         "movl %0, %%esp\n"
         "movl %1, %%ebp\n"
@@ -296,25 +296,25 @@ int32_t open (const uint8_t* filename){
     if (dentry.file_type==0) //rtc
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&rtc_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=0;
+        cur_pcb->file_desc_arr[fd].inode=0; //inode is 0 for rtc
         return fd;
     }
     else if (dentry.file_type==1) //directory
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&dir_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=0;
+        cur_pcb->file_desc_arr[fd].inode=0; //inode is 0 for directory
         return fd;
     }
     else if (dentry.file_type==2) //regular file
     {
         cur_pcb->file_desc_arr[fd].file_op_table_ptr=&file_op_table;
-        cur_pcb->file_desc_arr[fd].flags=1;
+        cur_pcb->file_desc_arr[fd].flags=1; //set flag to 1
         cur_pcb->file_desc_arr[fd].file_pos=0;
-        cur_pcb->file_desc_arr[fd].inode=dentry.inode_num;
+        cur_pcb->file_desc_arr[fd].inode=dentry.inode_num; //inode is 0 for directory
         return fd;
     }
     else return -1; //invalid file type
