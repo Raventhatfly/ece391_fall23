@@ -229,10 +229,14 @@ idt_syscall:
     movl %eax, .ret_val
     addl $12, %esp
 
-    .invalid_call:
+    .invalid_return:
     popal
     movl .ret_val, %eax
     iret
+
+    .invalid_call:
+    movl $-1, .ret_val
+    jmp .invalid_return
 
     .ret_val:
     .long 0

@@ -229,7 +229,7 @@ int32_t execute (const uint8_t* command){
         "pushl %3\n"
         "iret\n"
         : 
-        : "r" (USER_DS), "r" (USER_STACK_ADDR - 4),"r" (USER_CS), "r" (program_entry)   
+        : "r" (USER_DS), "r" (USER_PROGRAM_ADDR - 4),"r" (USER_CS), "r" (program_entry)   
         : "memory"
     );
     
