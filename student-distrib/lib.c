@@ -169,9 +169,29 @@ int32_t puts(int8_t* s) {
  *  Function: Output a character to the console */
 void putc(uint8_t c) {
     if(c == '\n' || c == '\r') {
-        screen_y++;
-        screen_x = 0;
+        if (screen_x >= NUM_COLS){
+            screen_x = 0;          /*set the position of the row*/
+                if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
+                    screen_y++;         
+                }else{
+                    memcpy(video_mem, video_mem+NUM_COLS*2, NUM_COLS*(NUM_ROWS-1)*2); /* or copy the screen to the next line*/
+                    int i;
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 ) = ' ';  /*clear the screen with blank*/
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 + 1) = ATTRIB;  /*set the ATTRIB of the screen*/
+                }
+        }
     } else {
+        if (screen_x >= NUM_COLS){
+            screen_x = 0;          /*set the position of the row*/
+                if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
+                    screen_y++;         
+                }else{
+                    memcpy(video_mem, video_mem+NUM_COLS*2, NUM_COLS*(NUM_ROWS-1)*2); /* or copy the screen to the next line*/
+                    int i;
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 ) = ' ';  /*clear the screen with blank*/
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 + 1) = ATTRIB;  /*set the ATTRIB of the screen*/
+                }
+        }
         *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1)) = c;
         *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1) + 1) = ATTRIB;
         screen_x++;

@@ -33,7 +33,7 @@ uint32_t buffer_clear(){
 */
 void screen_cpy(){
     screen_x = 0;          /*set the position of the row*/
-    if (screen_y < COLS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
+    if (screen_y < ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
         screen_y++;         
     }else{
         memcpy(video_mem, video_mem+COLS*2, COLS*(ROWS-1)*2); /* or copy the screen to the next line*/
@@ -140,6 +140,9 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { /*maybe cause some problems*/
         putc(*pointer);
+        if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
+            screen_cpy();
+        }
         my_terminal.cursor_x_coord=screen_x;
         my_terminal.cursor_y_coord=screen_y;
         draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
