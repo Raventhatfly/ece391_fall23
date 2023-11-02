@@ -67,3 +67,8 @@ the assembly functions.<br>
 **Description**: ls only shows part of the filename in the directory <br>
 **Difficulty**: Half an hour<br>
 **Fixing Method**: I find that I add the number of bytes into the file_pos, while we should only add 1 for ls because we read directory one by one. <br>
+
+**Author**: Luo Hanjun<br>
+**Description**: when we use ls, the cursor didn't change immediately <br>
+**Difficulty**: 5 minutes<br>
+**Fixing Method**: Add a draw_cursor function in the terminal write <br>
