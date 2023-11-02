@@ -72,3 +72,8 @@ the assembly functions.<br>
 **Description**: when we use ls, the cursor didn't change immediately <br>
 **Difficulty**: 5 minutes<br>
 **Fixing Method**: Add a draw_cursor function in the terminal write <br>
+
+**Author**: Liu Xuecheng<br>
+**Description**: halt cannot return to the previous process <br>
+**Difficulty**: 30 minutes<br>
+**Fixing Method**: save previous esp and ebp in the pdb and reset them when halt ends <br>
