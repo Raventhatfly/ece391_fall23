@@ -43,6 +43,7 @@ int32_t halt (uint8_t status){
     ebp = pcb->ebp;    /* TODO: Not sure here */
     esp = pcb->esp;
     ret = (int32_t) status;
+    if (status==255) ret=256;
     asm volatile(
         "movl %0, %%esp\n"
         "movl %1, %%ebp\n"
