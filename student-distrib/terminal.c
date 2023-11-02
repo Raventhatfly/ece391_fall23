@@ -140,9 +140,9 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { /*maybe cause some problems*/
         putc(*pointer);
-        if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
-            screen_cpy();
-        }
+        //if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
+         //   screen_cpy();
+        //}
         my_terminal.cursor_x_coord=screen_x;
         my_terminal.cursor_y_coord=screen_y;
         draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
