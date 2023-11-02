@@ -404,20 +404,41 @@ int32_t allocate_pid(){
     }
     return -1;
 }
-
+/*
+    * fetch_pcb_addr
+    *   DESCRIPTION: fetch the address of the PCB
+    *   INPUTS: pid
+    *   OUTPUTS: none
+    *   RETURN VALUE: The address of the PCB
+    *   SIDE EFFECTS: none
+*/
 pcb_t * fetch_pcb_addr(int32_t pid){
     pcb_t * return_addr;
     return_addr = (pcb_t *) (KERNEL_STACK_ADDR - (pid + 1) * PCB_SIZE);
     return return_addr;
 }
-
+/*
+    * fetch_curr_pid
+    *   DESCRIPTION: fetch the current process ID
+    *  INPUTS: none
+    *  OUTPUTS: none
+    * RETURN VALUE: The current process ID
+    * SIDE EFFECTS: none
+*/
 int32_t fetch_curr_pid(){
     register int32_t espv asm ("esp");
     return (KERNEL_STACK_ADDR-espv)/PCB_SIZE;
 }
 
 
-    
+/*
+    * file_op_table_init
+    *   DESCRIPTION: initialize the file operation table
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: none
+*/
 
 void file_op_table_init()
 {
@@ -446,10 +467,26 @@ void file_op_table_init()
     stdout_op_table.write =terminal_write ;
     stdout_op_table.close = terminal_close;
 }
+/*
+    * null_read
+    *   DESCRIPTION: null read
+    *   INPUTS: fd, buf, nbytes
+    *   OUTPUTS: none
+    *   RETURN VALUE: -1
+    *   SIDE EFFECTS: none
+*/
 int null_read(int32_t fd, void* buf, int32_t nbytes)
 {
     return -1;
 }
+/*
+    * null_write
+    *   DESCRIPTION: null write
+    *   INPUTS: fd, buf, nbytes
+    *   OUTPUTS: none
+    *   RETURN VALUE: -1
+    *   SIDE EFFECTS: none
+*/
 int null_write(int32_t fd, const void* buf, int32_t nbytes)
 {
     return -1;
