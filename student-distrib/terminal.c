@@ -51,7 +51,7 @@ void screen_cpy(){
     *   SIDE EFFECTS: read the input from keyboard
 */
 int32_t terminal_input(unsigned char input){
-    if (input == ENTER_ASC2){             /* if the input is enter, clear the buffer and copy the screen as moving to next line*/
+    if (input == ENTER_ASC2){             
         my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ENTER_ASC2;
         my_terminal.buffer_iterator++;
         screen_cpy();
@@ -113,6 +113,7 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     buffer_clear(); 
     read_flag = 0; 
     while (!read_flag);  /*wait until the enter is pressed*/
+    my_terminal.terminal_buffer[my_terminal.buffer_iterator] = '\0';
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
         j = BUFFER_SIZE;
     }else{
@@ -140,9 +141,9 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { /*maybe cause some problems*/
         putc(*pointer);
-        if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
-            screen_cpy();
-        }
+        //if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
+         //   screen_cpy();
+        //}
         my_terminal.cursor_x_coord=screen_x;
         my_terminal.cursor_y_coord=screen_y;
         draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
@@ -246,6 +247,7 @@ void terminal_init(){
 */
 uint32_t terminal_display(unsigned char input){
     int flag;
+    // if(my_terminal.buffer_iterator == BUFFER_SIZE -1 && (input != '\n' || input != '\r')) return -1;
     if (my_terminal.buffer_iterator >= BUFFER_SIZE) return -1; /*if the buffer is full, return -1 to inform the failure*/
     flag = terminal_input(input);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/

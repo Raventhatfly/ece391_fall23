@@ -169,7 +169,8 @@ int32_t puts(int8_t* s) {
  *  Function: Output a character to the console */
 void putc(uint8_t c) {
     if(c == '\n' || c == '\r') {
-        if (screen_x >= NUM_COLS){
+        //if (screen_x >= NUM_COLS-1){
+        {
             screen_x = 0;          /*set the position of the row*/
                 if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
                     screen_y++;         
@@ -181,7 +182,7 @@ void putc(uint8_t c) {
                 }
         }
     } else {
-        if (screen_x >= NUM_COLS){
+        if (screen_x >= NUM_COLS-1){
             screen_x = 0;          /*set the position of the row*/
                 if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
                     screen_y++;         
