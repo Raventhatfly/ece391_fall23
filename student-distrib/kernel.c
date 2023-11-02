@@ -25,6 +25,8 @@ int* filesys_base;
 /* declaration of init functions */
 extern void page_init();
 extern void key_init();
+extern void file_op_table_init();
+
 
 /* Check if MAGIC is valid and print the Multiboot information structure
    pointed by ADDR. */
