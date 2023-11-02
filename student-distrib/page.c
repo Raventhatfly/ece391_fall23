@@ -16,12 +16,12 @@ void page_init() {
         page_table_entries[i] = 0;
     }
     int video_idx = VIDEO >> 12;    /* get the index of video memory, move 12 bit to the right for reduce 0 */
-    page_table_entries[video_idx] = VIDEO | PRESENT_MASK; /* set the video memory*/
+    page_table_entries[video_idx] = (VIDEO & 0xfffff000) | PRESENT_MASK; /* set the video memory*/
     page_table_entries[video_idx] |= R_AND_W_MASK;
-    page_table_entries[video_idx] |= USER_MASK;
-    page_directory_entries[0] = ((uint32_t)page_table_entries)| PRESENT_MASK; /* set the page directory entries */
+    // page_table_entries[video_idx] |= USER_MASK;
+    page_directory_entries[0] = ((uint32_t)page_table_entries & 0xfffff000)| PRESENT_MASK; /* set the page directory entries */
     page_directory_entries[0] |= R_AND_W_MASK; 
-    page_directory_entries[0] |= USER_MASK; 
+    // page_directory_entries[0] |= USER_MASK; 
     page_directory_entries[1] = KERNEL | MB_BITMASK; /* set the kernel memory */
     /* use asm to set the control register bits to their proper values */
     /* so tells the hardware where the page directory is located and enables hardware support for paging */
@@ -32,7 +32,7 @@ void page_init() {
     orl $0x00000010,%%eax       \n\
     movl %%eax,%%cr4            \n\
     movl %%cr0,%%eax            \n\
-    orl $0x80000001,%%eax       \n\
+    orl $0x80000000,%%eax       \n\
     movl %%eax,%%cr0            \n\
     "
     :
@@ -54,7 +54,7 @@ void program_page_init(uint32_t program_id){
     page_directory_entries[pg_dir_index] |= R_AND_W_MASK;
     page_directory_entries[pg_dir_index] |= USER_MASK;
     page_directory_entries[pg_dir_index] |= MB_BITMASK; /* set the page directory entries */
-    page_directory_entries[pg_dir_index] |= (EIGHT_MBYTE + program_id * FOUR_MBYTE) >> 12; /* set physical base address*/
+    page_directory_entries[pg_dir_index] |= (EIGHT_MBYTE + program_id * FOUR_MBYTE); /* set physical base address*/
     uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
     asm volatile("     \n\
     movl %0, %%eax     \n\
