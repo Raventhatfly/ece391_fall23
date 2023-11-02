@@ -9,7 +9,14 @@
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
 uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0','\0','\0','\0','\0','\0','\0','\0','\0','\0'};
 int8_t process_id_arr[MAX_PROCESS] = {0};
-
+/*
+    * halt
+    *   DESCRIPTION: halt the current process
+    *   INPUTS: status
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t halt (uint8_t status){
     /* printf("Halt!\n"); */
     int32_t ebp,esp;
@@ -56,7 +63,14 @@ int32_t halt (uint8_t status){
     );
     return 0;
 }
-
+/*
+    * execute
+    *   DESCRIPTION: execute the input command
+    *   INPUTS: command
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t execute (const uint8_t* command){
     uint8_t buf[4];         
     dentry_t dentry;
@@ -221,7 +235,14 @@ int32_t execute (const uint8_t* command){
     
     return 0;
 }
-
+/*
+    * read
+    *   DESCRIPTION: read the input command
+    *   INPUTS: fd, buf, nbytes
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t read (int32_t fd, void* buf, int32_t nbytes){
     // printf("Read!\n");
     if (fd < 0 || fd > 7) return -1; /* invalid fd */
@@ -234,7 +255,14 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes){
     if (cur_pcb->file_desc_arr[fd].inode!=0) cur_pcb->file_desc_arr[fd].file_pos+=numread; //update file position only for regular file
     return numread;
 }
-
+/*
+    * write
+    *   DESCRIPTION: write the input command
+    *   INPUTS: fd, buf, nbytes
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t write (int32_t fd, const void* buf, int32_t nbytes){
     // printf("Write!\n");
     if (fd < 0 || fd > 7) return -1; /* invalid fd */
@@ -245,7 +273,14 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes){
     if (cur_pcb->file_desc_arr[fd].flags==0) return -1; //invalid fd
     return cur_pcb->file_desc_arr[fd].file_op_table_ptr->write(fd,buf,nbytes);
 }
-
+/*
+    * open
+    *   DESCRIPTION: open the input command
+    *   INPUTS: filename
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t open (const uint8_t* filename){
     /* printf("Open!\n");  */
     dentry_t dentry;
@@ -284,7 +319,14 @@ int32_t open (const uint8_t* filename){
     }
     else return -1; //invalid file type
 }
-
+/*
+    * close
+    *   DESCRIPTION: close the input command
+    *   INPUTS: fd
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t close (int32_t fd){
     /* printf("Close!\n"); */
     if (fd <= 1 || fd > 7) return -1;                   /* invalid fd */
@@ -294,22 +336,50 @@ int32_t close (int32_t fd){
     cur_pcb->file_desc_arr[fd].flags=0;
     return cur_pcb->file_desc_arr[fd].file_op_table_ptr->close(fd);
 }
-
+/*
+    * getargs
+    *   DESCRIPTION: get the input command
+    *   INPUTS: buf, nbytes
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t getargs (uint8_t* buf, int32_t nbytes){
     printf("getargs!\n");
     return 0;
 }
-
+/*
+    * vidmap
+    *   DESCRIPTION: vidmap the input command
+    *   INPUTS: screen_start
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t vidmap (uint8_t** screen_start){
     printf("VidMap!\n");
     return 0;
 }
-
+/*
+    * set_handler
+    *   DESCRIPTION: set_handler the input command
+    *   INPUTS: signum, handler_address
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t set_handler (int32_t signum, void* handler_address){
     printf("Set Handler!\n");
     return 0;
 }
-
+/*
+    * sigreturn
+    *   DESCRIPTION: sigreturn the input command
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t sigreturn (void){
     printf("Sig Return!\n");
     return 0;
