@@ -11,7 +11,7 @@ uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
 int8_t process_id_arr[MAX_PROCESS] = {0};
 
 int32_t halt (uint8_t status){
-    printf("Halt!\n");
+    /* printf("Halt!\n"); */
     int32_t ebp,esp;
     int32_t ret;
     int32_t i;
@@ -20,7 +20,7 @@ int32_t halt (uint8_t status){
     int32_t pid = fetch_curr_pid();
     pcb_t* pcb = fetch_pcb_addr(pid);
     if(pcb->parent_pid == -1){
-        printf("Fail to halt base process");
+        printf("Fail to halt base process\n");
         process_id_arr[pcb->pid] = 0;
         execute("shell");
         return -1;
@@ -247,7 +247,7 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes){
 }
 
 int32_t open (const uint8_t* filename){
-    printf("Open!\n");
+    /* printf("Open!\n");  */
     dentry_t dentry;
     if (read_dentry_by_name(filename,&dentry)==-1) return -1;
     int32_t cur_pid = fetch_curr_pid();
@@ -286,7 +286,7 @@ int32_t open (const uint8_t* filename){
 }
 
 int32_t close (int32_t fd){
-    printf("Close!\n");
+    /* printf("Close!\n"); */
     if (fd <= 1 || fd > 7) return -1;                   /* invalid fd */
     int32_t cur_pid = fetch_curr_pid();
     pcb_t * cur_pcb= fetch_pcb_addr(cur_pid);
