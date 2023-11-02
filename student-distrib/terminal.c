@@ -247,8 +247,10 @@ void terminal_init(){
 */
 uint32_t terminal_display(unsigned char input){
     int flag;
-    // if(my_terminal.buffer_iterator == BUFFER_SIZE -1 && (input != '\n' || input != '\r')) return -1;
-    if (my_terminal.buffer_iterator >= BUFFER_SIZE) return -1; /*if the buffer is full, return -1 to inform the failure*/
+    /* Ensure that the last character in the buffer is \n or \r */
+    if(my_terminal.buffer_iterator == BUFFER_SIZE -1 && (!(input == '\n' || input == '\r'))) return -1; 
+    /* if the buffer is full, return -1 to inform the failure */
+    if (my_terminal.buffer_iterator >= BUFFER_SIZE) return -1; 
     flag = terminal_input(input);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/
     terminal_output();                               /*if the input is not enter, write the input to screen*/
