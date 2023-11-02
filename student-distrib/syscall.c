@@ -11,7 +11,7 @@ uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0','\0','\0','\0','\0','\0','\0','\
 int8_t process_id_arr[MAX_PROCESS] = {0};
 /*
     * halt
-    *   DESCRIPTION: halt the current process
+    *   DESCRIPTION: halt the current process and return to the previous process
     *   INPUTS: status
     *   OUTPUTS: none
     *   RETURN VALUE: 0
@@ -32,7 +32,7 @@ int32_t halt (uint8_t status){
         execute((uint8_t*)("shell"));
         return -1;
     }
-    
+    /* 0~1 are stdin and stdout, cannot be closed */
     for (i=2; i<8; i++) {
         if (pcb->file_desc_arr[i].flags==1) {
             close(i);
