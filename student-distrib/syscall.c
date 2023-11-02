@@ -7,7 +7,7 @@
 
 /* commands and args */
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
-uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0'};
+uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {0};
 int8_t process_id_arr[MAX_PROCESS] = {0};
 
 int32_t halt (uint8_t status){
