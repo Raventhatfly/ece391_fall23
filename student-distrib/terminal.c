@@ -266,6 +266,13 @@ uint32_t terminal_display(unsigned char input){
     *   SIDE EFFECTS: delete the input from screen
 */
 uint32_t terminal_delete(){
+    /* 
+     * if the position is on the shell ending pos 7 and the former bytes contain '>' on screen_x == 5 
+     * we assume the content before this location is the shell prompt and it cannot be deleted.
+     */
+    if (screen_x == 7 && *(video_mem + ((COLS * screen_y + 5) * 2))=='>'){  
+        return -1;
+    }
     if (screen_x == 0) {     /*if the input is at the beginning of the line, delete is failed*/
         if(screen_y == 0) {
             return -1;
