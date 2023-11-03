@@ -7,7 +7,7 @@
 
 /* commands and args */
 uint8_t cmd[MAX_CMD + 1] = {'\0'};
-uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1] = {'\0','\0','\0','\0','\0','\0','\0','\0','\0','\0'};
+uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
 int8_t process_id_arr[MAX_PROCESS] = {0};
 /*
     * halt
@@ -45,9 +45,9 @@ int32_t halt (uint8_t status){
     program_page_init(pcb->parent_pid);
     
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 4;
+    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 4; /* Prevent stack collision. Using 4 as alignment */ 
     
-    ebp = pcb->ebp;    /* TODO: Not sure here */
+    ebp = pcb->ebp;    
     esp = pcb->esp;
     ret = (int32_t) status;
     if (status==255) ret=256;         /* exception */
@@ -163,7 +163,7 @@ int32_t execute (const uint8_t* command){
     /* Executble check: ELF magic number */
     if(buf[0] != 0x7f || buf[1] != 0x45 || buf[2] != 0x4c || buf[3] != 0x46){
         printf(" ELF Magic: %x, %x, %x, %x\n", buf[0],buf[1],buf[2],buf[3]);
-        printf("Unrecoginzed Executble!");
+        printf("Unrecoginzed Executble!\n");
         return -1;
     }
 
@@ -220,7 +220,7 @@ int32_t execute (const uint8_t* command){
     /* Context Switch */
     sti();
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - pid * PCB_SIZE - 4;          
+    tss.esp0 = KERNEL_STACK_ADDR - pid * PCB_SIZE - 4;         /* Prevent stack collision. Using 4 as alignment */ 
     asm volatile(
         "pushl %0\n"
         "pushl %1\n"

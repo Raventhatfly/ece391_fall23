@@ -234,6 +234,7 @@ idt_syscall:
     movl .ret_val, %eax
     iret
 
+    # the call is invalid, fill in the error code -1
     .invalid_call:
     movl $-1, .ret_val
     jmp .invalid_return
