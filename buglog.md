@@ -77,3 +77,8 @@ the assembly functions.<br>
 **Description**: halt cannot return to the previous process <br>
 **Difficulty**: 30 minutes<br>
 **Fixing Method**: save previous esp and ebp in the pdb and reset them when halt ends <br>
+
+**Author**: Wu Feiyang<br>
+**Description**: Page fault after halting the user program<br>
+**Difficulty**: 1 day, changing one line of code<br>
+**Fixing Method**: The address of filled in the page table is not correct.
