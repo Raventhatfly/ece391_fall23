@@ -19,10 +19,12 @@
 #define ADDR_SEARCH    22 /* as the highest 10 bits are the page directory index, so we need to move 22 bits to the right */
 uint32_t page_directory_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)));
 uint32_t page_table_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)));
+uint32_t video_table_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)));
 
 
 
 
 extern void page_init();
 extern void program_page_init(uint32_t program_id);
+extern void set_map(uint8_t** screen_start);
 #endif 

@@ -64,3 +64,21 @@ void program_page_init(uint32_t program_id){
     : "r" (page_dir_addr)
     : "%eax");
 }
+void set_map(uint8_t** screen_start)
+{
+    uint32_t pg_dir_index = (USER_START_PLACE+FOUR_MBYTE) >> ADDR_SEARCH; /* get the index of page directory */
+    page_directory_entries[pg_dir_index] = 0; /* initialize the page directory entries */
+    page_directory_entries[pg_dir_index] |= PRESENT_MASK;
+    page_directory_entries[pg_dir_index] |= R_AND_W_MASK;
+    page_directory_entries[pg_dir_index] |= USER_MASK;
+    page_directory_entries[pg_dir_index] |= ((uint32_t)video_table_entries & 0xfffff000);
+    uint32_t page_dir_addr = (uint32_t) &page_directory_entries;
+    asm volatile("     \n\
+    movl %0, %%eax     \n\
+    movl %%eax, %%cr3  \n\
+    "    
+    :
+    : "r" (page_dir_addr)
+    : "%eax");
+    *screen_start
+}
