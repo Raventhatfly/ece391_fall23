@@ -337,13 +337,13 @@ void launch_tests(){
 	//printf("File Name: %s, File Type: %d, File Size: %d\n", dentry.file_name, dentry.file_type, (((inode_t*)((boot_block_t*)filesys_base+1))+dentry.inode_num)->length);
 
 	/* Checkpoint 3 tests */
-	int8_t* cmd = "shell";
-	// uint8_t* cmd_shell = "ls";
-	asm volatile(
-        "movl %0, %%ebx\n"  
-        "movl $2, %%eax\n"  
-		"int $0x80\n"   
-        :      
-        : "r" (cmd)         
-    );
+	// int8_t* cmd = "shell";
+	// // uint8_t* cmd_shell = "ls";
+	// asm volatile(
+    //     "movl %0, %%ebx\n"  
+    //     "movl $2, %%eax\n"  
+	// 	"int $0x80\n"   
+    //     :      
+    //     : "r" (cmd)         
+    // );
 }

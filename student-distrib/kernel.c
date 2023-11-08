@@ -186,8 +186,24 @@ void entry(unsigned long magic, unsigned long addr) {
     /* Run tests */
     launch_tests();
 #endif
+    printf(" /$$$$$$$                                /$$                    \n");
+    printf("| $$__  $$                              | $$                    \n");
+    printf("| $$  \\ $$  /$$$$$$  /$$$$$$$$  /$$$$$$ | $$  /$$$$$$   /$$$$$$$\n");
+    printf("| $$$$$$$/ |____  $$|____ /$$/ /$$__  $$| $$ /$$__  $$ /$$_____/ \n");
+    printf("| $$__  $$  /$$$$$$$   /$$$$/ | $$$$$$$$| $$| $$  \\ $$|  $$$$$$  \n");
+    printf("| $$  \\ $$ /$$__  $$  /$$__/  | $$_____/| $$| $$  | $$ \\____  $$ \n");
+    printf("| $$  | $$|  $$$$$$$ /$$$$$$$$|  $$$$$$$| $$|  $$$$$$/ /$$$$$$$/ \n");
+    printf("|__/  |__/ \\_______/|________/ \\_______/|__/ \\______/ |_______/  \n");
     /* Execute the first program ("shell") ... */
-
+    int8_t* cmd = "shell";
+	// uint8_t* cmd_shell = "ls";
+	asm volatile(
+        "movl %0, %%ebx\n"  
+        "movl $2, %%eax\n"  
+		"int $0x80\n"   
+        :      
+        : "r" (cmd)         
+    );
     /* Spin (nicely, so we don't chew up cycles) */
     asm volatile (".1: hlt; jmp .1;");
 }
