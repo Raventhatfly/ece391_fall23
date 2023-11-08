@@ -3,9 +3,9 @@
 #include "types.h"
 
 #define MAX_CMD 32
-#define MAX_ARGS 10
+// #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
-#define MAX_PROCESS 10
+#define MAX_PROCESS 2
 #define KERNEL_STACK_ADDR 0x800000     /* 8 MB */
 #define USER_PROGRAM_ADDR 0x8048000     
 #define USER_STACK_ADDR   0x8400000     /* 132 MB */
@@ -39,7 +39,7 @@ typedef struct pcb{
     int32_t parent_pid;
     uint8_t cmd[MAX_CMD + 1];
     int32_t arg_cnt;
-    uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
+    uint8_t args[MAX_ARG_LEN + 1];
     int32_t esp;
     int32_t ebp;
 }pcb_t;

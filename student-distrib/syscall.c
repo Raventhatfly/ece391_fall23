@@ -5,9 +5,7 @@
 #include "rtc.h"
 #include "terminal.h"
 
-/* commands and args */
-uint8_t cmd[MAX_CMD + 1] = {'\0'};
-uint8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
+
 int8_t process_id_arr[MAX_PROCESS] = {0};
 /*
     * halt
@@ -72,6 +70,10 @@ int32_t halt (uint8_t status){
     *   SIDE EFFECTS: none
 */
 int32_t execute (const uint8_t* command){
+    /* commands and args */
+    uint8_t cmd[MAX_CMD + 1] = {'\0'};
+    uint8_t args[MAX_ARG_LEN + 1] = {'\0'};
+
     uint8_t buf[4];         
     dentry_t dentry;
     uint32_t program_entry;
@@ -80,31 +82,31 @@ int32_t execute (const uint8_t* command){
     int cmd_len = 0;
     int i = 0;
     int j = 0;
-    int curr_arg = 0;
+    // int curr_arg = 0;
     int file_len;
     int retval;
-    /* 
-    *  state 0, waiting for command at the leading spaces
-    *  state 1, reading the command
-    *  state 2, waiting for the next arg
-    *  state 3, reading the current arg
-    */
-    int state = 0;  
+
     if(command == NULL){
         return -1;
     }
+    /* state 0, waiting for command at the leading spaces;
+    *  state 1, reading the command
+       state 2, waiting for the arg
+       state 3, reading args
+    */
+    int state = 0;  
     while(command[i] != '\0'){
         switch (state)
         {
         case 0:
-            if(command[i] == ' ' || command[i] == '\n'){
+            if(command[i] == ' '){
                 i++;
             }else{
                 state = 1;
             }
             break;
         case 1:
-            if(command[i] == ' ' || command[i] == '\n'){
+            if(command[i] == ' '){
                 state = 2;
                 i++;
             }else{
@@ -114,25 +116,16 @@ int32_t execute (const uint8_t* command){
             }
             break;
         case 2:
-            if(command[i] != ' ' || command[i] == '\n'){
+            if(command[i] != ' '){
                 state = 3;
             }else{
                 i++;
             }
             break;
         case 3: 
-            if(command[i] == ' '|| command[i] == '\n'){
-                state = 2;
-                curr_arg++;
-                if(curr_arg >= MAX_ARGS)    return -1;
-                j = 0;
-                i++;
-            }else if(j >= MAX_ARG_LEN){
-                return -1;
-            }else{
-                args[curr_arg][j] = command[i];
-                j++; i++;
-            }
+            args[j] = command[i];
+            i++;
+            j++;
             break;
         default:
             state = 0;
@@ -140,19 +133,12 @@ int32_t execute (const uint8_t* command){
         }
         
     }
-    /* 
-     * Boundary condition. If arg not ended with space then increment curr_arg 
-     * so that it becomes the number of total args.
-     */
-    if(state == 3 && j != 0){
-        curr_arg++;         
-    }
 
     if(cmd_len == 0){
         return -1;      /* no executable input */
     }
     retval = read_dentry_by_name(cmd,&dentry);
-    memset(cmd,'\0',MAX_CMD + 1);
+    // memset(cmd,'\0',MAX_CMD + 1);
     if(retval == -1){
         return -1;
     }
@@ -169,7 +155,7 @@ int32_t execute (const uint8_t* command){
 
     /* Allocate PID */
     if((pid = allocate_pid()) == -1){
-        printf("Process ID allocation failed!\n");
+        printf("Process ID allocation failed!\nOnly supports tow user programs.\n");
         return -1;
     }
 
@@ -185,7 +171,7 @@ int32_t execute (const uint8_t* command){
 
     /* Create PCB */
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
-    execute_pcb->arg_cnt = curr_arg;     /* arg number */
+    // execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
     if(pid == 0){                            /* TODO: further modification: set up total process counter. If total process is 0 then there is not parent */
         execute_pcb->parent_pid = -1;        /* No parent */
@@ -193,9 +179,8 @@ int32_t execute (const uint8_t* command){
         execute_pcb->parent_pid = fetch_curr_pid();
     }
     strcpy((int8_t *)execute_pcb->cmd, (int8_t *)cmd);
-    for(i = 0; i < curr_arg; i++ ){
-        strcpy((int8_t *)execute_pcb->args[i], (int8_t *)args[i]);
-    }
+    strcpy((int8_t *)execute_pcb->args, (int8_t *)args);
+
     
     /* TODO: reinspect here */
     execute_pcb->file_desc_arr[0].file_op_table_ptr = &stdin_op_table;
@@ -338,14 +323,25 @@ int32_t close (int32_t fd){
 }
 /*
     * getargs
-    *   DESCRIPTION: get the input command
+    *   DESCRIPTION: get the input arguments
     *   INPUTS: buf, nbytes
     *   OUTPUTS: none
     *   RETURN VALUE: 0
     *   SIDE EFFECTS: none
 */
 int32_t getargs (uint8_t* buf, int32_t nbytes){
-    printf("getargs!\n");
+    int i;
+    int curr_pid = fetch_curr_pid();
+    pcb_t* curr_pcb = fetch_pcb_addr(curr_pid);
+    if(buf == NULL || curr_pcb->args[0] == '\0'){
+        return -1;
+    }
+    for(i=0;i<nbytes;i++){
+        if(curr_pcb->args[i] == '\0') break;
+        else{
+            buf[i] = curr_pcb->args[i];
+        }
+    }
     return 0;
 }
 /*
