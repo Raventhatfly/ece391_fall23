@@ -80,5 +80,4 @@ void set_map(uint8_t** screen_start)
     :
     : "r" (page_dir_addr)
     : "%eax");
-    *screen_start
 }
