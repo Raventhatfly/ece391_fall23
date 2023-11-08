@@ -337,12 +337,16 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
         return -1;
     }
     for(i=0;i<nbytes;i++){
-        if(curr_pcb->args[i] == '\0') break;
+        if(curr_pcb->args[i] == '\0'){
+           buf[i] = '\0';
+           return 0; 
+        }
         else{
             buf[i] = curr_pcb->args[i];
         }
     }
-    return 0;
+    /* failure when nbytes written but no end of string encountered */
+    return -1;
 }
 /*
     * vidmap
