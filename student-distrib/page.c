@@ -20,10 +20,10 @@ void page_init() {
     page_table_entries[video_idx] = (VIDEO & 0xfffff000) | PRESENT_MASK; /* set the video memory*/
     page_table_entries[video_idx] |= R_AND_W_MASK;
 
-    // page_table_entries[video_idx] |= USER_MASK;
+    page_table_entries[video_idx] |= USER_MASK;
     page_directory_entries[0] = ((uint32_t)page_table_entries & 0xfffff000)| PRESENT_MASK; /* set the page directory entries */
     page_directory_entries[0] |= R_AND_W_MASK; 
-    // page_directory_entries[0] |= USER_MASK; 
+    page_directory_entries[0] |= USER_MASK; 
 
     page_directory_entries[1] = KERNEL | MB_BITMASK; /* set the kernel memory */
 
