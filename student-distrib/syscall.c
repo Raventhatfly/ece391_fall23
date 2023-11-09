@@ -357,7 +357,6 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
     *   SIDE EFFECTS: none
 */
 int32_t vidmap (uint8_t** screen_start){
-    printf("VidMap!\n");
     if (screen_start==NULL || screen_start<(uint8_t**)KERNEL_STACK_ADDR || screen_start>=(uint8_t**)USER_STACK_ADDR) return -1; //invalid screen_start
     set_map(screen_start);
     *screen_start=(uint8_t*)(VIDEO);

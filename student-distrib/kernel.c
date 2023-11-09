@@ -173,6 +173,7 @@ void entry(unsigned long magic, unsigned long addr) {
     key_init();
     filesystem_init(filesys_base);
     file_op_table_init();
+    rtc_init();
     // rtc_init();
   
     /* Enable interrupts */

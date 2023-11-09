@@ -313,7 +313,7 @@ void launch_tests(){
 	// TEST_OUTPUT("page_value_test",page_value_test());
 	// TEST_OUTPUT("page_derefernece_test",page_dereference_test());
 	// TEST_OUTPUT("syscall_test",syscall_test());
-	rtc_init();
+	
 	// launch your tests here
 	
 	/* Checkpoint 2 tests */
