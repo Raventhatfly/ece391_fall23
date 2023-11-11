@@ -153,7 +153,7 @@ idt_exc_19:
 idt_irq_0:
     pushal
     cld
-    call irq0_handler
+    call pit_handler
     popal
     iret
 

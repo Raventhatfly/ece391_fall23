@@ -4,6 +4,7 @@
 #include "filesystem.h"
 #include "terminal.h"
 #include "rtc.h"
+#include "pit.h"
 
 #define PASS 1
 #define FAIL 0
@@ -346,4 +347,7 @@ void launch_tests(){
     //     :      
     //     : "r" (cmd)         
     // );
+
+	/* Checkpoint 5 tests */
+	pit_init(100);
 }
