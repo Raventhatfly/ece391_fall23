@@ -349,5 +349,5 @@ void launch_tests(){
     // );
 
 	/* Checkpoint 5 tests */
-	pit_init(100);
+	// pit_init(100);
 }
