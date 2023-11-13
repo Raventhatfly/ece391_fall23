@@ -173,7 +173,7 @@ int32_t execute (const uint8_t* command){
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     // execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
-    if(pid == 0){                            /* TODO: further modification: set up total process counter. If total process is 0 then there is not parent */
+    if(pid == 0){                            
         execute_pcb->parent_pid = -1;        /* No parent */
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
