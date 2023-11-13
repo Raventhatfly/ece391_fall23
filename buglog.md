@@ -88,3 +88,8 @@ the assembly functions.<br>
 **Description**: The RTC didn't work<br>
 **Difficulty**: 10 MINUTES, add one line of code<br>
 **Fixing Method**: Add a line of code to initialize RTC
+
+**Author**: Wu Feiyang<br>
+**Description**: When executing shell strange characters will be printed<br>
+**Difficulty**: 5 MINUTES, add one line of code<br>
+**Fixing Method**: Just initialize the buffer and set them to '\0' the problem would be fixed.<br>
