@@ -82,3 +82,9 @@ the assembly functions.<br>
 **Description**: Page fault after halting the user program<br>
 **Difficulty**: 1 day, changing one line of code<br>
 **Fixing Method**: The address of filled in the page table is not correct.
+
+### Checkpoint 4
+**Author**: Luo Hanjun<br>
+**Description**: The RTC didn't work<br>
+**Difficulty**: 10 MINUTES, add one line of code<br>
+**Fixing Method**: Add a line of code to initialize RTC
