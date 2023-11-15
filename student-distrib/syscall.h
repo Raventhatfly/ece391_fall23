@@ -5,7 +5,7 @@
 #define MAX_CMD 32
 // #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
-#define MAX_PROCESS 3
+#define MAX_PROCESS 6
 #define KERNEL_STACK_ADDR 0x800000     /* 8 MB */
 #define USER_PROGRAM_ADDR 0x8048000     
 #define USER_STACK_ADDR   0x8400000     /* 132 MB */

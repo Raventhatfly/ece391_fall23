@@ -173,7 +173,7 @@ int32_t execute (const uint8_t* command){
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     // execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
-    if(pid == 0){                            
+    if(pid == 0){                            /* TODO: further modification: set up total process counter. If total process is 0 then there is not parent */
         execute_pcb->parent_pid = -1;        /* No parent */
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
@@ -358,8 +358,8 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
 */
 int32_t vidmap (uint8_t** screen_start){
     if (screen_start==NULL || screen_start<(uint8_t**)KERNEL_STACK_ADDR || screen_start>=(uint8_t**)USER_STACK_ADDR) return -1; //invalid screen_start
-    set_map(screen_start);
-    *screen_start=(uint8_t*)(VIDEO);
+    set_map(VIDEO>>12,1);
+    *screen_start=(uint8_t*)(0x84b8000);
     return 0;
 }
 /*

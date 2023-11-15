@@ -120,6 +120,27 @@ void irq1_handler(void)
         case alt_release:
             alt=0;
             break;
+        case f1_press:
+            if (alt==1)
+            {
+                terminal_switch(0);
+                break;
+            }
+            break;
+        case f2_press:
+            if (alt==1)
+            {
+                terminal_switch(1);
+                break;
+            }
+            break;
+        case f3_press:
+            if (alt==1)
+            {
+                terminal_switch(2);
+                break;
+            }
+            break;
     default:
         if (key<SCANCODE_SIZE)  /*if the key is not a special key and is the pressing process*/
         {

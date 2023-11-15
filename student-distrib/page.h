@@ -26,5 +26,5 @@ uint32_t video_table_entries[ENTRIES] __attribute__((aligned(BROKEN_PAGE_SIZE)))
 
 extern void page_init();
 extern void program_page_init(uint32_t program_id);
-extern void set_map(uint8_t** screen_start);
+extern void set_map(uint32_t act_mem, uint32_t present);
 #endif 

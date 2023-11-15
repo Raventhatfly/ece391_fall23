@@ -17,10 +17,14 @@ void page_init() {
         video_table_entries[i] = 0;
     }
     int video_idx = VIDEO >> 12;    /* get the index of video memory, move 12 bit to the right for reduce 0 */
-    page_table_entries[video_idx] = (VIDEO & 0xfffff000) | PRESENT_MASK; /* set the video memory*/
-    page_table_entries[video_idx] |= R_AND_W_MASK;
+    for (i=0;i<=3;i++)
+    {
+        page_table_entries[video_idx] = ((video_idx<<12) & 0xfffff000) | PRESENT_MASK; /* set the video memory*/
+        page_table_entries[video_idx] |= R_AND_W_MASK;
+        page_table_entries[video_idx] |= USER_MASK;
+        video_idx++;
+    }
 
-    page_table_entries[video_idx] |= USER_MASK;
     page_directory_entries[0] = ((uint32_t)page_table_entries & 0xfffff000)| PRESENT_MASK; /* set the page directory entries */
     page_directory_entries[0] |= R_AND_W_MASK; 
     page_directory_entries[0] |= USER_MASK; 
@@ -74,12 +78,20 @@ void program_page_init(uint32_t program_id){
     : "r" (page_dir_addr)
     : "%eax");
 }
-void set_map(uint8_t** screen_start)
+void set_map(uint32_t act_mem, uint32_t present)
 {
-    uint32_t pg_dir_index = (VIDEO) >> 12; /* get the index of page directory */
+    uint32_t pg_dir_index=VIDEO>>12; //get the index of video memory, move 12 bit to the right for 4kb page
     video_table_entries[pg_dir_index] = 0; /* initialize the page directory entries */
-    video_table_entries[pg_dir_index] |= PRESENT_MASK;
+    video_table_entries[pg_dir_index] |= present;
     video_table_entries[pg_dir_index] |= R_AND_W_MASK;
     video_table_entries[pg_dir_index] |= USER_MASK;
-    video_table_entries[pg_dir_index] |= (VIDEO & 0xfffff000);
+    video_table_entries[pg_dir_index] |= ((act_mem<<12) & 0xfffff000);
+    uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
+    asm volatile("     \n\
+    movl %0, %%eax     \n\
+    movl %%eax, %%cr3  \n\
+    "    
+    :
+    : "r" (page_dir_addr)
+    : "%eax");
 }

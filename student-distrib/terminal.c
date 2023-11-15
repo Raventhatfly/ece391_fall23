@@ -3,11 +3,12 @@
 
 extern int screen_x;
 extern int screen_y;
-extern char* video_mem;  /* can the extern be used to link the variables in lib.c? */
+extern char* video_mem;  
 
 static int32_t i;
-termin_t my_terminal;
-int32_t read_flag=0;
+int32_t terminal_using;
+termin_t my_terminal[TERMINAL_NUM];
+uint32_t* backup_hidden_terminal[3]={(uint32_t*)0xB9000, (uint32_t*)0xBA000, (uint32_t*)0xBB000};
 /* the following four function are helper functions */
 /*
     * buffer_clear
@@ -17,9 +18,9 @@ int32_t read_flag=0;
     *   RETURN VALUE: 0
     *   SIDE EFFECTS: clear the buffer
 */
-uint32_t buffer_clear(){
-    for (i = 0; i < BUFFER_SIZE; i++) my_terminal.terminal_buffer[i] = ' '; /*clear the buffer of all the 128 chars*/
-    my_terminal.buffer_iterator = 0;
+uint32_t buffer_clear(int32_t id){
+    for (i = 0; i < BUFFER_SIZE; i++) my_terminal[id].terminal_buffer[i] = ' '; /*clear the buffer of all the 128 chars*/
+    my_terminal[id].buffer_iterator = 0;
     return 0;
 }
 
@@ -52,26 +53,26 @@ void screen_cpy(){
 */
 int32_t terminal_input(unsigned char input){
     if (input == ENTER_ASC2){             
-        my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ENTER_ASC2;
-        my_terminal.buffer_iterator++;
+        my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2;
+        my_terminal[terminal_using].buffer_iterator++;
         screen_cpy();
-        my_terminal.cursor_x_coord=screen_x;
-        my_terminal.cursor_y_coord=screen_y;
-        draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
-        read_flag=1;
+        my_terminal[terminal_using].cursor_x_coord=screen_x;
+        my_terminal[terminal_using].cursor_y_coord=screen_y;
+        draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+        my_terminal[terminal_using].read_flag=1;
         return -1;
     }
     if (input == 0x0){
         return -1;
     }
     if (screen_x==79){      /*if the input is at the end(the 80th char) of the line, set the buffer as enter to change to next line*/
-        my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ENTER_ASC2; /*if the input is at the end of the line, set the buffer as enter to change to next line*/
-        my_terminal.buffer_iterator++;
-        my_terminal.terminal_buffer[my_terminal.buffer_iterator] = input; /*set the buffer as the input to display*/
+        my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2; /*if the input is at the end of the line, set the buffer as enter to change to next line*/
+        my_terminal[terminal_using].buffer_iterator++;
+        my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
         screen_cpy();                                               /*copy the screen as moving to next line*/
         return 0;
     }else{
-        my_terminal.terminal_buffer[my_terminal.buffer_iterator] = input; /*set the buffer as the input to display*/
+        my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
         return 0;
     }     
 }
@@ -85,14 +86,35 @@ int32_t terminal_input(unsigned char input){
     *   SIDE EFFECTS: write the input to screen
 */
 void terminal_output(){
-    printf("%c", my_terminal.terminal_buffer[my_terminal.buffer_iterator]); /*print the current char*/
-    my_terminal.cursor_x_coord=screen_x;
-    my_terminal.cursor_y_coord=screen_y;
+    printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
+    my_terminal[terminal_using].cursor_x_coord=screen_x;
+    my_terminal[terminal_using].cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
-    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
-    my_terminal.buffer_iterator++;
+    draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+    my_terminal[terminal_using].buffer_iterator++;
 }
 
+/*
+    * terminal_switch
+    *   DESCRIPTION: switch the terminal
+    *   INPUTS: terminal_id -- the id of the terminal to switch to
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0 if succeed, -1 if failed
+    *   SIDE EFFECTS: switch the terminal
+*/
+int32_t terminal_switch(int32_t terminal_id){
+    if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
+    if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
+    //remap
+    memcpy((void*)backup_hidden_terminal[terminal_using], (void*)video_mem, FOURKB); /*copy the video memory to the terminal buffer*/
+    memcpy((void*)video_mem,(void*)backup_hidden_terminal[terminal_id], FOURKB);
+    screen_x=my_terminal[terminal_id].cursor_x_coord;
+    screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
+    draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
+    terminal_using=terminal_id;
+    //remap
+    return 0;
+}   
 /*
     * terminal_read
     *   DESCRIPTION: read the input from keyboard
@@ -108,18 +130,18 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     int32_t j = 0;
 	if (buf == NULL) return -1;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
     if (nbytes <= 0) return -1;  
-    read_flag=0;
+    my_terminal[terminal_using].read_flag=0;
 	// my_terminal.buffer_iterator = 0;	
-    buffer_clear(); 
-    read_flag = 0; 
-    while (!read_flag);  /*wait until the enter is pressed*/
-    my_terminal.terminal_buffer[my_terminal.buffer_iterator] = '\0';
+    buffer_clear(terminal_using); 
+    my_terminal[terminal_using].read_flag = 0; 
+    while (!my_terminal[terminal_using].read_flag);  /*wait until the enter is pressed*/
+    my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = '\0';
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
         j = BUFFER_SIZE;
     }else{
         j = nbytes;
     }									
-	for (i = 0; i < j && my_terminal.terminal_buffer[i] != '\0'; i++) ((char*)buf)[i] = my_terminal.terminal_buffer[i];
+	for (i = 0; i < j && my_terminal[terminal_using].terminal_buffer[i] != '\0'; i++) ((char*)buf)[i] = my_terminal[terminal_using].terminal_buffer[i];
 	return i;
 }
 
@@ -139,14 +161,11 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     const char* pointer = (const char*)buf;
     int32_t char_written = 0; 
     /* Write nbytes bytes of buf to the terminal */
-    while (char_written < nbytes && *pointer != '\0') { /*maybe cause some problems*/
+    while (char_written < nbytes && *pointer != '\0') { 
         putc(*pointer);
-        //if (*pointer == '\n' || screen_x==79) { // if the char is enter or the screen is full, copy the screen
-         //   screen_cpy();
-        //}
-        my_terminal.cursor_x_coord=screen_x;
-        my_terminal.cursor_y_coord=screen_y;
-        draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
+        my_terminal[terminal_using].cursor_x_coord=screen_x;
+        my_terminal[terminal_using].cursor_y_coord=screen_y;
+        draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord);
         pointer++;
         char_written++;
     }
@@ -216,11 +235,15 @@ uint32_t terminal_clear(){
     i = 0;   
     screen_x = i;
     screen_y = i;
-    my_terminal.cursor_x_coord=i;
-    my_terminal.cursor_y_coord=i;
-    i = buffer_clear();  /*clear the buffer*/
-    read_flag=0;
-    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord);
+    for (i=0;i<TERMINAL_NUM;i++){
+        my_terminal[i].cursor_x_coord=0;
+        my_terminal[i].cursor_y_coord=0;
+        my_terminal[i].read_flag=0;
+        my_terminal[i].terminal_flag=0;
+        buffer_clear(i);
+        draw_cursor(my_terminal[i].cursor_x_coord, my_terminal[i].cursor_y_coord);
+    }
+   terminal_using=0;
     return 0;
 }
 
@@ -248,9 +271,9 @@ void terminal_init(){
 uint32_t terminal_display(unsigned char input){
     int flag;
     /* Ensure that the last character in the buffer is \n or \r */
-    if(my_terminal.buffer_iterator == BUFFER_SIZE -1 && (!(input == '\n' || input == '\r'))) return -1; 
+    if(my_terminal[terminal_using].buffer_iterator == BUFFER_SIZE -1 && (!(input == '\n' || input == '\r'))) return -1; 
     /* if the buffer is full, return -1 to inform the failure */
-    if (my_terminal.buffer_iterator >= BUFFER_SIZE) return -1; 
+    if (my_terminal[terminal_using].buffer_iterator >= BUFFER_SIZE) return -1; 
     flag = terminal_input(input);                    /*read the input, flag shows wthether succeed*/
     if (flag == -1) return flag;                    /*if the input is enter, return -1 to inform the failure*/
     terminal_output();                               /*if the input is not enter, write the input to screen*/
@@ -287,12 +310,12 @@ uint32_t terminal_delete(){
     }
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2)) = ' '; /*initialize the char as blank and ATTRIB*/
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB;
-    my_terminal.cursor_x_coord=screen_x;
-    my_terminal.cursor_y_coord=screen_y;
-    draw_cursor(my_terminal.cursor_x_coord, my_terminal.cursor_y_coord); /*redraw the cursor*/
-    my_terminal.terminal_buffer[my_terminal.buffer_iterator] = ' '; 
-    my_terminal.buffer_iterator--;
-    my_terminal.buffer_iterator= my_terminal.buffer_iterator % BUFFER_SIZE; /*if the buffer is full, set the iterator to 0*/
+    my_terminal[terminal_using].cursor_x_coord=screen_x;
+    my_terminal[terminal_using].cursor_y_coord=screen_y;
+    draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+    my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ' '; 
+    my_terminal[terminal_using].buffer_iterator--;
+    my_terminal[terminal_using].buffer_iterator= my_terminal[terminal_using].buffer_iterator % BUFFER_SIZE; /*if the buffer is full, set the iterator to 0*/
     return 0;
 }
 

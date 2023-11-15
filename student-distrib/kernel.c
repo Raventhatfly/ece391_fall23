@@ -174,7 +174,8 @@ void entry(unsigned long magic, unsigned long addr) {
     filesystem_init(filesys_base);
     file_op_table_init();
     rtc_init();
-    // rtc_init();
+    // pit_init();
+    scheduler_init();
   
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your
@@ -197,7 +198,6 @@ void entry(unsigned long magic, unsigned long addr) {
     printf("|__/  |__/ \\_______/|________/ \\_______/|__/ \\______/ |_______/  \n");
     /* Execute the first program ("shell") ... */
     int8_t* cmd = "shell";
-	// uint8_t* cmd_shell = "ls";
 	asm volatile(
         "movl %0, %%ebx\n"  
         "movl $2, %%eax\n"  

@@ -2,6 +2,7 @@
 #include "i8259.h"
 #include "lib.h"
 #include "lib.h"
+#include "scheduler.h"
 
 int counter = 0;
 int tick = 0;
@@ -19,11 +20,12 @@ void pit_init(int fre){
 }
 
 void pit_handler(){
+    process_switch();
     send_eoi(PIT_IRQ);
-    if(++counter > 100){
-        tick++;
-        printf("PIT recieved at tick %d\n",tick);
-        counter = 0;
-    }
+    // if(++counter > 100){
+    //     tick++;
+    //     printf("PIT recieved at tick %d\n",tick);
+    //     counter = 0;
+    // }
     
 }
