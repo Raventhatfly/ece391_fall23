@@ -26,4 +26,5 @@ int process_switch();
 int node_allocate();
 int install_process(int pid, int terminal_id);
 int remove_process(int pid, int terminal_id);
+int change_terminal_process(int pid, int terminal_id);
 #endif

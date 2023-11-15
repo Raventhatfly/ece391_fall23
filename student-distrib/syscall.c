@@ -34,7 +34,7 @@ int32_t halt (uint8_t status){
     /* mp3.5: decrement number of process in the terminal */
     terminal_id = get_terminal_id();
     terminal_process_mapping[terminal_id].num_proc--;
-    
+
     /* 0~1 are stdin and stdout, cannot be closed */
     for (i=2; i<8; i++) {
         if (pcb->file_desc_arr[i].flags==1) {
@@ -186,8 +186,13 @@ int32_t execute (const uint8_t* command){
     // if(pid == 0){     /* mp 3.5: modified */  
     if(terminal_process_mapping[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
         execute_pcb->parent_pid = -1;        /* No parent */
+        /* mp3.5 clear flags and install the process to the linked list */
+        cli();
+        install_process(pid,terminal_id);
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
+        /* mp3.5: change the current active terminal process ID */
+        change_terminal_process(pid,terminal_id);
     }
     /* mp3.5: process number increment */
     terminal_process_mapping[terminal_id].num_proc++;

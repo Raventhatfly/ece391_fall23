@@ -3,6 +3,7 @@
 #include "x86_desc.h"
 #include "page.h"
 #include "terminal.h"
+#include "lib.h"
 
 int scheduler_activated = 0;
 terminal_proc_t terminal_process_mapping[3];
@@ -28,7 +29,7 @@ void scheduler_init(){
 
 /* return -2 if scheduler not initialized */
 int process_switch(){
-
+    // printf("hello\n");
     /* check if scheduler is activated */
     if(scheduler_activated == 0){
         return -2;  /* return -2 if scheduler not initialized */
@@ -66,6 +67,7 @@ int process_switch(){
     /* User program remap */
     /* Other setup */
     program_page_init(next_pid);
+    set_mem(active_proc_list[active_proc_list[i].next_proc].terminal_id);
 
     /* Context Switch */
     tss.ss0 = KERNEL_DS;
@@ -124,6 +126,21 @@ int remove_process(int pid, int terminal_id){
             active_proc_list[nxt].pid = EMPTY_NODE_PID;
             active_proc_list[nxt].terminal_id = 0;
             active_proc_list[nxt].next_proc = 0;
+            return 0;
+        }
+        i = active_proc_list[i].next_proc;
+    }  
+    return -1;
+}
+
+int change_terminal_process(int pid, int terminal_id){
+    int i=HEAD_NODE,nxt;
+    while (active_proc_list[i].next_proc != TAIL_NODE)
+    {
+        nxt = active_proc_list[i].next_proc;
+        if (active_proc_list[nxt].terminal_id == terminal_id)
+        {
+            active_proc_list[i].pid = pid;
             return 0;
         }
         i = active_proc_list[i].next_proc;
