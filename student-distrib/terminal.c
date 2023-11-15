@@ -90,12 +90,15 @@ int32_t terminal_input(unsigned char input){
     *   SIDE EFFECTS: write the input to screen
 */
 void terminal_output(){
+    set_mem(terminal_using);//3.5
     printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
     my_terminal[terminal_using].cursor_x_coord=screen_x;
     my_terminal[terminal_using].cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
     draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
     my_terminal[terminal_using].buffer_iterator++;
+    pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid()); //3.5
+    set_mem(cur_pcb->terminal_id);//3.5
 }
 
 void set_mem(int32_t terminal_id)
@@ -135,7 +138,7 @@ void set_mem(int32_t terminal_id)
 int32_t terminal_switch(int32_t terminal_id){
     if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
     if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
-   
+    
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
     draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
@@ -147,19 +150,6 @@ int32_t terminal_switch(int32_t terminal_id){
     pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     set_mem(cur_pcb->terminal_id);
 
-    /* start terminal shell */
-    // int8_t* cmd = "shell";
-    // if(term_shell_flag[terminal_id]==0 && (terminal_id != 0)){
-    //     term_shell_flag[terminal_id]=1;
-        
-    //     asm volatile(
-    //         "movl %0, %%ebx\n"  
-    //         "movl $2, %%eax\n"  
-    //         "int $0x80\n"   
-    //         :      
-    //         : "r" (cmd)         
-    //     );
-    // }
     return 0;
 }   
 
@@ -288,6 +278,7 @@ uint32_t terminal_clear(){
     my_terminal[terminal_using].read_flag=0;
     my_terminal[terminal_using].terminal_flag=0;
     draw_cursor(my_terminal[i].cursor_x_coord, my_terminal[i].cursor_y_coord);
+    
     return 0;
 }
 

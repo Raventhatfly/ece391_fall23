@@ -174,8 +174,9 @@ void entry(unsigned long magic, unsigned long addr) {
     filesystem_init(filesys_base);
     file_op_table_init();
     rtc_init();
-    // pit_init(-1);
     scheduler_init();
+    pit_init(-1);
+    
   
     /* Enable interrupts */
     /* Do not enable the following until after you have set up your

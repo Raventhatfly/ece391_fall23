@@ -32,6 +32,7 @@ void scheduler_init(){
         terminal_pid_map[i] = PID_EMPTY;
         curr_exe_terminal = 0;
     }
+    scheduler_activated = 1;
 }
 
 
@@ -83,16 +84,20 @@ int process_switch(){
     if(i == TERMINAL_NUM)   return -1;
     curr_exe_terminal = i;
     next_terminal = curr_exe_terminal;
-    do{
-        next_terminal++;
-        next_terminal = next_terminal % TERMINAL_NUM;
-    }while(terminal_pid_map[next_terminal]==PID_EMPTY);
+
+    next_terminal = (next_terminal + 1) % TERMINAL_NUM;
     next_pid = terminal_pid_map[next_terminal];
+    if(next_pid == PID_EMPTY && get_terminal_id() == next_terminal){
+        /* start terminal shell */
+        set_mem(next_terminal);
+        execute("shell");
+    }else if(next_pid == PID_EMPTY){
+        return -1;
+    }
     next_pcb_addr = fetch_pcb_addr(next_pid);
     /* end */
 
     /* User program remap */
-    /* Other setup */
     program_page_init(next_pid);
     // set_mem(active_proc_list[active_proc_list[i].next_proc].terminal_id);
     set_mem(next_pcb_addr->terminal_id);

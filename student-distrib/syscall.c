@@ -22,6 +22,7 @@ int32_t halt (uint8_t status){
     int32_t i;
     int32_t terminal_id;    /* mp3.5: */
 
+    if (status==255) ret=256;         /* exception */
     ret = 0;
     int32_t pid = fetch_curr_pid();
     pcb_t* pcb = fetch_pcb_addr(pid);
