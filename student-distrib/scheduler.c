@@ -76,25 +76,52 @@ int process_switch(){
     /* start */
     int next_terminal;
     pcb_t* next_pcb_addr;
-    for(i = 0;i<TERMINAL_NUM; i++){
-        if(terminal_pid_map[i] != PID_EMPTY){
-            break;
+
+    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    for(i=1;i<TERMINAL_NUM;i++){
+        if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
+            set_mem(i);
+            execute("shell");
         }
     }
-    if(i == TERMINAL_NUM)   return -1;
-    curr_exe_terminal = i;
     next_terminal = curr_exe_terminal;
-
-    next_terminal = (next_terminal + 1) % TERMINAL_NUM;
-    next_pid = terminal_pid_map[next_terminal];
-    if(next_pid == PID_EMPTY && get_terminal_id() == next_terminal){
-        /* start terminal shell */
-        set_mem(next_terminal);
-        execute("shell");
-    }else if(next_pid == PID_EMPTY){
-        return -1;
-    }
+    do{
+        next_terminal = (next_terminal + 1) % TERMINAL_NUM;
+        next_pid = terminal_pid_map[next_terminal];
+    }while(next_pid == PID_EMPTY && next_terminal != 0);
+    curr_exe_terminal = next_terminal;
     next_pcb_addr = fetch_pcb_addr(next_pid);
+    /* end */
+
+    /* start */
+    // int next_terminal;
+    // pcb_t* next_pcb_addr;
+    // for(i = 0;i<TERMINAL_NUM; i++){
+    //     if(terminal_pid_map[i] != PID_EMPTY){
+    //         break;
+    //     }
+    // }
+    // if(i == TERMINAL_NUM)   return -1;
+    // curr_exe_terminal = i;
+    // next_terminal = curr_exe_terminal;
+
+    // next_terminal = (next_terminal + 1) % TERMINAL_NUM;
+    // next_pid = terminal_pid_map[next_terminal];
+    // if(next_pid == PID_EMPTY && get_terminal_id() == next_terminal){
+    //     /* start terminal shell */
+    //     set_mem(next_terminal);
+    //     execute("shell");
+    // }else if(next_pid == PID_EMPTY){
+    //     return -1;
+    // }
+    // next_pcb_addr = fetch_pcb_addr(next_pid);
+    /* end */
+
+
+
+
+    
+    
     /* end */
 
     /* User program remap */

@@ -193,7 +193,7 @@ int32_t execute (const uint8_t* command){
     if(terminal_process_mapping[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
         execute_pcb->parent_pid = -1;        /* No parent */
         /* mp3.5 clear flags and install the process to the linked list */
-        cli();
+        // cli();
         // install_process(pid,terminal_id);
         change_terminal_process(pid,terminal_id);
     }else{
