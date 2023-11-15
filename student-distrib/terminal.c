@@ -1,6 +1,7 @@
 #include "terminal.h"
 #include "lib.h"
-
+#include "syscall.h"
+#include "page.h"
 extern int screen_x;
 extern int screen_y;
 extern char* video_mem;  
@@ -94,6 +95,29 @@ void terminal_output(){
     my_terminal[terminal_using].buffer_iterator++;
 }
 
+void set_mem(int32_t terminal_id)
+{
+    int32_t video_idx=VIDEO>>12;
+    pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
+    if (terminal_id==cur_pcb->terminal_id)
+    {
+        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
+        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
+    }
+    else
+    {
+        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
+        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
+    }
+    uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
+    asm volatile("              \n\
+    movl %0,%%eax               \n\
+    movl %%eax,%%cr3            \n\
+    "
+    :
+    : "r" (page_dir_addr)
+    : "eax");
+}
 /*
     * terminal_switch
     *   DESCRIPTION: switch the terminal
@@ -105,16 +129,18 @@ void terminal_output(){
 int32_t terminal_switch(int32_t terminal_id){
     if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
     if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
-    //remap
+    set_mem(terminal_using);
     memcpy((void*)backup_hidden_terminal[terminal_using], (void*)video_mem, FOURKB); /*copy the video memory to the terminal buffer*/
     memcpy((void*)video_mem,(void*)backup_hidden_terminal[terminal_id], FOURKB);
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
     draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
     terminal_using=terminal_id;
-    //remap
+    pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
+    set_mem(cur_pcb->terminal_id);
     return 0;
 }   
+
 /*
     * terminal_read
     *   DESCRIPTION: read the input from keyboard

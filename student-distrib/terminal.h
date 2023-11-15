@@ -30,6 +30,7 @@ extern int32_t terminal_open(const uint8_t *fname);
 extern int32_t terminal_close(int32_t fd);
 extern int32_t terminal_switch(int32_t terminal_id);
 extern int32_t get_terminal_id();
+extern void set_men(int32_t terminal_id);
 
 
 #endif 
