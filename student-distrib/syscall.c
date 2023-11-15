@@ -25,15 +25,17 @@ int32_t halt (uint8_t status){
     ret = 0;
     int32_t pid = fetch_curr_pid();
     pcb_t* pcb = fetch_pcb_addr(pid);
+
+    /* mp3.5: decrement number of process in the terminal */
+    terminal_id = get_terminal_id();
+    terminal_process_mapping[terminal_id].num_proc--;
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process\n");
         process_id_arr[pcb->pid] = 0;
         execute((uint8_t*)("shell"));
         return -1;
     }
-    /* mp3.5: decrement number of process in the terminal */
-    terminal_id = get_terminal_id();
-    terminal_process_mapping[terminal_id].num_proc--;
+    
 
     /* 0~1 are stdin and stdout, cannot be closed */
     for (i=2; i<8; i++) {

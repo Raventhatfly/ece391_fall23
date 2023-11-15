@@ -28,6 +28,7 @@ void scheduler_init(){
     //     terminal_process_mapping[i].num_proc = 0;
     // }
     for(i=0;i<TERMINAL_NUM;i++){
+        terminal_process_mapping[i].num_proc = 0;
         terminal_pid_map[i] = PID_EMPTY;
         curr_exe_terminal = 0;
     }
