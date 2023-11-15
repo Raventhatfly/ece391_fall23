@@ -20,6 +20,7 @@ int32_t halt (uint8_t status){
     int32_t ebp,esp;
     int32_t ret;
     int32_t i;
+    int32_t terminal_id;    /* mp3.5: */
 
     ret = 0;
     int32_t pid = fetch_curr_pid();
@@ -30,6 +31,10 @@ int32_t halt (uint8_t status){
         execute((uint8_t*)("shell"));
         return -1;
     }
+    /* mp3.5: decrement number of process in the terminal */
+    terminal_id = get_terminal_id();
+    terminal_process_mapping[terminal_id].num_proc--;
+    
     /* 0~1 are stdin and stdout, cannot be closed */
     for (i=2; i<8; i++) {
         if (pcb->file_desc_arr[i].flags==1) {
@@ -161,6 +166,7 @@ int32_t execute (const uint8_t* command){
         return -1;
     }
 
+    /* mp3.5: terminal id */
     terminal_id = get_terminal_id();
 
     /* Set up prgram paging (4MB) */
@@ -177,11 +183,15 @@ int32_t execute (const uint8_t* command){
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     // execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
-    if(pid == 0){                            /* TODO: further modification: set up total process counter. If total process is 0 then there is not parent */
+    // if(pid == 0){     /* mp 3.5: modified */  
+    if(terminal_process_mapping[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
         execute_pcb->parent_pid = -1;        /* No parent */
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
     }
+    /* mp3.5: process number increment */
+    terminal_process_mapping[terminal_id].num_proc++;
+
     strcpy((int8_t *)execute_pcb->cmd, (int8_t *)cmd);
     strcpy((int8_t *)execute_pcb->args, (int8_t *)args);
 
