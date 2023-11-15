@@ -235,15 +235,11 @@ uint32_t terminal_clear(){
     i = 0;   
     screen_x = i;
     screen_y = i;
-    for (i=0;i<TERMINAL_NUM;i++){
-        my_terminal[i].cursor_x_coord=0;
-        my_terminal[i].cursor_y_coord=0;
-        my_terminal[i].read_flag=0;
-        my_terminal[i].terminal_flag=0;
-        buffer_clear(i);
-        draw_cursor(my_terminal[i].cursor_x_coord, my_terminal[i].cursor_y_coord);
-    }
-   terminal_using=0;
+    my_terminal[terminal_using].cursor_x_coord=0;
+    my_terminal[terminal_using].cursor_y_coord=0;
+    my_terminal[terminal_using].read_flag=0;
+    my_terminal[terminal_using].terminal_flag=0;
+    draw_cursor(my_terminal[i].cursor_x_coord, my_terminal[i].cursor_y_coord);
     return 0;
 }
 
@@ -256,7 +252,12 @@ uint32_t terminal_clear(){
     *   SIDE EFFECTS: initialize the terminal
 */
 void terminal_init(){
-    i = terminal_clear();
+    for (i=0;i<TERMINAL_NUM;i++){
+        terminal_using=i;
+        terminal_clear();      /*clear the terminal*/
+    }
+    for (i=0;i<TERMINAL_NUM;i++) buffer_clear(i);
+    terminal_using=0;
     return;
 }
 
