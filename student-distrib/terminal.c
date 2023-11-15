@@ -97,12 +97,13 @@ void terminal_output(){
 
 void set_mem(int32_t terminal_id)
 {
-    screen_x=my_terminal[terminal_id].cursor_x_coord;
-    screen_y=my_terminal[terminal_id].cursor_y_coord;
+   
     int32_t video_idx=VIDEO>>12;
     pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     if (terminal_id==terminal_using)
     {
+         screen_x=my_terminal[terminal_id].cursor_x_coord;
+        screen_y=my_terminal[terminal_id].cursor_y_coord;
         page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
         video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
     }
