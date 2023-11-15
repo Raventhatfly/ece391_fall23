@@ -11,6 +11,9 @@
 #define HEAD_NODE 0
 #define TAIL_NODE (SENTINEL_NODE + MAX_PROCESS - 1)
 
+/* macros for the revised version */
+#define PID_EMPTY -1
+
 typedef struct sch_proc{
     int pid;
     int terminal_id;

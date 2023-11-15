@@ -9,20 +9,27 @@ int scheduler_activated = 0;
 terminal_proc_t terminal_process_mapping[3];
 /* array implemented linked list */
 sch_proc_t active_proc_list[MAX_PROCESS + SENTINEL_NODE];
+/* modified version */
+int terminal_pid_map[TERMINAL_NUM];
+int curr_exe_terminal;
 
 void scheduler_init(){
     /* set up the scheduler */
     int j;
     int i = HEAD_NODE + 1;
-    for(;i<TAIL_NODE;i++){
-        active_proc_list[i].pid = EMPTY_NODE_PID;
-    }
-    active_proc_list[HEAD_NODE].pid = HEAD_NODE_PID;
-    active_proc_list[TAIL_NODE].pid = TAIL_NODE_PID;
-    active_proc_list[HEAD_NODE].next_proc = TAIL_NODE;
-    scheduler_activated = 1;    /* scheduler activated */
-    for(i=0;i<TERMINAL_CNT;i++){
-        terminal_process_mapping[i].num_proc = 0;
+    // for(;i<TAIL_NODE;i++){
+    //     active_proc_list[i].pid = EMPTY_NODE_PID;
+    // }
+    // active_proc_list[HEAD_NODE].pid = HEAD_NODE_PID;
+    // active_proc_list[TAIL_NODE].pid = TAIL_NODE_PID;
+    // active_proc_list[HEAD_NODE].next_proc = TAIL_NODE;
+    // scheduler_activated = 1;    /* scheduler activated */
+    // for(i=0;i<TERMINAL_CNT;i++){
+    //     terminal_process_mapping[i].num_proc = 0;
+    // }
+    for(i=0;i<TERMINAL_NUM;i++){
+        terminal_pid_map[i] = PID_EMPTY;
+        curr_exe_terminal = 0;
     }
 }
 
@@ -49,25 +56,45 @@ int process_switch(){
     cur_pcb->ebp = cur_ebp;
     cur_pcb->esp = cur_esp;
 
-    for(i = HEAD_NODE + 1;i<TAIL_NODE;i++){
-        if(active_proc_list[i].pid == cur_pid){
+
+    // for(i = HEAD_NODE + 1;i<TAIL_NODE;i++){
+    //     if(active_proc_list[i].pid == cur_pid){
+    //         break;
+    //     }
+    // }
+    // if(i == TAIL_NODE) return -1;
+    // next_pid = active_proc_list[active_proc_list[i].next_proc].pid;
+    // if(next_pid == TAIL_NODE){
+    //     next_pid = active_proc_list[active_proc_list[HEAD_NODE].next_proc].pid;
+    // }
+    // if(next_pid == TAIL_NODE){
+    //     printf("Warning: No program is being runned!\n");
+    //     return -1;
+    // }
+    /* start */
+    int next_terminal;
+    pcb_t* next_pcb_addr;
+    for(i = 0;i<TERMINAL_NUM; i++){
+        if(terminal_pid_map[i] != PID_EMPTY){
             break;
         }
     }
-    if(i == TAIL_NODE) return -1;
-    next_pid = active_proc_list[active_proc_list[i].next_proc].pid;
-    if(next_pid == TAIL_NODE){
-        next_pid = active_proc_list[active_proc_list[HEAD_NODE].next_proc].pid;
-    }
-    if(next_pid == TAIL_NODE){
-        printf("Warning: No program is being runned!\n");
-        return -1;
-    }
-    
+    if(i == TERMINAL_NUM)   return -1;
+    curr_exe_terminal = i;
+    next_terminal = curr_exe_terminal;
+    do{
+        next_terminal++;
+        next_terminal = next_terminal % TERMINAL_NUM;
+    }while(terminal_pid_map[next_terminal]==PID_EMPTY);
+    next_pid = terminal_pid_map[next_terminal];
+    next_pcb_addr = fetch_pcb_addr(next_pid);
+    /* end */
+
     /* User program remap */
     /* Other setup */
     program_page_init(next_pid);
-    set_mem(active_proc_list[active_proc_list[i].next_proc].terminal_id);
+    // set_mem(active_proc_list[active_proc_list[i].next_proc].terminal_id);
+    set_mem(next_pcb_addr->terminal_id);
 
     /* Context Switch */
     tss.ss0 = KERNEL_DS;
@@ -134,16 +161,18 @@ int remove_process(int pid, int terminal_id){
 }
 
 int change_terminal_process(int pid, int terminal_id){
-    int i=HEAD_NODE,nxt;
-    while (active_proc_list[i].next_proc != TAIL_NODE)
-    {
-        nxt = active_proc_list[i].next_proc;
-        if (active_proc_list[nxt].terminal_id == terminal_id)
-        {
-            active_proc_list[i].pid = pid;
-            return 0;
-        }
-        i = active_proc_list[i].next_proc;
-    }  
-    return -1;
+    // int i=HEAD_NODE,nxt;
+    // while (active_proc_list[i].next_proc != TAIL_NODE)
+    // {
+    //     nxt = active_proc_list[i].next_proc;
+    //     if (active_proc_list[nxt].terminal_id == terminal_id)
+    //     {
+    //         active_proc_list[i].pid = pid;
+    //         return 0;
+    //     }
+    //     i = active_proc_list[i].next_proc;
+    // }  
+    // return -1;
+    terminal_pid_map[terminal_id] = pid;
+    return 0;
 }
