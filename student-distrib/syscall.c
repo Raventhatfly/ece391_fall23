@@ -193,6 +193,9 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[1].file_pos = 0;
     execute_pcb->file_desc_arr[1].inode = 0;
 
+    /* mp3.5: add the terminal information into the pcb */
+    execute_pcb->terminal_id = termianl_using;
+
     /* save ebp and esp register */
     asm volatile(
         "movl %%esp, %0\n"

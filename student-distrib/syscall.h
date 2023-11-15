@@ -1,6 +1,7 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
 #include "types.h"
+#include "scheduler.h"
 
 #define MAX_CMD 32
 // #define MAX_ARGS 10
@@ -11,7 +12,7 @@
 #define USER_STACK_ADDR   0x8400000     /* 132 MB */
 #define PCB_SIZE 0x2000                 /* 8kB */
 
-
+extern int32_t terminal_using;
 
 typedef struct file_op_table{
     int32_t (*open)(const uint8_t *fname);
@@ -42,6 +43,7 @@ typedef struct pcb{
     uint8_t args[MAX_ARG_LEN + 1];
     int32_t esp;
     int32_t ebp;
+    int32_t terminal_id;
 }pcb_t;
 
 int32_t allocate_pid();
