@@ -85,6 +85,8 @@ int32_t execute (const uint8_t* command){
     // int curr_arg = 0;
     int file_len;
     int retval;
+    /* mp3.5: terminal ID */
+    int terminal_id;
 
     if(command == NULL){
         return -1;
@@ -159,6 +161,8 @@ int32_t execute (const uint8_t* command){
         return -1;
     }
 
+    terminal_id = get_terminal_id();
+
     /* Set up prgram paging (4MB) */
     program_page_init(pid);
 
@@ -194,7 +198,7 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[1].inode = 0;
 
     /* mp3.5: add the terminal information into the pcb */
-    execute_pcb->terminal_id = termianl_using;
+    execute_pcb->terminal_id = terminal_id;
 
     /* save ebp and esp register */
     asm volatile(

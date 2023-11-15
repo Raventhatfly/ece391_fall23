@@ -1,7 +1,6 @@
 #ifndef SYSCALL_H
 #define SYSCALL_H
 #include "types.h"
-#include "scheduler.h"
 
 #define MAX_CMD 32
 // #define MAX_ARGS 10

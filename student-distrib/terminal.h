@@ -19,7 +19,6 @@ typedef struct termin {
 	int32_t terminal_flag;
 } termin_t;
 
-extern int32_t terminal_using;
 extern uint32_t terminal_clear();
 extern void terminal_init();
 extern int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes);
@@ -30,6 +29,7 @@ extern void draw_cursor(uint32_t x, uint32_t y);
 extern int32_t terminal_open(const uint8_t *fname);
 extern int32_t terminal_close(int32_t fd);
 extern int32_t terminal_switch(int32_t terminal_id);
+extern int32_t get_terminal_id();
 
 
 #endif 

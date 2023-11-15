@@ -320,3 +320,7 @@ uint32_t terminal_delete(){
     return 0;
 }
 
+/* Return terminal Id */
+int32_t get_terminal_id(){
+    return terminal_using;
+}
