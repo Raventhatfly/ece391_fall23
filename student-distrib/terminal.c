@@ -97,6 +97,8 @@ void terminal_output(){
 
 void set_mem(int32_t terminal_id)
 {
+    screen_x=my_terminal[terminal_id].cursor_x_coord;
+    screen_y=my_terminal[terminal_id].cursor_y_coord;
     int32_t video_idx=VIDEO>>12;
     pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     if (terminal_id==terminal_using)
@@ -129,12 +131,14 @@ void set_mem(int32_t terminal_id)
 int32_t terminal_switch(int32_t terminal_id){
     if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
     if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
-    set_mem(terminal_using);
-    memcpy((void*)backup_hidden_terminal[terminal_using], (void*)video_mem, FOURKB); /*copy the video memory to the terminal buffer*/
-    memcpy((void*)video_mem,(void*)backup_hidden_terminal[terminal_id], FOURKB);
+   
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
     draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
+
+    set_mem(terminal_using);
+    memcpy((void*)backup_hidden_terminal[terminal_using], (void*)video_mem, FOURKB); /*copy the video memory to the terminal buffer*/
+    memcpy((void*)video_mem,(void*)backup_hidden_terminal[terminal_id], FOURKB);
     terminal_using=terminal_id;
     pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     set_mem(cur_pcb->terminal_id);
