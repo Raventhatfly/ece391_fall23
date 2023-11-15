@@ -6,6 +6,9 @@ extern int screen_x;
 extern int screen_y;
 extern char* video_mem;  
 
+/*start shell flag */
+term_shell_flag[TERMINAL_NUM] = {0};
+
 static int32_t i;
 int32_t terminal_using;
 termin_t my_terminal[TERMINAL_NUM];
@@ -143,6 +146,20 @@ int32_t terminal_switch(int32_t terminal_id){
     terminal_using=terminal_id;
     pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     set_mem(cur_pcb->terminal_id);
+
+    /* start terminal shell */
+    // int8_t* cmd = "shell";
+    // if(term_shell_flag[terminal_id]==0 && (terminal_id != 0)){
+    //     term_shell_flag[terminal_id]=1;
+        
+    //     asm volatile(
+    //         "movl %0, %%ebx\n"  
+    //         "movl $2, %%eax\n"  
+    //         "int $0x80\n"   
+    //         :      
+    //         : "r" (cmd)         
+    //     );
+    // }
     return 0;
 }   
 
