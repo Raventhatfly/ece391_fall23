@@ -108,7 +108,8 @@ void set_mem(int32_t terminal_id)
     }
     else
     {
-        
+         screen_x=my_terminal[terminal_id].cursor_x_coord;
+        screen_y=my_terminal[terminal_id].cursor_y_coord;
         page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
         video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
     }
