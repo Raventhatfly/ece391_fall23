@@ -374,8 +374,10 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
     *   SIDE EFFECTS: none
 */
 int32_t vidmap (uint8_t** screen_start){
+    pcb_t* curr_pcb = fetch_pcb_addr(fetch_curr_pid());
     if (screen_start==NULL || screen_start<(uint8_t**)KERNEL_STACK_ADDR || screen_start>=(uint8_t**)USER_STACK_ADDR) return -1; //invalid screen_start
-    set_map(VIDEO>>12,1);
+    if (curr_pcb->terminal_id==get_terminal_id()) set_map(VIDEO>>12,1);
+    else set_map(1+curr_pcb->terminal_id+(VIDEO>>12),1);
     *screen_start=(uint8_t*)(0x84b8000);
     return 0;
 }

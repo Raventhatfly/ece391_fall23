@@ -78,6 +78,14 @@ void program_page_init(uint32_t program_id){
     : "r" (page_dir_addr)
     : "%eax");
 }
+/*
+    *  void set_map(uint32_t act_mem, uint32_t present)
+    *    DESCRIPTION: set the map for video memory
+    *    INPUT: act_mem -- the actual memory
+    *           present -- the present
+    *    OUTPUT: none
+    *    SIDE EFFECT: set the map for video memory
+*/
 void set_map(uint32_t act_mem, uint32_t present)
 {
     uint32_t pg_dir_index=VIDEO>>12; //get the index of video memory, move 12 bit to the right for 4kb page

@@ -3,10 +3,11 @@
 #include "rtc.h"
 #include "lib.h"
 #include "i8259.h"
+#include "terminal.h"
 
 volatile uint32_t int_counter;
-volatile uint32_t int_flag[10];
-volatile uint32_t rtc_rate_off;
+volatile uint32_t int_flag[10];     /* 10 levels of frequency */
+volatile uint32_t rtc_rate_off[TERMINAL_NUM];
 
 
 /* 
@@ -43,7 +44,9 @@ void rtc_init(void) {
     int i;
     for (i=0; i<10; i++) {int_flag[i]=0;}
     int_counter=0;
-    rtc_rate_off=9;
+    for (i=0; i<TERMINAL_NUM; i++) {
+        rtc_rate_off[i]=9;
+    }
 
     enable_irq(RTC_IRQ);              /* Enable RTC interrupt */
 }
@@ -91,8 +94,9 @@ void rtc_handler(void){
 */
 int rtc_open(const uint8_t* filename) {
     /* default freq = 2 */
-    rtc_rate_off=0;
-    int_flag[rtc_rate_off]=0;
+    int32_t terminal_using=get_terminal_id();
+    rtc_rate_off[terminal_using]=0;
+    int_flag[rtc_rate_off[terminal_using]]=0;
 	return 0;
 }
 
@@ -136,7 +140,8 @@ int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
     uint32_t freq = *(uint32_t*) buf;
     if (freq<=0 || freq>BASE_RATE) {return -1;}     /* check if between 1~1024 */
     if ((freq & (freq-1)) != 0) {return -1;}        /* check if power of 2 */
-    rtc_rate_off=log_2(freq)-1;         /* calculae offset */
+    int32_t terminal_using=get_terminal_id();
+    rtc_rate_off[terminal_using]=log_2(freq)-1;         /* calculae offset */
     return 0;
 }
 
@@ -150,8 +155,9 @@ int rtc_write(int32_t fd, const void* buf, int32_t nbytes) {
     *    SIDE EFFECTS: Resets the interrupt flag for the current frequency.
 */
 int rtc_read(int32_t fd, void* buf, int32_t nbytes) {
-    while (int_flag[rtc_rate_off]==0) {}
-    int_flag[rtc_rate_off]=0;
+    int32_t terminal_using=get_terminal_id();
+    while (int_flag[rtc_rate_off[terminal_using]]==0) {}
+    int_flag[rtc_rate_off[terminal_using]]=0;
     return 0;
 }
 
