@@ -21,6 +21,7 @@ int32_t halt (uint8_t status){
     int32_t ret;
     int32_t i;
     int32_t terminal_id;    /* mp3.5: */
+    pcb_t* parent_pcb;
 
     if (status==255) ret=256;         /* exception */
     ret = 0;
@@ -28,8 +29,10 @@ int32_t halt (uint8_t status){
     pcb_t* pcb = fetch_pcb_addr(pid);
 
     /* mp3.5: decrement number of process in the terminal */
-    terminal_id = get_terminal_id();
+    parent_pcb = fetch_pcb_addr(pcb->parent_pid);
+    terminal_id = parent_pcb->terminal_id;
     terminal_process_mapping[terminal_id].num_proc--;
+
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process\n");
         process_id_arr[pcb->pid] = 0;
@@ -47,14 +50,14 @@ int32_t halt (uint8_t status){
     }
     process_id_arr[pid]=0;
 
-    pcb_t* prev_pcb=fetch_pcb_addr(pcb->parent_pid);
+    // pcb_t* prev_pcb=fetch_pcb_addr(pcb->parent_pid);
     program_page_init(pcb->parent_pid);
 
     /* mp3.5: decrement number of process in the terminal */
-    change_terminal_process(pcb->parent_pid, prev_pcb->terminal_id);
+    change_terminal_process(pcb->parent_pid, parent_pcb->terminal_id);
 
     tss.ss0 = KERNEL_DS;
-    tss.esp0 = KERNEL_STACK_ADDR - prev_pcb->pid * PCB_SIZE - 4; /* Prevent stack collision. Using 4 as alignment */ 
+    tss.esp0 = KERNEL_STACK_ADDR - parent_pcb->pid * PCB_SIZE - 4; /* Prevent stack collision. Using 4 as alignment */ 
     
     ebp = pcb->ebp;    
     esp = pcb->esp;
@@ -97,6 +100,7 @@ int32_t execute (const uint8_t* command){
     int file_len;
     int retval;
     /* mp3.5: terminal ID */
+    pcb_t* parent_pcb;
     int terminal_id;
 
     if(command == NULL){
@@ -172,8 +176,6 @@ int32_t execute (const uint8_t* command){
         return -1;
     }
 
-    /* mp3.5: terminal id */
-    terminal_id = get_terminal_id();
 
     /* Set up prgram paging (4MB) */
     program_page_init(pid);
@@ -185,21 +187,24 @@ int32_t execute (const uint8_t* command){
     file_len = get_file_size(dentry.inode_num);
     read_data(dentry.inode_num, 0, (uint8_t*)USER_PROGRAM_ADDR, file_len);
 
+    
+    
     /* Create PCB */
     pcb_t* execute_pcb = fetch_pcb_addr(pid);
     // execute_pcb->arg_cnt = curr_arg;     /* arg number */
     execute_pcb->pid = pid;
+    
     // if(pid == 0){     /* mp 3.5: modified */  
+    terminal_id = get_terminal_id();
     if(terminal_process_mapping[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
         execute_pcb->parent_pid = -1;        /* No parent */
-        /* mp3.5 clear flags and install the process to the linked list */
-        // cli();
-        // install_process(pid,terminal_id);
-        change_terminal_process(pid,terminal_id);
+        execute_pcb->terminal_id = terminal_id;
     }else{
         execute_pcb->parent_pid = fetch_curr_pid();
-        /* mp3.5: change the current active terminal process ID */
-        change_terminal_process(pid,terminal_id);
+        /* mp3.5:  */
+        parent_pcb = fetch_pcb_addr(execute_pcb->parent_pid);
+        execute_pcb->terminal_id = parent_pcb->terminal_id;
+        terminal_id = parent_pcb->terminal_id;
     }
     /* mp3.5: process number increment */
     terminal_process_mapping[terminal_id].num_proc++;
@@ -219,8 +224,8 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[1].file_pos = 0;
     execute_pcb->file_desc_arr[1].inode = 0;
 
-    /* mp3.5: add the terminal information into the pcb */
-    execute_pcb->terminal_id = terminal_id;
+    /* mp3.5 */
+    change_terminal_process(pid,terminal_id);
 
     /* save ebp and esp register */
     asm volatile(

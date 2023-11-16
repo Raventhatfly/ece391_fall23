@@ -58,25 +58,8 @@ int process_switch(){
     cur_pcb->ebp = cur_ebp;
     cur_pcb->esp = cur_esp;
 
-
-    // for(i = HEAD_NODE + 1;i<TAIL_NODE;i++){
-    //     if(active_proc_list[i].pid == cur_pid){
-    //         break;
-    //     }
-    // }
-    // if(i == TAIL_NODE) return -1;
-    // next_pid = active_proc_list[active_proc_list[i].next_proc].pid;
-    // if(next_pid == TAIL_NODE){
-    //     next_pid = active_proc_list[active_proc_list[HEAD_NODE].next_proc].pid;
-    // }
-    // if(next_pid == TAIL_NODE){
-    //     printf("Warning: No program is being runned!\n");
-    //     return -1;
-    // }
     /* start */
     int next_terminal;
-    pcb_t* next_pcb_addr;
-
     if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     for(i=1;i<TERMINAL_NUM;i++){
         if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
@@ -90,50 +73,18 @@ int process_switch(){
         next_pid = terminal_pid_map[next_terminal];
     }while(next_pid == PID_EMPTY && next_terminal != 0);
     curr_exe_terminal = next_terminal;
-    next_pcb_addr = fetch_pcb_addr(next_pid);
     /* end */
-
-    /* start */
-    // int next_terminal;
-    // pcb_t* next_pcb_addr;
-    // for(i = 0;i<TERMINAL_NUM; i++){
-    //     if(terminal_pid_map[i] != PID_EMPTY){
-    //         break;
-    //     }
-    // }
-    // if(i == TERMINAL_NUM)   return -1;
-    // curr_exe_terminal = i;
-    // next_terminal = curr_exe_terminal;
-
-    // next_terminal = (next_terminal + 1) % TERMINAL_NUM;
-    // next_pid = terminal_pid_map[next_terminal];
-    // if(next_pid == PID_EMPTY && get_terminal_id() == next_terminal){
-    //     /* start terminal shell */
-    //     set_mem(next_terminal);
-    //     execute("shell");
-    // }else if(next_pid == PID_EMPTY){
-    //     return -1;
-    // }
-    // next_pcb_addr = fetch_pcb_addr(next_pid);
-    /* end */
-
-
-
 
     
-    
-    /* end */
-
+    pcb_t* next_pcb = fetch_pcb_addr(next_pid);
     /* User program remap */
     program_page_init(next_pid);
-    // set_mem(active_proc_list[active_proc_list[i].next_proc].terminal_id);
-    set_mem(next_pcb_addr->terminal_id);
+    set_mem(next_pcb->terminal_id);
 
     /* Context Switch */
     tss.ss0 = KERNEL_DS;
     tss.esp0 =  KERNEL_STACK_ADDR - next_pid * PCB_SIZE - 4;   /* Prevent stack collision. Using 4 as alignment *//* -4 alignment */
 
-    pcb_t* next_pcb = fetch_pcb_addr(next_pid);
     asm volatile(
         "movl %0, %%esp\n"
         "movl %1, %%ebp\n"
