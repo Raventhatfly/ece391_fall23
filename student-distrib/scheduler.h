@@ -26,8 +26,5 @@ typedef struct terminal_proc{
 
 // extern int32_t terminal_using;
 int process_switch();
-int node_allocate();
-int install_process(int pid, int terminal_id);
-int remove_process(int pid, int terminal_id);
 int change_terminal_process(int pid, int terminal_id);
 #endif

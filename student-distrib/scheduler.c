@@ -17,16 +17,6 @@ void scheduler_init(){
     /* set up the scheduler */
     int j;
     int i = HEAD_NODE + 1;
-    // for(;i<TAIL_NODE;i++){
-    //     active_proc_list[i].pid = EMPTY_NODE_PID;
-    // }
-    // active_proc_list[HEAD_NODE].pid = HEAD_NODE_PID;
-    // active_proc_list[TAIL_NODE].pid = TAIL_NODE_PID;
-    // active_proc_list[HEAD_NODE].next_proc = TAIL_NODE;
-    // scheduler_activated = 1;    /* scheduler activated */
-    // for(i=0;i<TERMINAL_CNT;i++){
-    //     terminal_process_mapping[i].num_proc = 0;
-    // }
     for(i=0;i<TERMINAL_NUM;i++){
         terminal_process_mapping[i].num_proc = 0;
         terminal_pid_map[i] = PID_EMPTY;
@@ -38,7 +28,6 @@ void scheduler_init(){
 
 /* return -2 if scheduler not initialized */
 int process_switch(){
-    // printf("hello\n");
     /* check if scheduler is activated */
     if(scheduler_activated == 0){
         return -2;  /* return -2 if scheduler not initialized */
@@ -95,68 +84,7 @@ int process_switch(){
     );
 }
 
-/* return the block that is empty in the linked list */
-int node_allocate(){
-    int i = HEAD_NODE + 1;
-    for(;i<TAIL_NODE;i++){
-        if(active_proc_list[i].pid == EMPTY_NODE_PID){
-            return i;
-        }
-    }
-    return -1;
-}
-/* return -1 on failure */
-int install_process(int pid, int terminal_id){
-    int i = HEAD_NODE,last_node=HEAD_NODE;
-    while (active_proc_list[last_node].next_proc != TAIL_NODE)
-    {
-        last_node = active_proc_list[last_node].next_proc;
-    }
-    for (i=HEAD_NODE+1;i<TAIL_NODE;i++)
-    {
-        if (active_proc_list[i].pid == EMPTY_NODE_PID)
-        {
-            active_proc_list[i].pid = pid;
-            active_proc_list[i].terminal_id = terminal_id;
-            active_proc_list[i].next_proc = TAIL_NODE;
-            active_proc_list[last_node].next_proc = i;
-            return 0;
-        }
-    }
-    return -1;
-}
-
-int remove_process(int pid, int terminal_id){
-    int i=HEAD_NODE,nxt;
-    while (active_proc_list[i].next_proc != TAIL_NODE)
-    {
-        nxt = active_proc_list[i].next_proc;
-        if (active_proc_list[nxt].pid == pid && active_proc_list[nxt].terminal_id == terminal_id)
-        {
-            active_proc_list[i].next_proc = active_proc_list[nxt].next_proc;
-            active_proc_list[nxt].pid = EMPTY_NODE_PID;
-            active_proc_list[nxt].terminal_id = 0;
-            active_proc_list[nxt].next_proc = 0;
-            return 0;
-        }
-        i = active_proc_list[i].next_proc;
-    }  
-    return -1;
-}
-
 int change_terminal_process(int pid, int terminal_id){
-    // int i=HEAD_NODE,nxt;
-    // while (active_proc_list[i].next_proc != TAIL_NODE)
-    // {
-    //     nxt = active_proc_list[i].next_proc;
-    //     if (active_proc_list[nxt].terminal_id == terminal_id)
-    //     {
-    //         active_proc_list[i].pid = pid;
-    //         return 0;
-    //     }
-    //     i = active_proc_list[i].next_proc;
-    // }  
-    // return -1;
     terminal_pid_map[terminal_id] = pid;
     return 0;
 }
