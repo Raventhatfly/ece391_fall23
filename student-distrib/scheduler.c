@@ -31,11 +31,12 @@ int process_switch(){
     if(scheduler_activated == 0){
         return -2;  /* return -2 if scheduler not initialized */
     }
-
+    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     int cur_esp;
     int cur_ebp;
     int next_pid;
     int i;
+    
     int cur_pid = fetch_curr_pid();
     pcb_t* cur_pcb = fetch_pcb_addr(cur_pid);
     asm volatile(
@@ -43,12 +44,12 @@ int process_switch(){
         "movl %%ebp, %1\n"
         : "=r" (cur_esp), "=r" (cur_ebp)
     );
-    cur_pcb->ebp = cur_ebp;
-    cur_pcb->esp = cur_esp;
+    cur_pcb->scheduler_ebp = cur_ebp;
+    cur_pcb->scheduler_esp = cur_esp;
 
     /* start */
     int next_terminal;
-    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    // if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     for(i=1;i<TERMINAL_NUM;i++){
         if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
             set_mem(i);
@@ -79,8 +80,9 @@ int process_switch(){
         "leave\n"
         "ret\n"
         :
-        : "r" (next_pcb->esp), "r" (next_pcb->ebp)
+        : "r" (next_pcb->scheduler_esp), "r" (next_pcb->scheduler_ebp)
     );
+
 }
 
 int change_terminal_process(int pid, int terminal_id){

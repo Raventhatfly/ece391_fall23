@@ -30,8 +30,12 @@ int32_t halt (uint8_t status){
 
     /* mp3.5: decrement number of process in the terminal */
     // parent_pcb = fetch_pcb_addr(pcb->parent_pid);
+    
     terminal_id = pcb->terminal_id;
     terminal_process_mapping[terminal_id].num_proc--;
+    /* mp3.5: decrement number of process in the terminal */
+    change_terminal_process(pcb->parent_pid, pcb->terminal_id);
+    
 
     if(pcb->parent_pid == -1){
         printf("Fail to halt base process\n");
@@ -53,8 +57,7 @@ int32_t halt (uint8_t status){
     parent_pcb = fetch_pcb_addr(pcb->parent_pid);
     program_page_init(pcb->parent_pid);
 
-    /* mp3.5: decrement number of process in the terminal */
-    change_terminal_process(pcb->parent_pid, pcb->terminal_id);
+    
 
     tss.ss0 = KERNEL_DS;
     tss.esp0 = KERNEL_STACK_ADDR - parent_pcb->pid * PCB_SIZE - 4; /* Prevent stack collision. Using 4 as alignment */ 

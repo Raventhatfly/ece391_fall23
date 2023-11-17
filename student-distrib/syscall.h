@@ -42,6 +42,8 @@ typedef struct pcb{
     uint8_t args[MAX_ARG_LEN + 1];
     int32_t esp;
     int32_t ebp;
+    int32_t scheduler_ebp;
+    int32_t scheduler_esp;
     int32_t terminal_id;
 }pcb_t;
 
