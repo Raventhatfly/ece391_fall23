@@ -15,8 +15,7 @@ int curr_exe_terminal;
 
 void scheduler_init(){
     /* set up the scheduler */
-    int j;
-    int i = HEAD_NODE + 1;
+    int i,j;
     for(i=0;i<TERMINAL_NUM;i++){
         terminal_process_mapping[i].num_proc = 0;
         terminal_pid_map[i] = PID_EMPTY;
@@ -60,7 +59,7 @@ int process_switch(){
     do{
         next_terminal = (next_terminal + 1) % TERMINAL_NUM;
         next_pid = terminal_pid_map[next_terminal];
-    }while(next_pid == PID_EMPTY && next_terminal != 0);
+    }while(next_pid == PID_EMPTY); /* && next_terminal != 0 */
     curr_exe_terminal = next_terminal;
     /* end */
 
