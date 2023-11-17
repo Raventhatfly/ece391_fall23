@@ -25,6 +25,7 @@ typedef struct terminal_proc{
 }terminal_proc_t;
 
 // extern int32_t terminal_using;
+void scheduler_init();
 int process_switch();
 int change_terminal_process(int pid, int terminal_id);
 #endif
