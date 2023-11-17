@@ -29,8 +29,8 @@ int32_t halt (uint8_t status){
     pcb_t* pcb = fetch_pcb_addr(pid);
 
     /* mp3.5: decrement number of process in the terminal */
-    parent_pcb = fetch_pcb_addr(pcb->parent_pid);
-    terminal_id = parent_pcb->terminal_id;
+    // parent_pcb = fetch_pcb_addr(pcb->parent_pid);
+    terminal_id = pcb->terminal_id;
     terminal_process_mapping[terminal_id].num_proc--;
 
     if(pcb->parent_pid == -1){
@@ -50,11 +50,11 @@ int32_t halt (uint8_t status){
     }
     process_id_arr[pid]=0;
 
-    // pcb_t* prev_pcb=fetch_pcb_addr(pcb->parent_pid);
+    parent_pcb = fetch_pcb_addr(pcb->parent_pid);
     program_page_init(pcb->parent_pid);
 
     /* mp3.5: decrement number of process in the terminal */
-    change_terminal_process(pcb->parent_pid, parent_pcb->terminal_id);
+    change_terminal_process(pcb->parent_pid, pcb->terminal_id);
 
     tss.ss0 = KERNEL_DS;
     tss.esp0 = KERNEL_STACK_ADDR - parent_pcb->pid * PCB_SIZE - 4; /* Prevent stack collision. Using 4 as alignment */ 
