@@ -171,18 +171,18 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     int32_t j = 0;
 	if (buf == NULL) return -1;  /*if the buffer is NULL or the nbytes is 0 or negative, return 0 as failed*/
     if (nbytes <= 0) return -1;  
-    my_terminal[terminal_using].read_flag=0;
+    my_terminal[curr_exe_terminal].read_flag=0;
 	// my_terminal.buffer_iterator = 0;	
-    buffer_clear(terminal_using); 
-    my_terminal[terminal_using].read_flag = 0; 
-    while (!my_terminal[terminal_using].read_flag);  /*wait until the enter is pressed*/
-    my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = '\0';
+    buffer_clear(curr_exe_terminal); 
+    my_terminal[curr_exe_terminal].read_flag = 0; 
+    while (!my_terminal[curr_exe_terminal].read_flag);  /*wait until the enter is pressed*/
+    my_terminal[curr_exe_terminal].terminal_buffer[my_terminal[curr_exe_terminal].buffer_iterator] = '\0';
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
         j = BUFFER_SIZE;
     }else{
         j = nbytes;
     }									
-	for (i = 0; i < j && my_terminal[terminal_using].terminal_buffer[i] != '\0'; i++) ((char*)buf)[i] = my_terminal[terminal_using].terminal_buffer[i];
+	for (i = 0; i < j && my_terminal[curr_exe_terminal].terminal_buffer[i] != '\0'; i++) ((char*)buf)[i] = my_terminal[terminal_using].terminal_buffer[i];
 	return i;
 }
 
@@ -204,9 +204,9 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { 
         putc(*pointer);
-        my_terminal[terminal_using].cursor_x_coord=screen_x;
-        my_terminal[terminal_using].cursor_y_coord=screen_y;
-        draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord);
+        my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
+        my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
+        draw_cursor(my_terminal[curr_exe_terminal].cursor_x_coord, my_terminal[curr_exe_terminal].cursor_y_coord);
         pointer++;
         char_written++;
     }
