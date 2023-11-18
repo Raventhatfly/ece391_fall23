@@ -32,6 +32,6 @@ extern int32_t terminal_switch(int32_t terminal_id);
 extern int32_t get_terminal_id();
 extern void set_men(int32_t terminal_id);
 
-
+extern termin_t my_terminal[TERMINAL_NUM];
 #endif 
 

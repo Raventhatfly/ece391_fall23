@@ -11,7 +11,7 @@ term_shell_flag[TERMINAL_NUM] = {0};
 
 static int32_t i;
 int32_t terminal_using;
-termin_t my_terminal[TERMINAL_NUM];
+
 extern int curr_exe_terminal;
 uint32_t* backup_hidden_terminal[3]={(uint32_t*)0xB9000, (uint32_t*)0xBA000, (uint32_t*)0xBB000};
 /* the following four function are helper functions */
@@ -93,10 +93,10 @@ int32_t terminal_input(unsigned char input){
 void terminal_output(){
     set_mem(terminal_using);//3.5
     printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
-    my_terminal[terminal_using].cursor_x_coord=screen_x;
-    my_terminal[terminal_using].cursor_y_coord=screen_y;
+    //my_terminal[terminal_using].cursor_x_coord=screen_x;
+    //my_terminal[terminal_using].cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
-    draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+    //draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
     my_terminal[terminal_using].buffer_iterator++;
     //pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid()); //3.5
     //set_mem(cur_pcb->terminal_id);//3.5
@@ -204,9 +204,7 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { 
         putc(*pointer);
-        my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
-        my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
-        draw_cursor(my_terminal[curr_exe_terminal].cursor_x_coord, my_terminal[curr_exe_terminal].cursor_y_coord);
+        
         pointer++;
         char_written++;
     }

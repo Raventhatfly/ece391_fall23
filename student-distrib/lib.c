@@ -1,8 +1,8 @@
 /* lib.c - Some basic library functions (printf, strlen, etc.)
  * vim:ts=4 noexpandtab */
-
+#include "scheduler.h"
 #include "lib.h"
-
+#include "terminal.h"
 #define VIDEO       0xB8000
 #define NUM_COLS    80
 #define NUM_ROWS    25
@@ -11,7 +11,7 @@
 int screen_x;
 int screen_y;
 char* video_mem = (char *)VIDEO;
-
+extern int curr_exe_terminal;
 /* void clear(void);
  * Inputs: void
  * Return Value: none
@@ -168,6 +168,8 @@ int32_t puts(int8_t* s) {
  * Return Value: void
  *  Function: Output a character to the console */
 void putc(uint8_t c) {
+    int flag = 0;
+    cli_and_save(flag);
     if(c == '\n' || c == '\r') {
         //if (screen_x >= NUM_COLS-1){
         {
@@ -199,6 +201,10 @@ void putc(uint8_t c) {
         screen_x %= NUM_COLS;
         screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
     }
+    my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
+    my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
+    draw_cursor(my_terminal[curr_exe_terminal].cursor_x_coord, my_terminal[curr_exe_terminal].cursor_y_coord);
+    restore_flags(flag);
 }
 
 /* int8_t* itoa(uint32_t value, int8_t* buf, int32_t radix);
