@@ -145,9 +145,11 @@ void set_mem(int32_t terminal_id)
     *   SIDE EFFECTS: switch the terminal
 */
 int32_t terminal_switch(int32_t terminal_id){
+    int32_t flag;
     if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
     if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
     
+    cli_and_save(flag);
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
     draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
@@ -159,7 +161,7 @@ int32_t terminal_switch(int32_t terminal_id){
     //pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     //set_mem(cur_pcb->terminal_id);
     set_mem(curr_exe_terminal);
-
+    restore_flags(flag);
     return 0;
 }   
 
@@ -277,6 +279,8 @@ int32_t terminal_close(int32_t fd){
     *   SIDE EFFECTS: clear the terminal
 */
 uint32_t terminal_clear(){
+    int32_t flag;
+    cli_and_save(flag);
     for (i = 0; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2) = ' ';
     for (i = 0; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2 + 1) = ATTRIB; /*set the ATTRIB of the screen*/
     i = 0;   
@@ -288,6 +292,7 @@ uint32_t terminal_clear(){
     my_terminal[terminal_using].terminal_flag=0;
     draw_cursor(my_terminal[i].cursor_x_coord, my_terminal[i].cursor_y_coord);
     
+    restore_flags(flag);
     return 0;
 }
 
@@ -342,6 +347,9 @@ uint32_t terminal_delete(){
      * if the position is on the shell ending pos 7 and the former bytes contain '>' on screen_x == 5 
      * we assume the content before this location is the shell prompt and it cannot be deleted.
      */
+    int flag;
+    cli_and_save(flag);
+
     if (screen_x == 7 && *(video_mem + ((COLS * screen_y + 5) * 2))=='>'){  
         return -1;
     }
@@ -365,6 +373,8 @@ uint32_t terminal_delete(){
     my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ' '; 
     my_terminal[terminal_using].buffer_iterator--;
     my_terminal[terminal_using].buffer_iterator= my_terminal[terminal_using].buffer_iterator % BUFFER_SIZE; /*if the buffer is full, set the iterator to 0*/
+    
+    restore_flags(flag);
     return 0;
 }
 
