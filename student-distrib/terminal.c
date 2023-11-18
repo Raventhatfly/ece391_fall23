@@ -57,13 +57,16 @@ void screen_cpy(){
     *   SIDE EFFECTS: read the input from keyboard
 */
 int32_t terminal_input(unsigned char input){
+    int32_t flag;
     if (input == ENTER_ASC2){             
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2;
         my_terminal[terminal_using].buffer_iterator++;
+        cli_and_save(flag);
         screen_cpy();
         my_terminal[terminal_using].cursor_x_coord=screen_x;
         my_terminal[terminal_using].cursor_y_coord=screen_y;
         draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+        restore_flags(flag);
         my_terminal[terminal_using].read_flag=1;
         return -1;
     }
