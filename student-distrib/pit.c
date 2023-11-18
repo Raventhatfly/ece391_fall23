@@ -20,8 +20,9 @@ void pit_init(int fre){
 }
 
 void pit_handler(){
-    process_switch();
     send_eoi(PIT_IRQ);
+    process_switch();
+    
     // if(++counter > 100){
     //     tick++;
     //     printf("PIT recieved at tick %d\n",tick);
