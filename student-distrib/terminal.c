@@ -91,12 +91,12 @@ int32_t terminal_input(unsigned char input){
     *   SIDE EFFECTS: write the input to screen
 */
 void terminal_output(){
-    int temp;
+    //int temp;
     set_mem(terminal_using);//3.5
-    temp=curr_exe_terminal;
-    curr_exe_terminal=terminal_using;
+    //temp=curr_exe_terminal;
+    //curr_exe_terminal=terminal_using;
     printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
-    curr_exe_terminal=temp;
+    //curr_exe_terminal=temp;
     //my_terminal[terminal_using].cursor_x_coord=screen_x;
     //my_terminal[terminal_using].cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
