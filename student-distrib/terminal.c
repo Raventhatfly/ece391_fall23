@@ -97,8 +97,8 @@ void terminal_output(){
     //curr_exe_terminal=terminal_using;
     printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
     //curr_exe_terminal=temp;
-    //my_terminal[terminal_using].cursor_x_coord=screen_x;
-    //my_terminal[terminal_using].cursor_y_coord=screen_y;
+    my_terminal[terminal_using].cursor_x_coord=screen_x;
+    my_terminal[terminal_using].cursor_y_coord=screen_y;
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
     //draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
     my_terminal[terminal_using].buffer_iterator++;
@@ -208,7 +208,8 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { 
         putc(*pointer);
-        
+        my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
+        my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
         pointer++;
         char_written++;
     }
