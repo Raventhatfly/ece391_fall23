@@ -79,7 +79,8 @@ int process_switch(){
     pcb_t* next_pcb = fetch_pcb_addr(next_pid);
     /* User program remap */
     program_page_init(next_pid);
-    set_mem(next_pcb->terminal_id);
+    //set_mem(next_pcb->terminal_id);
+    set_mem(curr_exe_terminal);
 
     /* Context Switch */
     tss.ss0 = KERNEL_DS;
