@@ -32,10 +32,20 @@ int process_switch(){
         return -2;  /* return -2 if scheduler not initialized */
     }
     if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    
     int cur_esp;
     int cur_ebp;
     int next_pid;
     int i;
+
+    // for(i=1;i<TERMINAL_NUM;i++){
+    //     if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
+    //         set_mem(i);
+    //         curr_exe_terminal = i;
+    //         execute("shell");
+    //         return 0;
+    //     }
+    // }
     
     int cur_pid = fetch_curr_pid();
     pcb_t* cur_pcb = fetch_pcb_addr(cur_pid);
@@ -49,10 +59,11 @@ int process_switch(){
 
     /* start */
     int next_terminal;
-    // if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     for(i=1;i<TERMINAL_NUM;i++){
         if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
             set_mem(i);
+            curr_exe_terminal = i;
             execute("shell");
         }
     }
