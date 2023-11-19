@@ -207,8 +207,8 @@ void putc(uint8_t c) {
     restore_flags(flag);
 }
 void putc_keyboard(uint8_t c) {
-    int flag = 0;
-    cli_and_save(flag);
+    //int flag = 0;
+    //cli_and_save(flag);
     if(c == '\n' || c == '\r') {
         //if (screen_x >= NUM_COLS-1){
         {
@@ -246,7 +246,7 @@ void putc_keyboard(uint8_t c) {
     my_terminal[get_terminal_id()].cursor_x_coord=screen_x;
     my_terminal[get_terminal_id()].cursor_y_coord=screen_y;
     draw_cursor(screen_x, screen_y);
-    restore_flags(flag);
+    //restore_flags(flag);
 }
 /* int8_t* itoa(uint32_t value, int8_t* buf, int32_t radix);
  * Inputs: uint32_t value = number to convert

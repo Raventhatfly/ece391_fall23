@@ -351,8 +351,8 @@ uint32_t terminal_delete(){
      * if the position is on the shell ending pos 7 and the former bytes contain '>' on screen_x == 5 
      * we assume the content before this location is the shell prompt and it cannot be deleted.
      */
-    int flag;
-    cli_and_save(flag);
+    //int flag;
+    //cli_and_save(flag);
 
     if (screen_x == 7 && *(video_mem + ((COLS * screen_y + 5) * 2))=='>'){  
         return -1;
@@ -378,7 +378,7 @@ uint32_t terminal_delete(){
     my_terminal[terminal_using].buffer_iterator--;
     my_terminal[terminal_using].buffer_iterator= my_terminal[terminal_using].buffer_iterator % BUFFER_SIZE; /*if the buffer is full, set the iterator to 0*/
     
-    restore_flags(flag);
+    //restore_flags(flag);
     return 0;
 }
 

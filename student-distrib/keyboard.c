@@ -2,6 +2,7 @@
 #include "lib.h"
 #include "i8259.h"
 #include "terminal.h"
+#include "scheduler.h"
 /*
 table from scancode to ascii
 */
@@ -31,6 +32,7 @@ table from scancode to ascii
 flag for special key
 */
 int8_t caps=0,shift=0,ctrl=0,alt=0;
+extern int curr_exe_terminal;
 /*
 table from scancode to ascii
 */
@@ -161,10 +163,14 @@ void irq1_handler(void)
                 ascii = scancode[key];
             if (ctrl && (ascii=='l' || ascii=='L'))
             {
+                set_mem(get_terminal_id);
                 terminal_clear();
+                set_mem(curr_exe_terminal);
                 break; 
             } else if (ascii=='\b'){
+                set_mem(get_terminal_id);
                 terminal_delete();
+                set_mem(curr_exe_terminal);
                 break;
             }else if (ascii=='\t'){
                 terminal_display(' ');
