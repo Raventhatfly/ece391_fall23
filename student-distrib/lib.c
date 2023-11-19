@@ -201,8 +201,8 @@ void putc(uint8_t c) {
         screen_x %= NUM_COLS;
         screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
     }
-    //my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
-    //my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
+    my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
+    my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
     draw_cursor(screen_x, screen_y);
     restore_flags(flag);
 }
