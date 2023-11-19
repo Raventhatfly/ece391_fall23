@@ -163,12 +163,12 @@ void irq1_handler(void)
                 ascii = scancode[key];
             if (ctrl && (ascii=='l' || ascii=='L'))
             {
-                set_mem(get_terminal_id);
+                set_mem(get_terminal_id());
                 terminal_clear();
                 set_mem(curr_exe_terminal);
                 break; 
             } else if (ascii=='\b'){
-                set_mem(get_terminal_id);
+                set_mem(get_terminal_id());
                 terminal_delete();
                 set_mem(curr_exe_terminal);
                 break;
