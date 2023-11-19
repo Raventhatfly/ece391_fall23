@@ -206,7 +206,45 @@ void putc(uint8_t c) {
     draw_cursor(screen_x, screen_y);
     restore_flags(flag);
 }
-
+void putc_keyboard(uint8_t c) {
+    int flag = 0;
+    cli_and_save(flag);
+    if(c == '\n' || c == '\r') {
+        //if (screen_x >= NUM_COLS-1){
+        {
+            screen_x = 0;          /*set the position of the row*/
+                if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
+                    screen_y++;         
+                }else{
+                    memcpy(video_mem, video_mem+NUM_COLS*2, NUM_COLS*(NUM_ROWS-1)*2); /* or copy the screen to the next line*/
+                    int i;
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 ) = ' ';  /*clear the screen with blank*/
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 + 1) = ATTRIB;  /*set the ATTRIB of the screen*/
+                }
+        }
+    } else {
+        if (screen_x >= NUM_COLS-1){
+            screen_x = 0;          /*set the position of the row*/
+                if (screen_y < NUM_ROWS-1){    /*if the row is not the last row(there are 25 rows so 24), go to the next row*/
+                    screen_y++;         
+                }else{
+                    memcpy(video_mem, video_mem+NUM_COLS*2, NUM_COLS*(NUM_ROWS-1)*2); /* or copy the screen to the next line*/
+                    int i;
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 ) = ' ';  /*clear the screen with blank*/
+                    for (i = 0; i < NUM_COLS; i++) *(uint32_t *)(video_mem + (NUM_COLS*(NUM_ROWS-1)+i)*2 + 1) = ATTRIB;  /*set the ATTRIB of the screen*/
+                }
+        }
+        *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1)) = c;
+        *(uint8_t *)(video_mem + ((NUM_COLS * screen_y + screen_x) << 1) + 1) = ATTRIB;
+        screen_x++;
+        screen_x %= NUM_COLS;
+        screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
+    }
+    my_terminal[get_terminal_id()].cursor_x_coord=screen_x;
+    my_terminal[get_terminal_id()].cursor_y_coord=screen_y;
+    draw_cursor(screen_x, screen_y);
+    restore_flags(flag);
+}
 /* int8_t* itoa(uint32_t value, int8_t* buf, int32_t radix);
  * Inputs: uint32_t value = number to convert
  *            int8_t* buf = allocated buffer to place string in

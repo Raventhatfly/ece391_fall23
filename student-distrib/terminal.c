@@ -212,7 +212,7 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     int32_t char_written = 0; 
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { 
-        putc(*pointer);
+        putc_keyboard(*pointer);
         //my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
         //my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
         pointer++;
