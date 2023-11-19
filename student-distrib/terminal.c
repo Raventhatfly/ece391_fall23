@@ -57,18 +57,17 @@ void screen_cpy(){
     *   SIDE EFFECTS: read the input from keyboard
 */
 int32_t terminal_input(unsigned char input){
-    //int32_t flag;
-    if (input == ENTER_ASC2){             
+    if (input == ENTER_ASC2){     
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2;
         my_terminal[terminal_using].buffer_iterator++;
-        //cli_and_save(flag);
-        screen_cpy();
-        my_terminal[terminal_using].cursor_x_coord=screen_x;
-        my_terminal[terminal_using].cursor_y_coord=screen_y;
-        draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
-        //restore_flags(flag);
+        
+        // screen_cpy();
+        // my_terminal[terminal_using].cursor_x_coord=screen_x;
+        // my_terminal[terminal_using].cursor_y_coord=screen_y;
+        // draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+        
         my_terminal[terminal_using].read_flag=1;
-        return -1;
+        return 0;
     }
     if (input == 0x0){
         return -1;
@@ -76,11 +75,16 @@ int32_t terminal_input(unsigned char input){
     if (screen_x==79){      /*if the input is at the end(the 80th char) of the line, set the buffer as enter to change to next line*/
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2; /*if the input is at the end of the line, set the buffer as enter to change to next line*/
         my_terminal[terminal_using].buffer_iterator++;
+        set_mem(terminal_using);//3.5
+        putc_keyboard(ENTER_ASC2); /*print the current char*/
+        set_mem(curr_exe_terminal);//3.5    
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
-        screen_cpy();                                               /*copy the screen as moving to next line*/
+                                               /*copy the screen as moving to next line*/
+        my_terminal[terminal_using].buffer_iterator++;
         return 0;
     }else{
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
+        my_terminal[terminal_using].buffer_iterator++;
         return 0;
     }     
 }
