@@ -357,6 +357,9 @@ uint32_t terminal_delete(){
     if (screen_x == 7 && *(video_mem + ((COLS * screen_y + 5) * 2))=='>'){  
         return -1;
     }
+    if(my_terminal[terminal_using].buffer_iterator == 0){   /* if the buffer is empty, do not delete */
+        return -1;
+    }
     if (screen_x == 0) {     /*if the input is at the beginning of the line, delete is failed*/
         if(screen_y == 0) {
             return -1;
