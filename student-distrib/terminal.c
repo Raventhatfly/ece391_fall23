@@ -80,11 +80,11 @@ int32_t terminal_input(unsigned char input){
         set_mem(curr_exe_terminal);//3.5    
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
                                                /*copy the screen as moving to next line*/
-        my_terminal[terminal_using].buffer_iterator++;
+        //my_terminal[terminal_using].buffer_iterator++;
         return 0;
     }else{
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = input; /*set the buffer as the input to display*/
-        my_terminal[terminal_using].buffer_iterator++;
+        //my_terminal[terminal_using].buffer_iterator++;
         return 0;
     }     
 }
