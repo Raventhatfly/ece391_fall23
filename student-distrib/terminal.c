@@ -74,7 +74,7 @@ int32_t terminal_input(unsigned char input){
     }
     if (screen_x==79){      /*if the input is at the end(the 80th char) of the line, set the buffer as enter to change to next line*/
         my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator] = ENTER_ASC2; /*if the input is at the end of the line, set the buffer as enter to change to next line*/
-        my_terminal[terminal_using].buffer_iterator++;
+        //my_terminal[terminal_using].buffer_iterator++;
         set_mem(terminal_using);//3.5
         putc_keyboard(ENTER_ASC2); /*print the current char*/
         set_mem(curr_exe_terminal);//3.5    
