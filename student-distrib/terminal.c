@@ -65,9 +65,11 @@ int32_t terminal_input(unsigned char input){
         // my_terminal[terminal_using].cursor_x_coord=screen_x;
         // my_terminal[terminal_using].cursor_y_coord=screen_y;
         // draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
-        
+        set_mem(terminal_using);//3.5
+        putc_keyboard(ENTER_ASC2); /*print the current char*/
+        set_mem(curr_exe_terminal);//3.5    
         my_terminal[terminal_using].read_flag=1;
-        return 0;
+        return -1;
     }
     if (input == 0x0){
         return -1;
