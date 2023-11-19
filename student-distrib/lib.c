@@ -240,6 +240,9 @@ void putc_keyboard(uint8_t c) {
         screen_x %= NUM_COLS;
         screen_y = (screen_y + (screen_x / NUM_COLS)) % NUM_ROWS;
     }
+    *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
+    //draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
+    my_terminal[get_terminal_id()].buffer_iterator++;
     my_terminal[get_terminal_id()].cursor_x_coord=screen_x;
     my_terminal[get_terminal_id()].cursor_y_coord=screen_y;
     draw_cursor(screen_x, screen_y);

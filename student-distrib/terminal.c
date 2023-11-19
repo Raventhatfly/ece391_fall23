@@ -98,13 +98,11 @@ void terminal_output(){
     set_mem(terminal_using);//3.5
     //temp=curr_exe_terminal;
     //curr_exe_terminal=terminal_using;
-    printf("%c", my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
+    putc_keyboard(my_terminal[terminal_using].terminal_buffer[my_terminal[terminal_using].buffer_iterator]); /*print the current char*/
     //curr_exe_terminal=temp;
     //my_terminal[terminal_using].cursor_x_coord=screen_x;
     //my_terminal[terminal_using].cursor_y_coord=screen_y;
-    *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB; /*set the ATTRIB of the screen*/
-    //draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
-    my_terminal[terminal_using].buffer_iterator++;
+   
     //pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid()); //3.5
     //set_mem(cur_pcb->terminal_id);//3.5
     set_mem(curr_exe_terminal);//3.5
@@ -212,7 +210,7 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
     int32_t char_written = 0; 
     /* Write nbytes bytes of buf to the terminal */
     while (char_written < nbytes && *pointer != '\0') { 
-        putc_keyboard(*pointer);
+        putc(*pointer);
         //my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
         //my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
         pointer++;
