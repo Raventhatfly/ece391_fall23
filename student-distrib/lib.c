@@ -203,7 +203,7 @@ void putc(uint8_t c) {
     }
     my_terminal[curr_exe_terminal].cursor_x_coord=screen_x;
     my_terminal[curr_exe_terminal].cursor_y_coord=screen_y;
-    if (curr_exe_terminal != get_terminal_id()) draw_cursor(screen_x, screen_y);
+    if (curr_exe_terminal == get_terminal_id()) draw_cursor(screen_x, screen_y);
     restore_flags(flag);
 }
 void putc_keyboard(uint8_t c) {
