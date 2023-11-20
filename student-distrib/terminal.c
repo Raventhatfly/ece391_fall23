@@ -7,7 +7,6 @@ extern int screen_y;
 extern char* video_mem;  
 
 /*start shell flag */
-term_shell_flag[TERMINAL_NUM] = {0};
 termin_t my_terminal[TERMINAL_NUM];
 static int32_t i;
 int32_t terminal_using;
@@ -28,7 +27,31 @@ uint32_t buffer_clear(int32_t id){
     my_terminal[id].buffer_iterator = 0;
     return 0;
 }
-
+void set_mem(int32_t terminal_id)
+{
+    screen_x=my_terminal[terminal_id].cursor_x_coord;
+    screen_y=my_terminal[terminal_id].cursor_y_coord;
+    int32_t video_idx=VIDEO>>12;
+    if (terminal_id==terminal_using)
+    {
+        
+        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
+        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
+    }
+    else
+    {
+        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
+        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
+    }
+    uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
+    asm volatile("              \n\
+    movl %0,%%eax               \n\
+    movl %%eax,%%cr3            \n\
+    "
+    :
+    : "r" (page_dir_addr)
+    : "eax");
+}
 /*
     * terminal_input
     *   DESCRIPTION: read the input from keyboard
@@ -65,32 +88,6 @@ int32_t buffer_set(unsigned char input){
     }     
 }
 
-void set_mem(int32_t terminal_id)
-{
-    screen_x=my_terminal[terminal_id].cursor_x_coord;
-    screen_y=my_terminal[terminal_id].cursor_y_coord;
-    int32_t video_idx=VIDEO>>12;
-    pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
-    if (terminal_id==terminal_using)
-    {
-        
-        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
-        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | VIDEO; /* set the video memory*/
-    }
-    else
-    {
-        page_table_entries[video_idx]=(page_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
-        video_table_entries[video_idx]=(video_table_entries[video_idx] & 0x00000fff) | (uint32_t)backup_hidden_terminal[terminal_id]; /* set the video memory*/
-    }
-    uint32_t page_dir_addr = (uint32_t) &page_directory_entries; /* update CR3 register to use the new page directory and flush the TLB*/
-    asm volatile("              \n\
-    movl %0,%%eax               \n\
-    movl %%eax,%%cr3            \n\
-    "
-    :
-    : "r" (page_dir_addr)
-    : "eax");
-}
 /*
     * terminal_switch
     *   DESCRIPTION: switch the terminal
