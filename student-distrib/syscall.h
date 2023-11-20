@@ -12,7 +12,7 @@
 #define USER_STACK_ADDR   0x8400000     /* 132 MB */
 #define PCB_SIZE 0x2000                 /* 8kB */
 
-extern terminal_proc_t terminal_process_mapping[];
+extern terminal_proc_t terminal_pid_map[];
 typedef struct file_op_table{
     int32_t (*open)(const uint8_t *fname);
     int32_t (*read)(int32_t fd, void* buf, int32_t nbytes);

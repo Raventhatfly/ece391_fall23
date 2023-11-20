@@ -13,15 +13,9 @@
 
 /* macros for the revised version */
 #define PID_EMPTY -1
-
-typedef struct sch_proc{
-    int pid;
-    int terminal_id;
-    int next_proc;
-}sch_proc_t;
-
 typedef struct terminal_proc{
     int num_proc;
+    int pid;
 }terminal_proc_t;
 
 // extern int32_t terminal_using;

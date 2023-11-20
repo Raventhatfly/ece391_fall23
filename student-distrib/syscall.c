@@ -32,7 +32,7 @@ int32_t halt (uint8_t status){
     // parent_pcb = fetch_pcb_addr(pcb->parent_pid);
     
     terminal_id = pcb->terminal_id;
-    terminal_process_mapping[terminal_id].num_proc--;
+    terminal_pid_map[terminal_id].num_proc--;
     /* mp3.5: decrement number of process in the terminal */
     change_terminal_process(pcb->parent_pid, pcb->terminal_id);
     
@@ -199,7 +199,7 @@ int32_t execute (const uint8_t* command){
     
     // if(pid == 0){     /* mp 3.5: modified */  
     terminal_id = get_terminal_id();
-    if(terminal_process_mapping[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
+    if(terminal_pid_map[terminal_id].num_proc == 0){    /* if this the first program in the terminal, then no parent */                 
         execute_pcb->parent_pid = -1;        /* No parent */
         execute_pcb->terminal_id = terminal_id;
     }else{
@@ -210,7 +210,7 @@ int32_t execute (const uint8_t* command){
         terminal_id = parent_pcb->terminal_id;
     }
     /* mp3.5: process number increment */
-    terminal_process_mapping[terminal_id].num_proc++;
+    terminal_pid_map[terminal_id].num_proc++;
 
     strcpy((int8_t *)execute_pcb->cmd, (int8_t *)cmd);
     strcpy((int8_t *)execute_pcb->args, (int8_t *)args);

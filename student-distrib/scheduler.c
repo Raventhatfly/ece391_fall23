@@ -6,19 +6,15 @@
 #include "lib.h"
 
 int scheduler_activated = 0;
-terminal_proc_t terminal_process_mapping[3];
-/* array implemented linked list */
-sch_proc_t active_proc_list[MAX_PROCESS + SENTINEL_NODE];
-/* modified version */
-int terminal_pid_map[TERMINAL_NUM];
+terminal_proc_t terminal_pid_map[TERMINAL_NUM];
 int curr_exe_terminal;
 
 void scheduler_init(){
     /* set up the scheduler */
     int i;
     for(i=0;i<TERMINAL_NUM;i++){
-        terminal_process_mapping[i].num_proc = 0;
-        terminal_pid_map[i] = PID_EMPTY;
+        terminal_pid_map[i].num_proc = 0;
+        terminal_pid_map[i].pid = PID_EMPTY;
         curr_exe_terminal = 0;
     }
     scheduler_activated = 1;
@@ -31,22 +27,13 @@ int process_switch(){
     if(scheduler_activated == 0){
         return -2;  /* return -2 if scheduler not initialized */
     }
-    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    if(terminal_pid_map[0].pid == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     
     int cur_esp;
     int cur_ebp;
     int next_pid;
     int i;
 
-    // for(i=1;i<TERMINAL_NUM;i++){
-    //     if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
-    //         set_mem(i);
-    //         curr_exe_terminal = i;
-    //         execute("shell");
-    //         return 0;
-    //     }
-    // }
-    
     int cur_pid = fetch_curr_pid();
     pcb_t* cur_pcb = fetch_pcb_addr(cur_pid);
     asm volatile(
@@ -59,9 +46,9 @@ int process_switch(){
 
     /* start */
     int next_terminal;
-    if(terminal_pid_map[0] == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
+    if(terminal_pid_map[0].pid == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     for(i=1;i<TERMINAL_NUM;i++){
-        if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
+        if(terminal_pid_map[i].pid == PID_EMPTY && i==get_terminal_id()){
             set_mem(i);
             curr_exe_terminal = i;
             execute((uint8_t*)"shell");
@@ -70,7 +57,7 @@ int process_switch(){
     next_terminal = curr_exe_terminal;
     do{
         next_terminal = (next_terminal + 1) % TERMINAL_NUM;
-        next_pid = terminal_pid_map[next_terminal];
+        next_pid = terminal_pid_map[next_terminal].pid;
     }while(next_pid == PID_EMPTY); /* && next_terminal != 0 */
     curr_exe_terminal = next_terminal;
     /* end */
@@ -99,6 +86,6 @@ int process_switch(){
 }
 
 int change_terminal_process(int pid, int terminal_id){
-    terminal_pid_map[terminal_id] = pid;
+    terminal_pid_map[terminal_id].pid = pid;
     return 0;
 }
