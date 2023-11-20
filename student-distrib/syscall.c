@@ -209,6 +209,8 @@ int32_t execute (const uint8_t* command){
         execute_pcb->terminal_id = parent_pcb->terminal_id;
         terminal_id = parent_pcb->terminal_id;
         /* can not reach the maximum number of process a terminal can hold */
+        // int allowed_terminal_process = MAX_TERMINAL_PROCESS - allocated_pid_cnt();
+
         if(terminal_pid_map[terminal_id].num_proc >= MAX_TERMINAL_PROCESS){
             printf("Terminal %d has reached its maximum supported process.\n",terminal_id);
             process_id_arr[pid]=0;          /* free pid */
@@ -451,6 +453,23 @@ int32_t allocate_pid(){
         }
     }
     return -1;
+}
+
+/*
+    * allocated_pid_cnt
+    *   DESCRIPTION: count the number of the allocated PIDs 
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: the number of the allocated PIDs 
+    *   SIDE EFFECTS: none
+*/
+int32_t allocated_pid_cnt(){
+    int i, cnt;
+    cnt = 0;
+    for(i = 0;i < MAX_PROCESS; i++){
+        if(process_id_arr[i] == 1)  cnt++;
+    }
+    return cnt;
 }
 /*
     * fetch_pcb_addr

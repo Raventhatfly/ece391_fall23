@@ -49,6 +49,7 @@ typedef struct pcb{
 }pcb_t;
 
 int32_t allocate_pid();
+int32_t allocated_pid_cnt();
 pcb_t * fetch_pcb_addr(int32_t pid);
 void push_pcb();
 
