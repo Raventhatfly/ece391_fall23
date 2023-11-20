@@ -156,12 +156,13 @@ int32_t terminal_switch(int32_t terminal_id){
     //cli_and_save(flag);
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; //maybe some problems
-    draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
+    // draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
 
     set_mem(terminal_using);
     memcpy((void*)backup_hidden_terminal[terminal_using], (void*)video_mem, FOURKB); /*copy the video memory to the terminal buffer*/
     memcpy((void*)video_mem,(void*)backup_hidden_terminal[terminal_id], FOURKB);
     terminal_using=terminal_id;
+    draw_cursor(my_terminal[terminal_id].cursor_x_coord, my_terminal[terminal_id].cursor_y_coord);
     //pcb_t* cur_pcb = fetch_pcb_addr(fetch_curr_pid());
     //set_mem(cur_pcb->terminal_id);
     set_mem(curr_exe_terminal);
@@ -242,6 +243,9 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
 /*0x3D4 and 0x3D5 are the ports for the VGA board*/
 /*0xFF is used to mask the high 8 bits*/
 void draw_cursor(uint32_t x, uint32_t y) {	
+    if(curr_exe_terminal != get_terminal_id()){
+        return;
+    }
 	outb(0x0F, 0x3D4);						/* Tell the VGA board we are setting the high cursor byte. */
 	outb((uint8_t) ( (COLS * y + x) & 0xFF), 0x3D5); 
 	outb(0x0E, 0x3D4);						/* Tell the VGA board we are setting the low cursor byte. */
