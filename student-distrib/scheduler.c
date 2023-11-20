@@ -15,7 +15,7 @@ int curr_exe_terminal;
 
 void scheduler_init(){
     /* set up the scheduler */
-    int i,j;
+    int i;
     for(i=0;i<TERMINAL_NUM;i++){
         terminal_process_mapping[i].num_proc = 0;
         terminal_pid_map[i] = PID_EMPTY;
@@ -64,7 +64,7 @@ int process_switch(){
         if(terminal_pid_map[i] == PID_EMPTY && i==get_terminal_id()){
             set_mem(i);
             curr_exe_terminal = i;
-            execute("shell");
+            execute((uint8_t*)"shell");
         }
     }
     next_terminal = curr_exe_terminal;
@@ -94,6 +94,7 @@ int process_switch(){
         :
         : "r" (next_pcb->scheduler_esp), "r" (next_pcb->scheduler_ebp)
     );
+    return 0;   /* prevent warning; never execute here */
 
 }
 

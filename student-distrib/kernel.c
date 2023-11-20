@@ -14,6 +14,9 @@
 #include "filesystem.h"
 #include "page.h"
 #include "terminal.h"
+#include "pit.h"
+#include "scheduler.h"
+
 #define RUN_TESTS
 
 int* filesys_base;
