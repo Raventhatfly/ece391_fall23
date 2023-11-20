@@ -2,7 +2,7 @@
 #define _SCHEDULER_H
 
 // #define MAX_PROCESS 6
-#define MAX_TERMINAL_PROCESS 3
+#define MAX_TERMINAL_PROCESS 4
 #define TERMINAL_CNT 3
 #define SENTINEL_NODE 2
 #define HEAD_NODE_PID -2

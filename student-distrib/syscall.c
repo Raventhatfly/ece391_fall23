@@ -175,7 +175,7 @@ int32_t execute (const uint8_t* command){
 
     /* Allocate PID */
     if((pid = allocate_pid()) == -1){
-        printf("Process ID allocation failed!\nOnly supports tow user programs.\n");
+        printf("Process ID allocation failed!\n");
         return -1;
     }
 
@@ -208,6 +208,13 @@ int32_t execute (const uint8_t* command){
         parent_pcb = fetch_pcb_addr(execute_pcb->parent_pid);
         execute_pcb->terminal_id = parent_pcb->terminal_id;
         terminal_id = parent_pcb->terminal_id;
+        /* can not reach the maximum number of process a terminal can hold */
+        if(terminal_pid_map[terminal_id].num_proc >= MAX_TERMINAL_PROCESS){
+            printf("Terminal %d has reached its maximum supported process.\n",terminal_id);
+            process_id_arr[pid]=0;          /* free pid */
+            program_page_init(execute_pcb->parent_pid);
+            return -1;
+        }
     }
     /* mp3.5: process number increment */
     terminal_pid_map[terminal_id].num_proc++;
