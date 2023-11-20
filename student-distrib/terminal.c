@@ -245,7 +245,6 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t nbytes) {
 void draw_cursor(uint32_t x, uint32_t y) {	
     //if(curr_exe_terminal != get_terminal_id()){
       //  return;
-    }
 	outb(0x0F, 0x3D4);						/* Tell the VGA board we are setting the high cursor byte. */
 	outb((uint8_t) ( (COLS * y + x) & 0xFF), 0x3D5); 
 	outb(0x0E, 0x3D4);						/* Tell the VGA board we are setting the low cursor byte. */
