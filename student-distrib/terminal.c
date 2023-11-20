@@ -7,7 +7,6 @@ extern int screen_y;
 extern char* video_mem;  
 
 /*start shell flag */
-term_shell_flag[TERMINAL_NUM] = {0};
 termin_t my_terminal[TERMINAL_NUM];
 static int32_t i;
 int32_t terminal_using;
