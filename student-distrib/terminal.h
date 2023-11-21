@@ -17,6 +17,7 @@ typedef struct termin {
 	uint32_t  cursor_y_coord;          /* y_axis coordinate of cursor */
 	int32_t read_flag;
 	int32_t terminal_flag;
+	int32_t terminal_active;
 } termin_t;
 
 extern uint32_t terminal_clear();
@@ -31,6 +32,7 @@ extern int32_t terminal_close(int32_t fd);
 extern int32_t terminal_switch(int32_t terminal_id);
 extern int32_t get_terminal_id();
 extern void set_mem(int32_t terminal_id);
+extern int32_t active_termminal_cnt();
 
 extern termin_t my_terminal[TERMINAL_NUM];
 #endif 

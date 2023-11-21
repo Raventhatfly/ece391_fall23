@@ -209,10 +209,9 @@ int32_t execute (const uint8_t* command){
         execute_pcb->terminal_id = parent_pcb->terminal_id;
         terminal_id = parent_pcb->terminal_id;
         /* can not reach the maximum number of process a terminal can hold */
-        // int allowed_terminal_process = MAX_TERMINAL_PROCESS - allocated_pid_cnt();
-
-        if(terminal_pid_map[terminal_id].num_proc >= MAX_TERMINAL_PROCESS){
-            printf("Terminal %d has reached its maximum supported process.\n",terminal_id);
+        if(terminal_pid_map[terminal_id].num_proc >= MAX_TERMINAL_PROCESS  
+        || (MAX_PROCESS - allocated_pid_cnt() < TERMINAL_NUM - active_termminal_cnt())){
+            printf("Terminal %d has reached its maximum number of supporting processes.\n",terminal_id);
             process_id_arr[pid]=0;          /* free pid */
             program_page_init(execute_pcb->parent_pid);
             return -1;
@@ -224,8 +223,6 @@ int32_t execute (const uint8_t* command){
     strcpy((int8_t *)execute_pcb->cmd, (int8_t *)cmd);
     strcpy((int8_t *)execute_pcb->args, (int8_t *)args);
 
-    
-    /* TODO: reinspect here */
     execute_pcb->file_desc_arr[0].file_op_table_ptr = &stdin_op_table;
     execute_pcb->file_desc_arr[0].flags = 1;
     execute_pcb->file_desc_arr[0].file_pos = 0;

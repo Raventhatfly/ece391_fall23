@@ -99,6 +99,8 @@ int32_t buffer_set(unsigned char input){
 int32_t terminal_switch(int32_t terminal_id){
     if(terminal_id<0||terminal_id>2) return -1; /*if the terminal id is not valid, return -1 to inform the failure*/
     if(terminal_id==terminal_using) return 0; /*if the terminal is the current terminal, return 0 to inform the success*/
+
+    my_terminal[terminal_id].terminal_active = 1;
     
     screen_x=my_terminal[terminal_id].cursor_x_coord;
     screen_y=my_terminal[terminal_id].cursor_y_coord; 
@@ -247,12 +249,14 @@ uint32_t terminal_clear(){
 */
 void terminal_init(){
     for (i=0;i<TERMINAL_NUM;i++){
-        terminal_using=i;
-        terminal_clear();      /*clear the terminal*/
+        if(i==0){
+            my_terminal[i].terminal_active = 1;
+        }else{
+            my_terminal[i].terminal_active = 0;     /* set the active terminal value to not activated state */
+        }
+        buffer_clear(i);
     }
-    for (i=0;i<TERMINAL_NUM;i++) buffer_clear(i);
     terminal_using=0;
-    return;
 }
 
 /*
@@ -325,4 +329,15 @@ uint32_t terminal_delete(){
 /* Return terminal Id */
 int32_t get_terminal_id(){
     return terminal_using;
+}
+
+int32_t active_termminal_cnt(){
+    int i, cnt;
+    cnt = 0;
+    for(i = 0;i<TERMINAL_CNT;i++){
+        if(my_terminal[i].terminal_active){
+            cnt++;
+        }
+    }
+    return cnt;
 }

@@ -179,6 +179,7 @@ void entry(unsigned long magic, unsigned long addr) {
     rtc_init();
     scheduler_init();
     pit_init(-1);
+    terminal_init();
     
   
     /* Enable interrupts */
