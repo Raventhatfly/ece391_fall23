@@ -9,6 +9,14 @@ int scheduler_activated = 0;
 terminal_proc_t terminal_pid_map[TERMINAL_NUM];
 int curr_exe_terminal;
 
+/*
+    * scheduler_init
+    *   DESCRIPTION: initialize the scheduler
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: none
+    *   SIDE EFFECTS: none
+*/
 void scheduler_init(){
     /* set up the scheduler */
     int i;
@@ -21,7 +29,14 @@ void scheduler_init(){
 }
 
 
-/* return -2 if scheduler not initialized */
+/*
+    * process_switch
+    *   DESCRIPTION: swith to the next process
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: negative number on failure and 0 on success
+    *   SIDE EFFECTS: change the process
+*/
 int process_switch(){
     /* check if scheduler is activated */
     if(scheduler_activated == 0){
@@ -44,7 +59,6 @@ int process_switch(){
     cur_pcb->scheduler_ebp = cur_ebp;
     cur_pcb->scheduler_esp = cur_esp;
 
-    /* start */
     int next_terminal;
     if(terminal_pid_map[0].pid == PID_EMPTY)    return -1;  /* if default terminal not executing, finish the program */
     for(i=1;i<TERMINAL_NUM;i++){
@@ -58,10 +72,8 @@ int process_switch(){
     do{
         next_terminal = (next_terminal + 1) % TERMINAL_NUM;
         next_pid = terminal_pid_map[next_terminal].pid;
-    }while(next_pid == PID_EMPTY); /* && next_terminal != 0 */
+    }while(next_pid == PID_EMPTY); 
     curr_exe_terminal = next_terminal;
-    /* end */
-
     
     pcb_t* next_pcb = fetch_pcb_addr(next_pid);
     /* User program remap */

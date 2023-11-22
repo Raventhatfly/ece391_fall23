@@ -326,11 +326,26 @@ uint32_t terminal_delete(){
     return 0;
 }
 
-/* Return terminal Id */
+/*
+    * get_terminal_id
+    *   DESCRIPTION: get the id of the current using terminal
+    *   INPUTS: none
+    *   OUTPUTS: the ID of the current using terminal
+    *   RETURN VALUE: 
+    *   SIDE EFFECTS: none
+*/
 int32_t get_terminal_id(){
     return terminal_using;
 }
 
+/*
+    * active_termminal_cnt
+    *   DESCRIPTION: count the number of terminal that are currently active
+    *   INPUTS: none
+    *   OUTPUTS: the ID of the current using terminal
+    *   RETURN VALUE: 
+    *   SIDE EFFECTS: none
+*/
 int32_t active_termminal_cnt(){
     int i, cnt;
     cnt = 0;
