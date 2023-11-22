@@ -93,3 +93,14 @@ the assembly functions.<br>
 **Description**: When executing shell strange characters will be printed<br>
 **Difficulty**: 5 MINUTES, add one line of code<br>
 **Fixing Method**: Just initialize the buffer and set them to '\0' the problem would be fixed.<br>
+
+### Checkpoint 5
+**Author** Wu Feiyang <br>
+**Description**: Terminal losing control after switching to terminals other than the first terminal <br>
+**Difficulty**: 5 hours, chaning several lines of code<br>
+**Fixing Method**: When executing the `pithandler` function, there are two functions, namely `process_swith` and `sendedo`.
+It seems that  `process_switch` will not return immediately and send EOI to the interrupt handler. So PIC got stuck, unable to 
+respond any interrupts. <br>
+
+**Author** Wu Feiyang <br>
+**Description**: 
