@@ -5,6 +5,7 @@
 #include "terminal.h"
 #include "rtc.h"
 #include "pit.h"
+#include "page.h"
 
 #define PASS 1
 #define FAIL 0
@@ -305,7 +306,18 @@ int directory_read_test(){
 /* Checkpoint 4 tests */
 /* Checkpoint 5 tests */
 
-
+int malloc_test()
+{
+	TEST_HEADER;
+	int* ptr1 = (int*)malloc(100);
+	// int* ptr2 = (int*)malloc(100);
+	// printf("ptr1: %x, ptr2: %x\n", ptr1, ptr2);
+	// display_memory();
+	// free(ptr1);
+	// free(ptr2);
+	// display_memory();
+	return PASS;
+}
 /* Test suite entry point */
 void launch_tests(){
 	/* Checkpoint 1 tests */
@@ -350,4 +362,5 @@ void launch_tests(){
 
 	/* Checkpoint 5 tests */
 	// pit_init(100);
+	malloc_test();
 }
