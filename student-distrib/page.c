@@ -199,13 +199,13 @@ void* malloc(uint32_t length)
         split(i);
         i--;
     }
-    /*buddy_node* temp = buddy_head[i];
+    buddy_node* temp = buddy_head[i];
     buddy_head[i] = buddy_head[i]->next;
     if (buddy_head[i]!=NULL) buddy_head[i]->prev = NULL;
     temp->prev = NULL;
     temp->next = NULL;
     size[temp->start_addr]=level;
-    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE);*/
+    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE);
 }
 /*
     *  void free(void* ptr)
