@@ -315,7 +315,7 @@ int malloc_test()
 	 display_memory();
 	 free(ptr1);
 	 free(ptr2);
-	 //display_memory();
+	 display_memory();
 	return PASS;
 }
 /* Test suite entry point */
