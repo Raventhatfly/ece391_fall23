@@ -38,6 +38,6 @@ extern void page_init();
 extern void program_page_init(uint32_t program_id);
 extern void set_map(uint32_t act_mem, uint32_t present);
 extern void* malloc(uint32_t length);
-extern void free(void* ptr);
+extern int free(void* ptr);
 extern void display_memory();
 #endif 

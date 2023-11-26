@@ -214,11 +214,12 @@ void* malloc(uint32_t length)
     *    OUTPUT: none
     *    SIDE EFFECT: free the memory
 */
-void free(void* ptr)
+int free(void* ptr)
 {
     int num=(int)(ptr-MALLOC_START_PLACE)/4096;
     int level=size[num];
     int index,i;
+    if (level==-1) return -1;
     size[num]=-1;
     index=1;
     for (i=0;i<10-level;i++) index*=2;
@@ -243,6 +244,7 @@ void free(void* ptr)
         level++;
     }
     add(index,level);
+    return 0;
 }
 
 
