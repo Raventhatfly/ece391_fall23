@@ -180,7 +180,7 @@ void* malloc(uint32_t length)
 {
     int i,num,level;
     length=(length-1)/4096+1; //get the number of pages needed
-    printf("malloc: %d\n",length);
+    //printf("malloc: %d\n",length);
     i=0;
     num = 1;
     while (num < length)
@@ -189,13 +189,13 @@ void* malloc(uint32_t length)
         i++;
     }
     level=i;
-    printf("level: %d\n",level);
+    //printf("level: %d\n",level);
     while (buddy_head[i]==NULL && i<=10) i++;
-    printf("i: %d\n",i);
+    //printf("i: %d\n",i);
     if (i>10) return NULL;
     while (i>level)
     {
-        printf("split: %d\n",i);
+        //printf("split: %d\n",i);
         split(i);
         i--;
     }
@@ -223,8 +223,8 @@ void free(void* ptr)
     index=1;
     for (i=0;i<10-level;i++) index*=2;
     index+=num/(1024/index);
-    printf("free: %d %d\n",index,level);
-    printf("%d %d\n",buddy_list[index^1].next,buddy_list[index^1].prev);
+    //printf("free: %d %d\n",index,level);
+    //printf("%d %d\n",buddy_list[index^1].next,buddy_list[index^1].prev);
     while ((buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL || buddy_head[level]==&buddy_list[index^1]) && index>1)
     {
         if (buddy_head[level]==&buddy_list[index^1])
