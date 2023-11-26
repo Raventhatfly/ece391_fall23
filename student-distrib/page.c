@@ -223,6 +223,7 @@ void free(void* ptr)
     index=1;
     for (i=0;i<10-level;i++) index*=2;
     index+=num/(1024/index);
+    printf("free: %d %d\n",index,level);
     while (buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL && index>1)
     {
         if (buddy_head[level]==&buddy_list[index^1])
@@ -256,7 +257,7 @@ void display_memory()
     int i,num;
     printf("-------------------------\n");
     printf("Memory display:\n");
-    for (i=0;i<10;i++)
+    for (i=0;i<=10;i++)
     {
         printf("Level %d:\n",i);
         num = 0;
