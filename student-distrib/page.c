@@ -191,13 +191,13 @@ void* malloc(uint32_t length)
     while (buddy_head[i]==NULL && i<=10) i++;
     printf("i: %d\n",i);
     if (i>10) return NULL;
-    /*while (i>level)
+    while (i>level)
     {
         printf("split: %d\n",i);
         split(i);
         i--;
     }
-    buddy_node* temp = buddy_head[i];
+    /*buddy_node* temp = buddy_head[i];
     buddy_head[i] = buddy_head[i]->next;
     if (buddy_head[i]!=NULL) buddy_head[i]->prev = NULL;
     temp->prev = NULL;
