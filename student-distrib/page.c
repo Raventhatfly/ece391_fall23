@@ -30,7 +30,7 @@ void buddy_init()
 }
 void add(int index,int level)
 {
-    printf("add level: %d %d\n",index,level);
+   //printf("add level: %d %d\n",index,level);
     buddy_node* temp;
     if (level<0 || level>10) return;
     if (buddy_head[level]==NULL)
@@ -58,7 +58,7 @@ void split(int index)
     if (index==0) return;
     add(temp->index*2,index-1);
     add(temp->index*2+1,index-1);
-    printf("split: %d %d\n",index,buddy_head[index-1]);
+    //printf("split: %d %d\n",index,buddy_head[index-1]);
 }
 void page_init() {
     int i=0;
