@@ -260,7 +260,7 @@ void display_memory()
         buddy_node* temp = buddy_head[i];
         while (temp!=NULL)
         {
-            printf("Node %d: start_addr: %d\n",num,temp->start_addr);
+            //printf("Node %d: start_addr: %d\n",num,temp->start_addr);
             num++;
             temp = temp->next;
         }
