@@ -176,7 +176,6 @@ void set_map(uint32_t act_mem, uint32_t present)
 */
 void* malloc(uint32_t length)
 {
-    printf("malloc: %d\n",length);
     int i,num,level;
     length=(length-1)/4096+1; //get the number of pages needed
     printf("malloc: %d\n",length);
@@ -188,10 +187,12 @@ void* malloc(uint32_t length)
         i++;
     }
     level=i;
+    printf("level: %d\n",level);
     while (buddy_head[i]==NULL && i<=10) i++;
     if (i>10) return NULL;
     while (i>level)
     {
+        printf("split: %d\n",i);
         split(i);
         i--;
     }
