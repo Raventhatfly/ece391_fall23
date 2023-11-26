@@ -224,6 +224,7 @@ void free(void* ptr)
     for (i=0;i<10-level;i++) index*=2;
     index+=num/(1024/index);
     printf("free: %d %d\n",index,level);
+    printf("%d %d\n",buddy_list[index^1].next,buddy_list[index^1].prev);
     while (buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL && index>1)
     {
         if (buddy_head[level]==&buddy_list[index^1])
