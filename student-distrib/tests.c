@@ -310,7 +310,7 @@ int malloc_test()
 {
 	TEST_HEADER;
 	int* ptr1 = (int*)malloc(100);
-	// int* ptr2 = (int*)malloc(100);
+	 int* ptr2 = (int*)malloc(100);
 	// printf("ptr1: %x, ptr2: %x\n", ptr1, ptr2);
 	 display_memory();
 	// free(ptr1);
