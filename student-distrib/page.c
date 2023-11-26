@@ -32,7 +32,7 @@ void add(int index,int level)
 {
     printf("add level: %d %d\n",index,level);
     buddy_node* temp;
-    if (index<0 || index>10) return;
+    if (level<0 || level>10) return;
     if (buddy_head[level]==NULL)
     {
         buddy_head[level]=&buddy_list[index];
