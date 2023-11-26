@@ -26,7 +26,7 @@ void buddy_init()
         }
         num *= 2;
     }
-    buddy_head[0]=&buddy_list[1];
+    buddy_head[10]=&buddy_list[1];
 }
 void add(int index,int level)
 {
