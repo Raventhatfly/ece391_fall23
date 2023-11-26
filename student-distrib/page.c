@@ -189,8 +189,9 @@ void* malloc(uint32_t length)
     level=i;
     printf("level: %d\n",level);
     while (buddy_head[i]==NULL && i<=10) i++;
+    printf("i: %d\n",i);
     if (i>10) return NULL;
-    while (i>level)
+    /*while (i>level)
     {
         printf("split: %d\n",i);
         split(i);
@@ -202,7 +203,7 @@ void* malloc(uint32_t length)
     temp->prev = NULL;
     temp->next = NULL;
     size[temp->start_addr]=level;
-    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE);
+    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE);*/
 }
 /*
     *  void free(void* ptr)
