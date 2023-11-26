@@ -311,7 +311,7 @@ int malloc_test()
 	TEST_HEADER;
 	int* ptr1 = (int*)malloc(4096*2-1);
 	 int* ptr2 = (int*)malloc(4096*2);
-	 int* ptr3 = (int*)malloc(4096*2+1);
+	 int* ptr3 = (int*)malloc(4096-1);
 	 printf("ptr1: %x, ptr2: %x\n", ptr1, ptr2);
 	 display_memory();
 	 free(ptr1);
