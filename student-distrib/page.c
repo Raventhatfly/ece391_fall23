@@ -58,6 +58,7 @@ void split(int index)
     if (index==0) return;
     add(temp->index*2,index-1);
     add(temp->index*2+1,index-1);
+    printf("split: %d %d\n",index,buddy_head[index-1]);
 }
 void page_init() {
     int i=0;
