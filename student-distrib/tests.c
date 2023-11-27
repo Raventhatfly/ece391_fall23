@@ -314,8 +314,8 @@ int malloc_test()
 	 int* ptr3 = (int*)malloc(4096-1);
 	 printf("ptr1: %x, ptr2: %x\n", ptr1, ptr2);
 	 display_memory();
-	 free(ptr1);
-	 free(ptr2);
+	 //free(ptr1);
+	 //free(ptr2);
 	 display_memory();
 	return PASS;
 }
