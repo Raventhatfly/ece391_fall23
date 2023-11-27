@@ -12,21 +12,21 @@
 void buddy_init()
 {
     uint32_t i,j,num=1;
-    for (i=0;i<=10;i++)
+    for (i=0;i<=LOG2_ENTRIES;i++)
     {
         buddy_head[i] = NULL;
-        size[i] = -1;
-        for (j=num;j<2*num;j++)
+        size[i] = -1; // -1 means the block is not used
+        for (j=num;j<2*num;j++) //initialize the buddy list
         {
-            buddy_list[j].level = 10-i;
-            buddy_list[j].start_addr = ((1024/num)*(j-num));
+            buddy_list[j].level = LOG2_ENTRIES-i;
+            buddy_list[j].start_addr = ((ENTRIES/num)*(j-num));
             buddy_list[j].prev = NULL;
             buddy_list[j].next = NULL;
             buddy_list[j].index = j;
         }
         num *= 2;
     }
-    buddy_head[10]=&buddy_list[1];
+    buddy_head[LOG2_ENTRIES]=&buddy_list[1];
 }
 /*
     *  void add(int index,int level)
@@ -39,7 +39,7 @@ void buddy_init()
 void add(int index,int level)
 {
     buddy_node* temp;
-    if (level<0 || level>10) return;
+    if (level<0 || level>LOG2_ENTRIES) return;
     if (buddy_head[level]==NULL)
     {
         buddy_head[level]=&buddy_list[index];
@@ -62,7 +62,7 @@ void add(int index,int level)
 void split(int level)
 {
     buddy_node* temp;
-    if (level<0 || level>10) return;
+    if (level<0 || level>LOG2_ENTRIES) return;
     if (buddy_head[level]==NULL) return;
     temp = buddy_head[level];
     buddy_head[level] = buddy_head[level]->next;
@@ -208,8 +208,8 @@ void* malloc(uint32_t length)
         i++;
     }
     level=i;
-    while (buddy_head[i]==NULL && i<=10) i++;
-    if (i>10) return NULL;
+    while (buddy_head[i]==NULL && i<=LOG2_ENTRIES) i++;
+    if (i>LOG2_ENTRIES) return NULL;
     while (i>level)
     {
         split(i);
@@ -221,7 +221,7 @@ void* malloc(uint32_t length)
     temp->prev = NULL;
     temp->next = NULL;
     size[temp->start_addr]=level;
-    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE);
+    return (void*)(temp->start_addr*4096+MALLOC_START_PLACE); //return the pointer of the memory
 }
 /*
     *  void free(void* ptr)
@@ -238,8 +238,8 @@ int free(void* ptr)
     if (level==-1) return -1;
     size[num]=-1;
     index=1;
-    for (i=0;i<10-level;i++) index*=2;
-    index+=num/(1024/index);
+    for (i=0;i<LOG2_ENTRIES-level;i++) index*=2;
+    index+=num/(ENTRIES/index); //get the index of the node
     while ((buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL || buddy_head[level]==&buddy_list[index^1]) && index>1)
     {
         if (buddy_head[level]==&buddy_list[index^1])
