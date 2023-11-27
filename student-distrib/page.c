@@ -3,11 +3,11 @@
 #include "types.h"
 
 /*
-    *  void page_init()
-    *    DESCRIPTION: initialize the page
+    *  void buddy_init()
+    *    DESCRIPTION: initialize the buddy system
     *    INPUT: none
     *    OUTPUT: none
-    *    SIDE EFFECT: set the page directory and page table
+    *    SIDE EFFECT: initialize the buddy system
 */
 void buddy_init()
 {
@@ -28,6 +28,14 @@ void buddy_init()
     }
     buddy_head[10]=&buddy_list[1];
 }
+/*
+    *  void add(int index,int level)
+    *    DESCRIPTION: add the node to the buddy system
+    *    INPUT: index -- the index of the node
+    *           level -- the level of the node
+    *    OUTPUT: none
+    *    SIDE EFFECT: add the node to the buddy system
+*/
 void add(int index,int level)
 {
    //printf("add level: %d %d\n",index,level);
@@ -45,21 +53,34 @@ void add(int index,int level)
     buddy_list[index].prev=NULL;
     buddy_head[level]=&buddy_list[index];
 }
-void split(int index)
+/*
+    *  void split(int level)
+    *    DESCRIPTION: split the node to the buddy system
+    *    INPUT: level -- the level of the node
+    *    OUTPUT: none
+    *    SIDE EFFECT: split the node to the buddy system
+*/
+void split(int level)
 {
     buddy_node* temp;
-    if (index<0 || index>10) return;
-    if (buddy_head[index]==NULL) return;
-    temp = buddy_head[index];
-    buddy_head[index] = buddy_head[index]->next;
-    if (buddy_head[index]!=NULL) buddy_head[index]->prev = NULL;
+    if (level<0 || level>10) return;
+    if (buddy_head[level]==NULL) return;
+    temp = buddy_head[level];
+    buddy_head[level] = buddy_head[level]->next;
+    if (buddy_head[level]!=NULL) buddy_head[level]->prev = NULL;
     temp->prev = NULL;
     temp->next = NULL;
-    if (index==0) return;
-    add(temp->index*2,index-1);
-    add(temp->index*2+1,index-1);
-    //printf("split: %d %d\n",index,buddy_head[index-1]);
+    if (level==0) return;
+    add(temp->index*2,level-1);
+    add(temp->index*2+1,level-1);
 }
+/*
+    *  void page_init()
+    *    DESCRIPTION: initialize the page
+    *    INPUT: none
+    *    OUTPUT: none
+    *    SIDE EFFECT: set the page directory and page table
+*/
 void page_init() {
     int i=0;
     for (i=0; i<ENTRIES; i++) {     /* initialize all entries of table and dict to 0 */
@@ -180,7 +201,6 @@ void* malloc(uint32_t length)
 {
     int i,num,level;
     length=(length-1)/4096+1; //get the number of pages needed
-    //printf("malloc: %d\n",length);
     i=0;
     num = 1;
     while (num < length)
@@ -189,13 +209,10 @@ void* malloc(uint32_t length)
         i++;
     }
     level=i;
-    //printf("level: %d\n",level);
     while (buddy_head[i]==NULL && i<=10) i++;
-    //printf("i: %d\n",i);
     if (i>10) return NULL;
     while (i>level)
     {
-        //printf("split: %d\n",i);
         split(i);
         i--;
     }
@@ -224,8 +241,6 @@ int free(void* ptr)
     index=1;
     for (i=0;i<10-level;i++) index*=2;
     index+=num/(1024/index);
-    //printf("free: %d %d\n",index,level);
-    //printf("%d %d\n",buddy_list[index^1].next,buddy_list[index^1].prev);
     while ((buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL || buddy_head[level]==&buddy_list[index^1]) && index>1)
     {
         if (buddy_head[level]==&buddy_list[index^1])
@@ -267,7 +282,6 @@ void display_memory()
         buddy_node* temp = buddy_head[i];
         while (temp!=NULL)
         {
-            //printf("Node %d: start_addr: %d\n",num,temp->start_addr);
             num++;
             temp = temp->next;
         }
