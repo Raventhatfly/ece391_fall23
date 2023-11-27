@@ -5,6 +5,7 @@
 #include "types.h"
 
 #define ENTRIES 1024 /* the entries for the page directory and page table */ 
+#define LOG2_ENTRIES 10 /* the log2 of the entries */
 #define BROKEN_PAGE_SIZE 4*ENTRIES /* the broken up page size is 4 KB */
 #define INITIAL_STATE 0x0 /* the initial state for the page */
 #define VIDEO   0xB8000  /* video memory address */
@@ -30,8 +31,8 @@ typedef struct buddy_node {
     struct buddy_node* prev;
     struct buddy_node* next;
 } buddy_node;
-buddy_node buddy_list[ENTRIES*2-1];
-buddy_node* buddy_head[11];
+buddy_node buddy_list[ENTRIES*2-1]; //ENTRIES*2-1 is the number of nodes in the tree
+buddy_node* buddy_head[LOG2_ENTRIES+1]; 
 int32_t size[ENTRIES];
 
 extern void page_init();
