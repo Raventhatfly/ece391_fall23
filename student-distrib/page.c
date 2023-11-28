@@ -38,7 +38,6 @@ void buddy_init()
 */
 void add(int index,int level)
 {
-    buddy_node* temp;
     if (level<0 || level>LOG2_ENTRIES) return;
     if (buddy_head[level]==NULL)
     {

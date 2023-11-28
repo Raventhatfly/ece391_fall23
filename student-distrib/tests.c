@@ -320,6 +320,7 @@ int malloc_test()
 	free(ptr1);
 	free(ptr2);
 	display_memory();
+	free(ptr3);
 	return PASS;
 }
 /* Test suite entry point */
