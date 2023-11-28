@@ -113,3 +113,8 @@ scheduling to avoid the problem.<br>
 **Description**: The backspace can't function sometimes<br>
 **Difficulty**: Half an hour<br>
 **Fixing Method**: I use two function to putc, while the one for keyboard responce don't lock because I already lock in irq handler. Double lock lead to this bug.<br>
+
+**Author** Zhang Yucheng <br>
+**Description**: Buddy system can't merge the pages after free<br>
+**Difficulty**: Half an hour<br>
+**Fixing Method**: I forget to judge the condition that the pages are on the head of the list, I fix it by considering it.<br>
