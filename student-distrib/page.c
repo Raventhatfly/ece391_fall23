@@ -38,15 +38,15 @@ void buddy_init()
 */
 void add(int index,int level)
 {
-    if (level<0 || level>LOG2_ENTRIES) return;
-    if (buddy_head[level]==NULL)
+    if (level<0 || level>LOG2_ENTRIES) return; //invalid level
+    if (buddy_head[level]==NULL) //if the level is empty
     {
         buddy_head[level]=&buddy_list[index];
         buddy_list[index].prev=NULL;
         buddy_list[index].next=NULL;
         return;
     }
-    buddy_head[level]->prev=&buddy_list[index];
+    buddy_head[level]->prev=&buddy_list[index]; //add the node to the head of the level list
     buddy_list[index].next=buddy_head[level];
     buddy_list[index].prev=NULL;
     buddy_head[level]=&buddy_list[index];
@@ -62,15 +62,15 @@ void split(int level)
 {
     buddy_node* temp;
     if (level<0 || level>LOG2_ENTRIES) return;
-    if (buddy_head[level]==NULL) return;
-    temp = buddy_head[level];
-    buddy_head[level] = buddy_head[level]->next;
-    if (buddy_head[level]!=NULL) buddy_head[level]->prev = NULL;
+    if (buddy_head[level]==NULL) return; //if the level is empty
+    temp = buddy_head[level]; //get the head of the level list
+    buddy_head[level] = buddy_head[level]->next; //delete the head of the level list
+    if (buddy_head[level]!=NULL) buddy_head[level]->prev = NULL; //if the level list is not empty
     temp->prev = NULL;
     temp->next = NULL;
     if (level==0) return;
-    add(temp->index*2,level-1);
-    add(temp->index*2+1,level-1);
+    add(temp->index*2,level-1); //add the left child to the level list
+    add(temp->index*2+1,level-1); //add the right child to the level list
 }
 /*
     *  void page_init()
@@ -201,25 +201,25 @@ void* malloc(uint32_t length)
     length=(length-1)/4096+1; //get the number of pages needed
     i=0;
     num = 1;
-    while (num < length)
+    while (num < length) //get the level of the node
     {
         num *= 2;
         i++;
     }
     level=i;
-    while (buddy_head[i]==NULL && i<=LOG2_ENTRIES) i++;
+    while (buddy_head[i]==NULL && i<=LOG2_ENTRIES) i++; //find the first level that is not empty
     if (i>LOG2_ENTRIES) return NULL;
-    while (i>level)
+    while (i>level) //split the node until the level is the level of the node
     {
         split(i);
         i--;
     }
-    buddy_node* temp = buddy_head[i];
-    buddy_head[i] = buddy_head[i]->next;
+    buddy_node* temp = buddy_head[i]; //get the head of the level list
+    buddy_head[i] = buddy_head[i]->next; //delete the head of the level list
     if (buddy_head[i]!=NULL) buddy_head[i]->prev = NULL;
-    temp->prev = NULL;
+    temp->prev = NULL; 
     temp->next = NULL;
-    size[temp->start_addr]=level;
+    size[temp->start_addr]=level; //store the size of the node
     return (void*)(temp->start_addr*4096+MALLOC_START_PLACE); //return the pointer of the memory
 }
 /*
@@ -234,14 +234,14 @@ int free(void* ptr)
     int num=(int)(ptr-MALLOC_START_PLACE)/4096;
     int level=size[num];
     int index,i;
-    if (level==-1) return -1;
-    size[num]=-1;
+    if (level==-1) return -1; //invalid pointer
+    size[num]=-1; //set the size to -1
     index=1;
     for (i=0;i<LOG2_ENTRIES-level;i++) index*=2;
     index+=num/(ENTRIES/index); //get the index of the node
-    while ((buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL || buddy_head[level]==&buddy_list[index^1]) && index>1)
+    while ((buddy_list[index^1].next!=NULL || buddy_list[index^1].prev!=NULL || buddy_head[level]==&buddy_list[index^1]) && index>1) //merge the node until the node is the root or the buddy of the node is not free
     {
-        if (buddy_head[level]==&buddy_list[index^1])
+        if (buddy_head[level]==&buddy_list[index^1]) //if the buddy is the head of the level list
         {
             buddy_head[level]=buddy_head[level]->next;
             if (buddy_head[level]!=NULL) buddy_head[level]->prev = NULL;
@@ -251,9 +251,9 @@ int free(void* ptr)
             buddy_list[index^1].prev->next = buddy_list[index^1].next;
             if (buddy_list[index^1].next!=NULL) buddy_list[index^1].next->prev = buddy_list[index^1].prev;
         }
-        buddy_list[index^1].prev = NULL;
+        buddy_list[index^1].prev = NULL; //clear the buddy
         buddy_list[index^1].next = NULL;
-        index/=2;
+        index/=2; //go to the parent node
         level++;
     }
     add(index,level);
