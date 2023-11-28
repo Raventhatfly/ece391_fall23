@@ -4,6 +4,7 @@
 #include "page.h"
 #include "rtc.h"
 #include "terminal.h"
+#include "signal.h"
 
 
 int8_t process_id_arr[MAX_PROCESS] = {0};
@@ -233,6 +234,9 @@ int32_t execute (const uint8_t* command){
     execute_pcb->file_desc_arr[1].file_pos = 0;
     execute_pcb->file_desc_arr[1].inode = 0;
 
+    /* extra credit */
+    signal_init(execute_pcb);
+    
     /* mp3.5 */
     change_terminal_process(pid,terminal_id);
 
@@ -416,7 +420,17 @@ int32_t vidmap (uint8_t** screen_start){
     *   SIDE EFFECTS: none
 */
 int32_t set_handler (int32_t signum, void* handler_address){
-    printf("Set Handler!\n");
+    // printf("Set Handler!\n");
+    pcb_t* cur_pcb;
+    int cur_pid;
+    if(signum < 0 || signum >= SIG_NUM)     return -1;
+    if(handler_address == NULL){
+        signal_init(cur_pcb);
+    }else{
+        cur_pid = fetch_curr_pid();
+        cur_pcb = fetch_pcb_addr(cur_pid);
+        cur_pcb->sig_hand[signum] = handler_address;
+    }
     return 0;
 }
 /*
@@ -428,8 +442,25 @@ int32_t set_handler (int32_t signum, void* handler_address){
     *   SIDE EFFECTS: none
 */
 int32_t sigreturn (void){
-    printf("Sig Return!\n");
-    return 0;
+    // printf("Sig Return!\n");
+    int pid, ret;
+    int32_t cur_ebp;
+    hw_context_t* context;
+    hw_context_t* prev_context;
+    asm volatile(
+        "movl %%ebp, %0\n"
+        : "=r" (cur_ebp)
+    );
+    
+    pid = fetch_curr_pid();
+    pcb_t* cur_pcb = fetch_pcb_addr(pid);
+    
+    context = (hw_context_t*)(cur_ebp + 20);  
+    prev_context = (hw_context_t*)(context->stored_esp + 4);
+    ret = prev_context->registers.eax;
+    memcpy(context, prev_context, HARDWARE_CONTEXT_SIZE);
+    signal_unmask(cur_pcb);
+    return ret;
 }
 
 

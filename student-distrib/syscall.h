@@ -7,8 +7,14 @@
 // #define MAX_ARGS 10
 #define MAX_ARG_LEN 32
 #define MAX_PROCESS 9
+
+#ifndef SIG_NUM
+#define SIG_NUM 5
+#endif
+
 // #define MAX_TERMINAL_PROCESS 4
 #define KERNEL_STACK_ADDR 0x800000     /* 8 MB */
+#define USER_PROGRAM_PAGE 0x8000000     /* 128 MB */
 #define USER_PROGRAM_ADDR 0x8048000     
 #define USER_STACK_ADDR   0x8400000     /* 132 MB */
 #define PCB_SIZE 0x2000                 /* 8kB */
@@ -46,6 +52,9 @@ typedef struct pcb{
     int32_t scheduler_ebp;
     int32_t scheduler_esp;
     int32_t terminal_id;
+    void* sig_hand[SIG_NUM];
+    int32_t sig_state[SIG_NUM];
+    int32_t sig_mask;
 }pcb_t;
 
 int32_t allocate_pid();

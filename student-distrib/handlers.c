@@ -1,5 +1,6 @@
 #include "handlers.h"
 #include "syscall.h"
+#include "signal.h"
 /*
     *  void exception0_handler()
     *  DESCRIPTION: Exception of divided by 0
@@ -149,9 +150,10 @@ void exception12_handler(){
     *  INPUT/OUTPUT: none
 */
 void exception13_handler(){
-    printf("Exception: Gereral Protection. \n");
-    halt(-1);
-    while(1);
+    printf("Exception: Genreral Protection. \n");
+    signal_trigger(SEGFAULT);
+    // halt(-1);
+    // while(1);
 }
 
 /*
@@ -161,8 +163,9 @@ void exception13_handler(){
 */
 void exception14_handler(){
     printf("Exception: Page Fault! \n");
-    halt(-1);
-    while(1);
+    signal_trigger(SEGFAULT);
+    // halt(-1);
+    // while(1);
 }
 
 /*

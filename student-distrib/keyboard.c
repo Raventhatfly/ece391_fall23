@@ -3,6 +3,7 @@
 #include "i8259.h"
 #include "terminal.h"
 #include "scheduler.h"
+#include "signal.h"
 /*
 table from scancode to ascii
 */
@@ -167,6 +168,8 @@ void irq1_handler(void)
                 terminal_clear();
                 set_mem(curr_exe_terminal);
                 break; 
+            } else if(ctrl && (ascii=='c' || ascii=='C')){
+                signal_trigger(INTERRUPT);
             } else if (ascii=='\b'){
                 set_mem(get_terminal_id());
                 terminal_delete();

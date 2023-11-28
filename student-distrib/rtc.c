@@ -4,6 +4,7 @@
 #include "lib.h"
 #include "i8259.h"
 #include "terminal.h"
+#include "signal.h"
 
 volatile uint32_t int_counter;
 volatile uint32_t int_flag[10];     /* 10 levels of frequency */
@@ -82,6 +83,10 @@ void rtc_handler(void){
     }
     // test_interrupts();
     send_eoi(RTC_IRQ);              /* End Of Interrupt (EOI) signal */
+    /* alarm send signal */
+    if(int_counter % (BASE_RATE * 10) == 0){    /* send a signal every 10 seconds */
+        signal_trigger(ALARM);
+    }
     sti();                          /* re-enable interrupt */
 }
 

@@ -10,211 +10,857 @@
 .global idt_irq_6, idt_irq_7, idt_irq_8
 .global idt_syscall
 
-
+# Exception 0 ~ 7, 9, 15, 16, 18, 19 have no error code 
 idt_exc_0:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception0_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret 
 
 idt_exc_1:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception1_handler
-    popal 
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret 
 
 idt_exc_2:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception2_handler
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_3:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception3_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_4:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception4_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_5:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception5_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_6:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception6_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_7:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception7_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_8:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception8_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp    # Pop IRQ Exception Code
+    addl $4, %esp   # Pop Error Code 
     iret
 
 idt_exc_9:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception9_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_10:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception10_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp    # Pop IRQ Exception Code
+    addl $4, %esp   # Pop Error Code 
     iret
 
 idt_exc_11:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception11_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4, %esp   # Pop Error Code 
     iret
 
 idt_exc_12:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception12_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp    # Pop IRQ Exception Code
+    addl $4, %esp   # Pop Error Code 
     iret
 
 idt_exc_13:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception13_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp # Pop Error Code 
     iret
 
 idt_exc_14:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception14_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp    # pop error code
     iret
 
 idt_exc_15:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception15_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_16:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception16_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_17:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception17_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp # Pop Error Code 
     iret
 
 idt_exc_18:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception18_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_exc_19:
-    pushal
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call exception19_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
     iret
 
 idt_irq_0:
-    pushal
+    addl $-4,%esp
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call pit_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_1:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq1_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_2:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq2_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_3:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq3_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_4:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq4_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_5:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq5_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_6:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq6_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_7:
-    pushal
+    addl $-4,%esp   # Error Code
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call irq7_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_irq_8:
-    pushal
+    addl $-4,%esp
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     call rtc_handler
-    popal
+    call signal_handler
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4,%esp
     iret
 
 idt_syscall:
-    pushal
+    addl $-4, %esp
+    addl $-4, %esp  # IRQ Exception Code
+    pushl %fs 
+    pushl %es
+    pushl %ds 
+    pushl %eax
+    pushl %ebp
+    pushl %edi 
+    pushl %esi 
+    pushl %edx 
+    pushl %ecx 
+    pushl %ebx
     cld
     
     # check the syscall number. Unsighed number must not be bigger than 10
@@ -230,7 +876,18 @@ idt_syscall:
     addl $12, %esp
 
     .invalid_return:
-    popal
+    popl %ebx
+    popl %ecx 
+    popl %edx 
+    popl %esi 
+    popl %edi 
+    popl %ebp 
+    popl %eax  
+    popl %ds 
+    popl %es 
+    popl %fs 
+    addl $4,%esp # Pop IRQ Exception Code
+    addl $4, %esp
     movl .ret_val, %eax
     iret
 
