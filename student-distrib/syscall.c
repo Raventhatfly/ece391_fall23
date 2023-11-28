@@ -463,7 +463,32 @@ int32_t sigreturn (void){
     return ret;
 }
 
+/*
+    * user_malloc
+    *   DESCRIPTION: malloc the input command
+    *   INPUTS: length
+    *   OUTPUTS: none
+    *   RETURN VALUE: the address of the allocated memory
+    *   SIDE EFFECTS: none
+*/
 
+void* user_malloc(uint32_t length)
+{
+    return malloc(length);
+}
+
+/*
+    * user_free
+    *   DESCRIPTION: free the input command
+    *   INPUTS: ptr
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
+int32_t user_free(void* ptr)
+{
+    return free(ptr);
+}
 /*
     * allocate_pid
     *   DESCRIPTION: allocate a process ID
