@@ -108,3 +108,8 @@ respond any interrupts. <br>
 **Fixing Method**: The stack is faulty. I update the current esp and ebp registers in the pcb struct, however when the 
 stack was torn down these values are not updated. I decide to add a new variable to store the ebp and esp in case of 
 scheduling to avoid the problem.<br>
+
+**Author** Zhang Yucheng <br>
+**Description**: The backspace can't function sometimes<br>
+**Difficulty**: Half an hour<br>
+**Fixing Method**: I use two function to putc, while the one for keyboard responce don't lock because I already lock in irq handler. Double lock lead to this bug.<br>
