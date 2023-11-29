@@ -270,7 +270,7 @@ int free(void* ptr)
 */
 void display_memory()
 {
-    int i,num,cnt,t=1;
+    int i,num,cnt=0,t=1;
     printf("-------------------------\n");
     printf("Memory display\n");
     for (i=0;i<=10;i++)
@@ -287,5 +287,5 @@ void display_memory()
         t=t*2;
         printf("The number of blocks: %d\n",num);
     }
-    printf("percentage of memory used: %d/%d\n",cnt,ENTRIES);
+    printf("percentage of memory unused: %d/%d\n",cnt,ENTRIES);
 }
