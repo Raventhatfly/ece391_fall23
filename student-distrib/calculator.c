@@ -49,10 +49,12 @@ int cal(char *buf, int32_t length)
                     else if (op[op_top] == '-') num[num_top - 1] -= num[num_top];
                     else if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
                     else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+                    num[num_top]=0;
                     op_top--;
                     num_top--;
                 }
                 op[++op_top] = ch;
+                num_top++;
             }
             else if (ch == '*' || ch == '/')
             {
@@ -64,9 +66,18 @@ int cal(char *buf, int32_t length)
                     num_top--;
                 }
                 op[++op_top] = ch;
+                num_top++;
             }
-            num_top++;
         }
     }
+    while (op_top >= 0)
+        {
+            if (op[op_top] == '+') num[num_top - 1] += num[num_top];
+            else if (op[op_top] == '-') num[num_top - 1] -= num[num_top];
+            else if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
+            else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+            op_top--;
+            num_top--;
+        }
     return num[0];
 }
