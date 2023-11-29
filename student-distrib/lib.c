@@ -31,7 +31,7 @@ char get_attribute(){
     side effect: none
 */
 void set_attribute(char attr){
-    ATTRIB=attr;
+    ATTRIB=attr; //high 4 bits are background color, low 4 bits are foreground color
 }
 /* void clear(void);
  * Inputs: void
