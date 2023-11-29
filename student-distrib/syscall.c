@@ -5,6 +5,7 @@
 #include "rtc.h"
 #include "terminal.h"
 #include "signal.h"
+#include "kernel_program.h"
 
 
 int8_t process_id_arr[MAX_PROCESS] = {0};
@@ -158,6 +159,8 @@ int32_t execute (const uint8_t* command){
     if(cmd_len == 0){
         return -1;      /* no executable input */
     }
+    /* Extra Credit */
+    if(excute_kernel_program(cmd,args))     return 0;
     retval = read_dentry_by_name(cmd,&dentry);
     // memset(cmd,'\0',MAX_CMD + 1);
     if(retval == -1){

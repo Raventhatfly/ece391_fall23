@@ -16,6 +16,7 @@
 #include "terminal.h"
 #include "pit.h"
 #include "scheduler.h"
+#include "kernel_program.h"
 
 #define RUN_TESTS 0
 
@@ -180,6 +181,8 @@ void entry(unsigned long magic, unsigned long addr) {
     scheduler_init();
     pit_init(-1);
     terminal_init();
+
+    init_kernel_command();  /* Extra Credit */
     
   
     /* Enable interrupts */
