@@ -4,7 +4,7 @@
 #include "page.h"
 #include "calculator.h"
 #include "serial.h"
-uint8_t* k_commands[K_COMMAND_NUM];
+int8_t* k_commands[K_COMMAND_NUM];
 prog_function_ptr k_handlers[K_COMMAND_NUM];
 int cmd_cnt = K_COMMAND_NUM;
 
@@ -90,7 +90,7 @@ void color(int8_t* arg){
     }
     if('0'<=arg[0] && arg[0]<= '9'){
         if(arg[0] == '0'){
-            printf("Warning: you are using the background color. \n");
+            WARNING("you are using the background color.");
         }
         num = (int)(arg[0] - '0');
     }else if('a'<= arg[0] && arg[0]<='f'){
@@ -132,5 +132,14 @@ void info(int8_t* arg){
 }
 
 void serial(int8_t* arg){
+    // char c;
     serial_init();
+    // write_serial("R");
+    // printf("Send 'R',");
+    // if(serial_received()){
+    //     c = read_serial();
+    //     printf(" revieves %c\n", read_serial());
+    // }else{
+    //     printf(" revieves none.\n");
+    // }
 }
