@@ -1,6 +1,7 @@
 #include "kernel_program.h"
 #include "lib.h"
 #include "syscall.h"
+#include "page.h"
 uint8_t* k_commands[K_COMMAND_NUM];
 prog_function_ptr k_handlers[K_COMMAND_NUM];
 int cmd_cnt = K_COMMAND_NUM;
@@ -10,6 +11,8 @@ void init_kernel_command(){
     k_handlers[0] = (void*) help;
     k_commands[1] = "color";
     k_handlers[1] = (void*) color;
+    k_commands[2] = "meminfo";
+    k_handlers[2] = (void*) meminfo;
     
 }
 
@@ -84,6 +87,9 @@ void color(int8_t* arg){
     set_attribute(num);
 }
 
+void meminfo(int8_t* arg){
+    display_memory();
+}
 void calc(int8_t* arg){
     printf("This is a calculator!\n");
 }
