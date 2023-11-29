@@ -13,6 +13,7 @@ void* k_cmd_execute(int8_t *arg);
 
 /* kernel programs */
 void help(int8_t* arg);
+void color(int8_t* arg);
 void calc(int8_t* args);
 #endif
 
