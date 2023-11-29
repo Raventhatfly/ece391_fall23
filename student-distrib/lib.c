@@ -9,6 +9,7 @@
 int screen_x;
 int screen_y;
 char* video_mem = (char *)VIDEO;
+char ATTRIB=0x0F;
 extern int curr_exe_terminal;
 /* void clear(void);
  * Inputs: void
