@@ -11,6 +11,28 @@ int screen_y;
 char* video_mem = (char *)VIDEO;
 char ATTRIB=0x0F;
 extern int curr_exe_terminal;
+/*
+    char get_attribute()
+    Description: get the attribute of the screen
+    input: none
+    output: none
+    return value: the attribute of the screen
+    side effect: none
+*/
+char get_attribute(){
+    return ATTRIB;
+}
+/*
+    void set_attribute(char attr)
+    Description: set the attribute of the screen
+    input: char attr: the attribute to be set
+    output: none
+    return value: none
+    side effect: none
+*/
+void set_attribute(char attr){
+    ATTRIB=attr;
+}
 /* void clear(void);
  * Inputs: void
  * Return Value: none

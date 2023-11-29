@@ -225,8 +225,9 @@ int32_t terminal_close(int32_t fd){
     *   SIDE EFFECTS: clear the terminal
 */
 uint32_t terminal_clear(){
+    set_attribute(0x0F);
     for (i = 0; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2) = ' ';
-    for (i = 0; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2 + 1) = ATTRIB; /*set the ATTRIB of the screen*/
+    for (i = 0; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2 + 1) = get_attribute(); /*set the ATTRIB of the screen*/
     i = 0;   
     screen_x = i;
     screen_y = i;
@@ -315,7 +316,7 @@ uint32_t terminal_delete(){
         screen_x--;             /*or just delete the last char of the current line*/
     }
     *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2)) = ' '; /*initialize the char as blank and ATTRIB*/
-    *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = ATTRIB;
+    *(uint32_t *)(video_mem + ((COLS * screen_y + screen_x) * 2) + 1) = get_attribute();
     my_terminal[terminal_using].cursor_x_coord=screen_x;
     my_terminal[terminal_using].cursor_y_coord=screen_y;
     draw_cursor(my_terminal[terminal_using].cursor_x_coord, my_terminal[terminal_using].cursor_y_coord); /*redraw the cursor*/
