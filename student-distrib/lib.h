@@ -7,7 +7,6 @@
 
 #include "types.h"
 
-char ATTRIB=0x0F;
 int32_t printf(int8_t *format, ...);
 void putc(uint8_t c);
 void putc_keyboard(uint8_t c);
