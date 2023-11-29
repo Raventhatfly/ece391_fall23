@@ -3,6 +3,7 @@
 #include "syscall.h"
 #include "page.h"
 #include "calculator.h"
+#include "serial.h"
 uint8_t* k_commands[K_COMMAND_NUM];
 prog_function_ptr k_handlers[K_COMMAND_NUM];
 int cmd_cnt = K_COMMAND_NUM;
@@ -18,6 +19,8 @@ void init_kernel_command(){
     k_handlers[3] = (void*) calc;
     k_commands[4] = "info";
     k_handlers[4] = (void*) info;
+    k_commands[5] = "serial";
+    k_handlers[5] = (void*) serial;
     
 }
 
@@ -126,4 +129,8 @@ void info(int8_t* arg){
     printf("Developed Fall 2023, ECE391\n");
     printf("At University of Illinois Urbana Champaign\n");
     printf("Press 'help' for assistance\n");
+}
+
+void serial(int8_t* arg){
+    serial_init();
 }

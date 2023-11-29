@@ -712,7 +712,7 @@ idt_irq_4:
     pushl %ecx 
     pushl %ebx
     cld
-    call irq4_handler
+    call serial_handler
     call signal_handler
     popl %ebx
     popl %ecx 

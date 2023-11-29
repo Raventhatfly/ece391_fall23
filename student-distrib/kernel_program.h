@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#define K_COMMAND_NUM 5
+#define K_COMMAND_NUM 6
 
 typedef void (*prog_function_ptr)(int8_t* arg);
 void init_kernel_command();
@@ -17,5 +17,6 @@ void color(int8_t* arg);
 void meminfo(int8_t* arg);
 void calc(int8_t* args);
 void info(int8_t* info);
+void serial(int8_t* arg);
 #endif
 
