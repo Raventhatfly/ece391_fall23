@@ -3,7 +3,6 @@
 #include "lib.h"
 #define COLS    80  /* Number of columns in terminal */
 #define ROWS    25  /* Number of rows in terminal */
-#define ATTRIB  0x7 /* Attribute for terminal */
 #define BUFFER_SIZE   128 /* Video memory address */
 #define ENTER_ASC2	0xA /* Ascii code for enter */
 #define FAILURE 0
