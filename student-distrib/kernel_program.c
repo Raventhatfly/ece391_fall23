@@ -17,7 +17,7 @@ void init_kernel_command(){
     k_commands[3] = "calc";
     k_handlers[3] = (void*) calc;
     k_commands[4] = "info";
-    k_handlers[4] = info;
+    k_handlers[4] = (void*) info;
     
 }
 
