@@ -270,12 +270,12 @@ int free(void* ptr)
 */
 void display_memory()
 {
-    int i,num;
+    int i,num,cnt=0,t=1;
     printf("-------------------------\n");
-    printf("Memory display:\n");
+    printf("Memory display\n");
     for (i=0;i<=10;i++)
     {
-        printf("Level %d:\n",i);
+        printf("Level %d:   ",i);
         num = 0;
         buddy_node* temp = buddy_head[i];
         while (temp!=NULL)
@@ -283,6 +283,9 @@ void display_memory()
             num++;
             temp = temp->next;
         }
+        cnt=cnt+t*num;
+        t=t*2;
         printf("The number of blocks: %d\n",num);
     }
+    printf("percentage of memory unused: %d/%d\n",cnt,ENTRIES);
 }
