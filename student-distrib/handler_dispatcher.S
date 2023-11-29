@@ -865,7 +865,7 @@ idt_syscall:
     
     # check the syscall number. Unsighed number must not be bigger than 10
     decl %eax
-    cmpl $9, %eax
+    cmpl $11, %eax          # Number of system calls minus one
     ja .invalid_call 
 
     pushl %edx
@@ -910,3 +910,5 @@ idt_syscall_jmp_table:
     .long vidmap
     .long set_handler
     .long sigreturn
+    .long user_malloc
+    .long user_free
