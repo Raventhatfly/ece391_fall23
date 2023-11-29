@@ -6,12 +6,33 @@
 #define VIDEO       0xB8000
 #define NUM_COLS    80
 #define NUM_ROWS    25
-#define ATTRIB      0x7
-
 int screen_x;
 int screen_y;
 char* video_mem = (char *)VIDEO;
+char ATTRIB=0x0F;
 extern int curr_exe_terminal;
+/*
+    char get_attribute()
+    Description: get the attribute of the screen
+    input: none
+    output: none
+    return value: the attribute of the screen
+    side effect: none
+*/
+char get_attribute(){
+    return ATTRIB;
+}
+/*
+    void set_attribute(char attr)
+    Description: set the attribute of the screen
+    input: char attr: the attribute to be set
+    output: none
+    return value: none
+    side effect: none
+*/
+void set_attribute(char attr){
+    ATTRIB=attr; //high 4 bits are background color, low 4 bits are foreground color
+}
 /* void clear(void);
  * Inputs: void
  * Return Value: none
