@@ -7,6 +7,17 @@
 
 #include "types.h"
 
+char get_attribute();
+void set_attribute(char attr);
+#define WARNING(format, ...)                            \
+    do {                                                \
+        int attr = get_attribute();                     \
+        set_attribute(0x0c);                            \
+        printf("Warning: " format, ##__VA_ARGS__);      \
+        set_attribute(attr);                            \
+        printf("\n");                                       \
+    } while(0)
+
 int32_t printf(int8_t *format, ...);
 void putc(uint8_t c);
 void putc_keyboard(uint8_t c);
