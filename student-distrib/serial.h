@@ -20,6 +20,7 @@ void serial_init();
 void serial_handler();
 void serial_setmode(int mode);
 int32_t serial_read();
+void serial_send(int8_t byte);
 void serial_off();
 void test_serial();
 

@@ -28,10 +28,10 @@ void serial_init(){
     outb(0x1e, PORT+4);         // Set in loopback mode, test the serial chip
 
     
-    outb(0xae, PORT+0);         // Test serial chip (send byte 0xAE and check if serial returns same byte)
+    // outb(0xae, PORT+0);         // Test serial chip (send byte 0xAE and check if serial returns same byte)
 
      // enable_irq(SERIAL_IRQ);
-    enable_irq(4);
+    enable_irq(SERIAL_IRQ);
     
     // Check if serial is faulty (i.e: not same byte as sent)
     // if(inb(PORT + 0) != 0xAE) {
@@ -54,7 +54,7 @@ void serial_handler(){
     cli();
     if(serial_mode == MODE_DIRECT_PRINT){
         data = (int8_t) inb(PORT);
-        printf("%d", data);
+        printf("%c", data);
     }else if(serial_mode == MODE_INPUT_BUFFER){
         data = (int8_t) inb(PORT);
         if(sbuf.length < SERIAL_BUFFER_LEN){
@@ -85,4 +85,10 @@ void serial_set_mode(int mode){
 
 void serial_off(){
     outb(0x00, PORT+1);         /* serial interrupt off */
+}
+
+void serial_send(int8_t byte){
+    cli();
+    outb(byte, PORT+0);
+    sti();
 }

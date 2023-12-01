@@ -139,10 +139,17 @@ void serial(int8_t* arg){
     int8_t* recieve = "recieve";
     int8_t* help0 = "-h";
     int8_t* help1 = "help";
-    int baudrate, i;
+    int8_t* mode = "mode";
+    int8_t* loopback = "loopback";
+    int8_t* output = "output";
+    int baudrate, i, byte;
     separate_args(arg,args);
     if(strncmp(help0,args[0],2)==0 || strncmp(help1,args[0],4)==0){
         printf("RazelOS Serial Driver Usage:\n");
+        printf("[-h/-help]          Get usage\n");
+        printf("[on][#number]       Turn on the serial driver with the #number rate\n");
+        printf("[off]               Turn off the serial driver\n");
+        printf("[send][#byte]       Send the byte from the serial port\n");
     }else if(strncmp(on,args[0],2)==0){
         baudrate = 0;
         for(i=0;i<MAX_ARG_LEN;i++){
@@ -157,6 +164,19 @@ void serial(int8_t* arg){
         }else{
             printf("Using rate:%d\n", baudrate);
         }
+        serial_init();
+    }else if(strncmp(send,args[0],4)==0){
+        byte = 0;
+        for(i=0;i<MAX_ARG_LEN;i++){
+            if(args[1][i] <= '9' && args[1][i] >= '0'){
+                byte = byte * 10 + (int)(args[1][i] - '0');
+            }else{
+                break;
+            }
+        }
+        serial_send(byte);
+    }else if(strncmp(off,args[0],3)==0){
+        serial_off();
     }
 }
 
