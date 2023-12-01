@@ -10,7 +10,7 @@ extern char* video_mem;
 termin_t my_terminal[TERMINAL_NUM];
 static int32_t i;
 int32_t terminal_using;
-
+extern last_cmd_t last_cmd[TERMINAL_NUM];
 extern int curr_exe_terminal;
 uint32_t* backup_hidden_terminal[3]={(uint32_t*)0xB9000, (uint32_t*)0xBA000, (uint32_t*)0xBB000};
 /* the following four function are helper functions */
@@ -134,6 +134,9 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     my_terminal[curr_exe_terminal].read_flag = 0; 
     while (!my_terminal[curr_exe_terminal].read_flag);  /*wait until the enter is pressed*/
     my_terminal[curr_exe_terminal].terminal_buffer[my_terminal[curr_exe_terminal].buffer_iterator-1] = '\0';
+    last_cmd[curr_exe_terminal].cmd_len=my_terminal[curr_exe_terminal].buffer_iterator-1;
+    for (i = 0; i < last_cmd[curr_exe_terminal].cmd_len; i++) 
+        last_cmd[curr_exe_terminal].cmd[i] = my_terminal[curr_exe_terminal].terminal_buffer[i];
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
         j = BUFFER_SIZE;
     }else{
@@ -257,6 +260,14 @@ void terminal_init(){
         }
         buffer_clear(i);
     }
+    for (i=0;i<BUFFER_SIZE;i++){
+        last_cmd[0].cmd[i]='\0';
+        last_cmd[1].cmd[i]='\0';
+        last_cmd[2].cmd[i]='\0';
+    }
+    last_cmd[0].cmd_len=0;
+    last_cmd[1].cmd_len=0;
+    last_cmd[2].cmd_len=0;
     terminal_using=0;
 }
 
@@ -356,4 +367,18 @@ int32_t active_termminal_cnt(){
         }
     }
     return cnt;
+}
+/*
+    * show_last_cmd
+    *   DESCRIPTION: show the last command
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 
+    *   SIDE EFFECTS: none
+*/
+void show_last_cmd(){
+    int i;
+    for (i=0;i<last_cmd[curr_exe_terminal].cmd_len;i++){
+        terminal_display(last_cmd[curr_exe_terminal].cmd[i]);
+    }
 }

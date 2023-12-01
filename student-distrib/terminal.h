@@ -18,7 +18,10 @@ typedef struct termin {
 	int32_t terminal_flag;
 	int32_t terminal_active;
 } termin_t;
-
+typedef struct last_cmd {
+	uint8_t cmd[128];
+	uint32_t cmd_len;
+} last_cmd_t;
 extern uint32_t terminal_clear();
 extern void terminal_init();
 extern int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes);
@@ -32,6 +35,7 @@ extern int32_t terminal_switch(int32_t terminal_id);
 extern int32_t get_terminal_id();
 extern void set_mem(int32_t terminal_id);
 extern int32_t active_termminal_cnt();
+extern void show_last_cmd();
 
 extern termin_t my_terminal[TERMINAL_NUM];
 #endif 
