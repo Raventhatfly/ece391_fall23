@@ -155,6 +155,7 @@ void irq1_handler(void)
             break;
         case Advances_code:
             advance=advance^1;
+            printf("advance\n");
             break;
     default:
         if (key<SCANCODE_SIZE)  /*if the key is not a special key and is the pressing process*/
