@@ -151,6 +151,9 @@ void irq1_handler(void)
         case up:
             show_last_cmd();
             break;
+        case down:
+            show_next_cmd();
+            break;
     default:
         if (key<SCANCODE_SIZE)  /*if the key is not a special key and is the pressing process*/
         {
