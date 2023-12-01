@@ -36,6 +36,7 @@ extern int32_t get_terminal_id();
 extern void set_mem(int32_t terminal_id);
 extern int32_t active_termminal_cnt();
 extern void show_last_cmd();
+extern void show_next_cmd();
 
 extern termin_t my_terminal[TERMINAL_NUM];
 #endif 
