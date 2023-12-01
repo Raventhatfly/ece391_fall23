@@ -381,5 +381,4 @@ void show_last_cmd(){
     for (i=0;i<last_cmd[curr_exe_terminal].cmd_len;i++){
         terminal_display(last_cmd[curr_exe_terminal].cmd[i]);
     }
-    printf("zyczyc@391OS:~$\n");
 }

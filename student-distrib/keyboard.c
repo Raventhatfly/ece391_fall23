@@ -29,19 +29,14 @@ table from scancode to ascii
 #define f10_press 0x44
 #define f11_press 0x57
 #define f12_press 0x58
-#define Advances_code 0xE0
-#define up_make 0x49
-#define down_make 0x51
-#define left_make 0x47
-#define right_make 0x4F
-#define up_break 0xC9
-#define down_break 0xD1
-#define left_break 0xC7
-#define right_break 0xCF
+#define up 0x48
+#define down 0x50
+#define left 0x4B
+#define right 0x4D
 /*
 flag for special key
 */
-int8_t caps=0,shift=0,ctrl=0,alt=0,advance=0;
+int8_t caps=0,shift=0,ctrl=0,alt=0;
 extern int curr_exe_terminal;
 /*
 table from scancode to ascii
@@ -154,9 +149,8 @@ void irq1_handler(void)
                 break;
             }
             break;
-        case Advances_code:
-            advance=advance^1;
-            printf("advance\n");
+        case up:
+            show_last_cmd();
             break;
     default:
         if (key<SCANCODE_SIZE)  /*if the key is not a special key and is the pressing process*/
@@ -165,12 +159,6 @@ void irq1_handler(void)
             /*
             if shift is pressed, use the scancode_shift table
             */
-           if (key==up_break) printf("up\n");
-            if (advance==1)
-            {
-                if (key==up_make) show_last_cmd();
-                break;
-            }
             if (shift==1 && caps==1) //if shift and caps are pressed
                 ascii = scancode_shiftcaps[key];
             else if (shift==1) //if shift is pressed
