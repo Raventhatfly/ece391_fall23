@@ -133,9 +133,8 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     buffer_clear(curr_exe_terminal); 
     my_terminal[curr_exe_terminal].read_flag = 0; 
     while (!my_terminal[curr_exe_terminal].read_flag);  /*wait until the enter is pressed*/
-    printf("%d\n",my_terminal[curr_exe_terminal].buffer_iterator);
     my_terminal[curr_exe_terminal].terminal_buffer[my_terminal[curr_exe_terminal].buffer_iterator-1] = '\0';
-    last_cmd[curr_exe_terminal].cmd_len=my_terminal[curr_exe_terminal].buffer_iterator-1;
+    last_cmd[curr_exe_terminal].cmd_len=my_terminal[curr_exe_terminal].buffer_iterator-2;
     for (i = 0; i < last_cmd[curr_exe_terminal].cmd_len; i++) 
         last_cmd[curr_exe_terminal].cmd[i] = my_terminal[curr_exe_terminal].terminal_buffer[i];
     if (nbytes > BUFFER_SIZE) {     /*if the nbytes is larger than the buffer size, set the j as the buffer size*/
@@ -379,7 +378,6 @@ int32_t active_termminal_cnt(){
 */
 void show_last_cmd(){
     int i;
-    printf("%d\n",last_cmd[curr_exe_terminal].cmd_len);
     for (i=0;i<last_cmd[curr_exe_terminal].cmd_len;i++){
         terminal_display(last_cmd[curr_exe_terminal].cmd[i]);
     }
