@@ -396,5 +396,5 @@ void show_last_cmd(){
     for (i=0;i<prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd_len;i++){
         terminal_display(prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd[i]);
     }
-    curr_ask_cmd[terminal_using]--;
+    if (curr_ask_cmd[terminal_using]>0) curr_ask_cmd[terminal_using]--;
 }
