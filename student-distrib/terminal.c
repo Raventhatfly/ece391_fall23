@@ -142,8 +142,8 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     for (i = 0; i < prev_cmd[curr_exe_terminal][num_cmd[curr_exe_terminal]].cmd_len; i++) 
         prev_cmd[curr_exe_terminal][num_cmd[curr_exe_terminal]].cmd[i] = my_terminal[curr_exe_terminal].terminal_buffer[i];
     prev_cmd[curr_exe_terminal][num_cmd[curr_exe_terminal]].cmd[i] = '\0';
-    curr_ask_cmd[curr_exe_terminal]=num_cmd[curr_exe_terminal];
     num_cmd[curr_exe_terminal]++;
+    curr_ask_cmd[curr_exe_terminal]=num_cmd[curr_exe_terminal];
     if (num_cmd[curr_exe_terminal]==1000) num_cmd[curr_exe_terminal]=1000;//1000 is the max number of commands to store
 
 
@@ -393,8 +393,29 @@ void show_last_cmd(){
         i=terminal_delete();
         if (i==-1) break;
     }
+    if (curr_ask_cmd[terminal_using]>0) curr_ask_cmd[terminal_using]--;
     for (i=0;i<prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd_len;i++){
         terminal_display(prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd[i]);
     }
-    if (curr_ask_cmd[terminal_using]>0) curr_ask_cmd[terminal_using]--;
+}
+/*
+    * show_next_cmd
+    *   DESCRIPTION: show the next command
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 
+    *   SIDE EFFECTS: none
+*/
+void show_next_cmd(){
+    int i;
+    while (1)
+    {
+        i=terminal_delete();
+        if (i==-1) break;
+    }
+    if (curr_ask_cmd[terminal_using]<num_cmd[terminal_using]) curr_ask_cmd[terminal_using]++;
+    if (curr_ask_cmd[terminal_using]==num_cmd[terminal_using]) return;
+    for (i=0;i<prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd_len;i++){
+        terminal_display(prev_cmd[terminal_using][curr_ask_cmd[terminal_using]].cmd[i]);
+    }
 }
