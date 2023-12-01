@@ -164,6 +164,7 @@ void irq1_handler(void)
             /*
             if shift is pressed, use the scancode_shift table
             */
+           if (key==up_break) printf("up\n");
             if (advance==1)
             {
                 if (key==up_make) show_last_cmd();
