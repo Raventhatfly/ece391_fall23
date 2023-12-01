@@ -4,13 +4,17 @@
 #include "lib.h"
 #include "scheduler.h"
 
-int counter = 0;
+int counter;
+int freqency;
 int tick = 0;
 void pit_init(int fre){
     int div;
+    counter = 0;
+    freqency = fre;
     if(fre == -1){
         /* Use default value if input is -1 */
         fre = DEFAULT_FRE;
+        freqency = fre;
     }
     div = PIT_FREQ / fre;
     outb(PIT_CMD,PIT_CMD_PORT);
@@ -21,12 +25,14 @@ void pit_init(int fre){
 
 void pit_handler(){
     send_eoi(PIT_IRQ);
+    counter++;
     process_switch();
     
-    // if(++counter > 100){
-    //     tick++;
-    //     printf("PIT recieved at tick %d\n",tick);
-    //     counter = 0;
-    // }
-    
+}
+
+systime_t get_systime(){
+    systime_t systime;
+    systime.sec = counter / freqency;
+    systime.ms = (counter - systime.sec * freqency) * 1000 / freqency;
+    return systime;
 }
