@@ -132,14 +132,90 @@ void info(int8_t* arg){
 }
 
 void serial(int8_t* arg){
-    // char c;
-    serial_init();
-    // write_serial("R");
-    // printf("Send 'R',");
-    // if(serial_received()){
-    //     c = read_serial();
-    //     printf(" revieves %c\n", read_serial());
-    // }else{
-    //     printf(" revieves none.\n");
-    // }
+    int8_t args[MAX_ARGS][MAX_ARG_LEN + 1];
+    int8_t* on = "on";
+    int8_t* off = "off";
+    int8_t* send = "send";
+    int8_t* recieve = "recieve";
+    int8_t* help0 = "-h";
+    int8_t* help1 = "help";
+    int baudrate, i;
+    separate_args(arg,args);
+    if(strncmp(help0,args[0],2)==0 || strncmp(help1,args[0],4)==0){
+        printf("RazelOS Serial Driver Usage:\n");
+    }else if(strncmp(on,args[0],2)==0){
+        baudrate = 0;
+        for(i=0;i<MAX_ARG_LEN;i++){
+            if(args[1][i] <= '9' && args[1][i] >= '0'){
+                baudrate = baudrate * 10 + (int)(args[1][i] - '0');
+            }else{
+                break;
+            }
+        }
+        if(baudrate == 0){
+            printf("Using default rate: 115200 Hz\n");
+        }else{
+            printf("Using rate:%d\n", baudrate);
+        }
+    }
+}
+
+void separate_args(int8_t *arg, int8_t args[MAX_ARGS][MAX_ARG_LEN + 1]){
+    int cmd_len = 0;
+    int i = 0;
+    int j = 0;
+    int leading = 1;
+    int curr_arg = 0;
+    for(i = 0; i<MAX_ARGS;i++){
+        for(j=0;j<MAX_ARG_LEN+1;j++){
+            args[i][j] = '\0';
+        }
+    }
+    i = 0;
+    j = 0;
+    /* state 0, waiting for command at the leading spaces;
+       state 1, waiting for the next arg
+       state 2, reading the current arg
+    */
+    int state = 0;  
+    while(arg[i] != '\0'){
+        switch (state)
+        {
+        case 0:
+            if(arg[i] == ' '){
+                i++;
+            }else{
+                state = 2;
+            }
+            break;
+        case 1:
+            if(arg[i] != ' '){
+                state = 2;
+            }else{
+                i++;
+            }
+            break;
+        case 2: 
+            if(arg[i] == ' '){
+                state = 1;
+                curr_arg++;
+                if(curr_arg >= MAX_ARGS)    return -1;
+                j = 0;
+                i++;
+            }else if(j >= MAX_ARG_LEN){
+                return -1;
+            }else{
+                args[curr_arg][j] = arg[i];
+                j++; i++;
+            }
+            break;
+        default:
+            state = 0;
+            break;
+        }
+        
+    }
+    if(state == 2 && j != 0){
+        curr_arg++;
+    }
 }
