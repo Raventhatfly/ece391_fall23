@@ -100,6 +100,7 @@ void irq1_handler(void)
     cli();
     /*read from keyboard*/
     uint8_t key = inb(KEYBOARD_PORT);
+    printf("key: %x\n", key);
     /*
     change the special key to the flag
     */
