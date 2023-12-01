@@ -10,7 +10,7 @@ extern char* video_mem;
 termin_t my_terminal[TERMINAL_NUM];
 static int32_t i;
 int32_t terminal_using;
-extern last_cmd_t last_cmd[TERMINAL_NUM];
+last_cmd_t last_cmd[TERMINAL_NUM];
 extern int curr_exe_terminal;
 uint32_t* backup_hidden_terminal[3]={(uint32_t*)0xB9000, (uint32_t*)0xBA000, (uint32_t*)0xBB000};
 /* the following four function are helper functions */
