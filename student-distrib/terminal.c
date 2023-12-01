@@ -133,6 +133,7 @@ int32_t terminal_read(int32_t fd, void* buf, int32_t nbytes){
     buffer_clear(curr_exe_terminal); 
     my_terminal[curr_exe_terminal].read_flag = 0; 
     while (!my_terminal[curr_exe_terminal].read_flag);  /*wait until the enter is pressed*/
+    printf("%d\n",my_terminal[curr_exe_terminal].buffer_iterator);
     my_terminal[curr_exe_terminal].terminal_buffer[my_terminal[curr_exe_terminal].buffer_iterator-1] = '\0';
     last_cmd[curr_exe_terminal].cmd_len=my_terminal[curr_exe_terminal].buffer_iterator-1;
     for (i = 0; i < last_cmd[curr_exe_terminal].cmd_len; i++) 
