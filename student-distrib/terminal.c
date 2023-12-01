@@ -378,6 +378,7 @@ int32_t active_termminal_cnt(){
 */
 void show_last_cmd(){
     int i;
+    printf("%d\n",last_cmd[curr_exe_terminal].cmd_len);
     for (i=0;i<last_cmd[curr_exe_terminal].cmd_len;i++){
         terminal_display(last_cmd[curr_exe_terminal].cmd[i]);
     }
