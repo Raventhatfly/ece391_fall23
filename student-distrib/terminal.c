@@ -378,9 +378,11 @@ int32_t active_termminal_cnt(){
 */
 void show_last_cmd(){
     int i;
-    for (i = (ROWS - 1) * COLS + 7; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2) = ' ';
-    for (i = (ROWS - 1) * COLS + 7; i < ROWS * COLS; i++) *(uint32_t *)(video_mem + i*2 + 1) = get_attribute(); /*set the ATTRIB of the screen*/
-    buffer_clear(terminal_using);
+    while (1)
+    {
+        i=terminal_delete();
+        if (i==-1) break;
+    }
     for (i=0;i<last_cmd[terminal_using].cmd_len;i++){
         terminal_display(last_cmd[terminal_using].cmd[i]);
     }
