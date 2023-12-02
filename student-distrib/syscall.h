@@ -74,6 +74,7 @@ extern int32_t set_handler (int32_t signum, void* handler_address);
 extern int32_t sigreturn (void);
 extern void* user_malloc(uint32_t length);
 extern int32_t user_free(void* ptr);
+extern void set_color(int32_t color);
 extern void file_op_table_init();
 int32_t fetch_curr_pid();
 int null_read(int32_t fd, void* buf, int32_t nbytes);

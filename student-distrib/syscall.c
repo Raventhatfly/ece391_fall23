@@ -494,6 +494,12 @@ int32_t user_free(void* ptr)
 {
     return free(ptr);
 }
+
+
+void set_color(int32_t color){
+    set_attribute(color);
+}
+
 /*
     * allocate_pid
     *   DESCRIPTION: allocate a process ID

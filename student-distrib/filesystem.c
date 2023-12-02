@@ -89,7 +89,7 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
    
     buf_offset = 0;
 
-    if(inode >= 63){
+    if(inode > 63){
         return -1;
     }
     /* test if the offset is larger than the length of the file */
