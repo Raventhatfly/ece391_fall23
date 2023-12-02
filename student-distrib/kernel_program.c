@@ -51,9 +51,9 @@ void help(int8_t* arg){
     printf("-- calc --: RazelOS support calculator\n");
     printf("-- info --: Operating System information\n");
     printf("Key support:\n");
-    printf("Ctrl+L: clear screen\n");
     printf("Alt+F1/F2/F3: change terminal\n");
     printf("Ctrl+C: Halt current process\n");
+    printf("Ctrl+L: clear screen\n");
 }
 
 void color(int8_t* arg){
@@ -150,6 +150,7 @@ void serial(int8_t* arg){
         printf("[on][#number]       Turn on the serial driver with the #number rate\n");
         printf("[off]               Turn off the serial driver\n");
         printf("[send][#byte]       Send the byte from the serial port\n");
+        printf("[loopback][0/1]     If the second param is 0 turn off loopback, otherwise loopback\n");
     }else if(strncmp(on,args[0],2)==0){
         baudrate = 0;
         for(i=0;i<MAX_ARG_LEN;i++){
@@ -177,6 +178,14 @@ void serial(int8_t* arg){
         serial_send(byte);
     }else if(strncmp(off,args[0],3)==0){
         serial_off();
+    }else if(strncmp(loopback,args[0],8)==0){
+        if(args[1][0] == '0'){
+            serial_loopback_disable();
+        }else{
+            serial_loopback_enable();
+        }
+    }else{
+        printf("Invalid argument\n");
     }
 }
 

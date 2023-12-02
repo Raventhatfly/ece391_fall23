@@ -92,3 +92,15 @@ void serial_send(int8_t byte){
     outb(byte, PORT+0);
     sti();
 }
+
+void serial_loopback_enable(){
+    cli();
+    outb(0x1e, PORT+4);         
+    sti();
+}
+
+void serial_loopback_disable(){
+    cli();
+    outb(0x0f,PORT+4);      
+    sti();
+}
