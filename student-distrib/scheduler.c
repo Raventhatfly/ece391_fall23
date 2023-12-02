@@ -97,6 +97,15 @@ int process_switch(){
 
 }
 
+
+/*
+    * change_terminal_process()
+    *   DESCRIPTION: change the executing process on the terminal
+    *   INPUTS: pid, terminal_id
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int change_terminal_process(int pid, int terminal_id){
     terminal_pid_map[terminal_id].pid = pid;
     return 0;

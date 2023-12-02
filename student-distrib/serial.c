@@ -9,6 +9,15 @@
 static serial_buffer_t sbuf;
 static int serial_mode;
 int buffer_data_cnt;    /* In Bytes */
+
+/*
+    * serial_init()
+    *   DESCRIPTION: initialize the serial driver
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_init(){
     /* @cite: https://wiki.osdev.org/Serial_Ports */
     sbuf.head = 0;
@@ -49,6 +58,14 @@ void serial_init(){
 
 }
 
+/*
+    * serial_handler()
+    *   DESCRIPTION: serial interrupt handler
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_handler(){
     int8_t data;
     cli();
@@ -67,6 +84,14 @@ void serial_handler(){
     sti();
 }
 
+/*
+    * serial_read()
+    *   DESCRIPTION: read the serial input from the buffer
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 int32_t serial_read(){
     int8_t byte;
     if(sbuf.length == 0){
@@ -79,26 +104,66 @@ int32_t serial_read(){
     }
 }
 
+/*
+    * set_serial_mode()
+    *   DESCRIPTION: set the mode of the serial driver
+    *   INPUTS: mode
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_set_mode(int mode){
     serial_mode = mode;
 }
 
+/*
+    * serial_off()
+    *   DESCRIPTION: read the serial input from the buffer
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_off(){
     outb(0x00, PORT+1);         /* serial interrupt off */
 }
 
+/*
+    * serial_send()
+    *   DESCRIPTION: turn off the serial
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_send(int8_t byte){
     cli();
     outb(byte, PORT+0);
     sti();
 }
 
+/*
+    * serial_loopback_enable()
+    *   DESCRIPTION: serial loopback mode enabled
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_loopback_enable(){
     cli();
     outb(0x1e, PORT+4);         
     sti();
 }
 
+/*
+    * serial_loopback_enable()
+    *   DESCRIPTION: serial loopback mode disabled
+    *   INPUTS: none
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void serial_loopback_disable(){
     cli();
     outb(0x0f,PORT+4);      

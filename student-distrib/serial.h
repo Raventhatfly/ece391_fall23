@@ -18,7 +18,7 @@ typedef struct serial_buffer{
 
 void serial_init();
 void serial_handler();
-void serial_setmode(int mode);
+void serial_set_mode(int mode);
 int32_t serial_read();
 void serial_send(int8_t byte);
 void serial_loopback_enable();

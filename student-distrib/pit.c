@@ -7,6 +7,14 @@
 int counter;
 int freqency;
 int tick = 0;
+
+/*
+    *  void pit_init()
+    *    DESCRIPTION: initialize the pit with the given frequency
+    *    INPUT: fre
+    *    OUTPUT: none
+    *    SIDE EFFECT: 
+*/
 void pit_init(int fre){
     int div;
     counter = 0;
@@ -23,6 +31,14 @@ void pit_init(int fre){
     enable_irq(PIT_IRQ);
 }
 
+/*
+    *  void pit_handler()
+    *    DESCRIPTION: handle the pit interrupt 
+    *    INPUT: none
+    *    OUTPUT: none
+    *    SIDE EFFECT: Do the process switch within the handler and increase the 
+    *                 system time counter.
+*/
 void pit_handler(){
     send_eoi(PIT_IRQ);
     counter++;
@@ -30,6 +46,13 @@ void pit_handler(){
     
 }
 
+/*
+    *  void get_systime()
+    *    DESCRIPTION: return the system time
+    *    INPUT: none
+    *    OUTPUT: none
+    *    SIDE EFFECT: none
+*/
 systime_t get_systime(){
     systime_t systime;
     systime.sec = counter / freqency;

@@ -136,12 +136,12 @@ void serial(int8_t* arg){
     int8_t* on = "on";
     int8_t* off = "off";
     int8_t* send = "send";
-    int8_t* recieve = "recieve";
+    // int8_t* recieve = "recieve";
     int8_t* help0 = "-h";
     int8_t* help1 = "help";
-    int8_t* mode = "mode";
+    // int8_t* mode = "mode";
     int8_t* loopback = "loopback";
-    int8_t* output = "output";
+    // int8_t* output = "output";
     int baudrate, i, byte;
     separate_args(arg,args);
     if(strncmp(help0,args[0],2)==0 || strncmp(help1,args[0],4)==0){
@@ -190,10 +190,8 @@ void serial(int8_t* arg){
 }
 
 void separate_args(int8_t *arg, int8_t args[MAX_ARGS][MAX_ARG_LEN + 1]){
-    int cmd_len = 0;
     int i = 0;
     int j = 0;
-    int leading = 1;
     int curr_arg = 0;
     for(i = 0; i<MAX_ARGS;i++){
         for(j=0;j<MAX_ARG_LEN+1;j++){
@@ -228,11 +226,11 @@ void separate_args(int8_t *arg, int8_t args[MAX_ARGS][MAX_ARG_LEN + 1]){
             if(arg[i] == ' '){
                 state = 1;
                 curr_arg++;
-                if(curr_arg >= MAX_ARGS)    return -1;
+                if(curr_arg >= MAX_ARGS)    return;
                 j = 0;
                 i++;
             }else if(j >= MAX_ARG_LEN){
-                return -1;
+                return;
             }else{
                 args[curr_arg][j] = arg[i];
                 j++; i++;

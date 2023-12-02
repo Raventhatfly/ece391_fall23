@@ -161,11 +161,13 @@ int32_t execute (const uint8_t* command){
     }
 
     /* Excute Kernel Program */ 
-    if(excute_kernel_program((int8_t*)cmd,(int8_t*)args))     return 0;
+    // if(excute_kernel_program((int8_t*)cmd,(int8_t*)args))     return 0;
 
     retval = read_dentry_by_name(cmd,&dentry);
     // memset(cmd,'\0',MAX_CMD + 1);
     if(retval == -1){
+        /* If no such user program, excute Kernel Program */ 
+        if(excute_kernel_program((int8_t*)cmd,(int8_t*)args))     return 0;
         return -1;
     }
     if(read_data(dentry.inode_num,0,buf,4) != 4){
@@ -495,7 +497,14 @@ int32_t user_free(void* ptr)
     return free(ptr);
 }
 
-
+/*
+    * set_color()
+    *   DESCRIPTION: set the character color
+    *   INPUTS: color code
+    *   OUTPUTS: none
+    *   RETURN VALUE: 0
+    *   SIDE EFFECTS: none
+*/
 void set_color(int32_t color){
     set_attribute(color);
 }
