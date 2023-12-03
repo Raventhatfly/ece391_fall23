@@ -118,3 +118,19 @@ scheduling to avoid the problem.<br>
 **Description**: Buddy system can't merge the pages after free<br>
 **Difficulty**: Half an hour<br>
 **Fixing Method**: I forget to judge the condition that the pages are on the head of the list, I fix it by considering it.<br>
+
+### Extra Credit
+**Author** Wu Feiyang <br>
+**Description**: Program always enter general protection fault after page fault.<br>
+**Difficulty**: 10 hours, chaning more than twenty lines of code<br>
+**Fixing Method**: I forget that the processor pushes an error code on the stack. The program enters the general protection for loading the wrong segment after `iret`.<br>
+
+**Author** Wu Feiyang <br>
+**Description**: Program always page faults and never stop in sigtest.<br>
+**Difficulty**: 12 hours, chaning more than a hundred lines of assembly code<br>
+**Fixing Method**: The user program `sigtest` require rigorous stack frame that is listed on the document of MP3. At first I didn't know this and used my own stack instead. But after insecting the program of the usercoded encoded in assembly I found the page fault occurred in effort to dereference `eax` and the user program updated eax from the hardware context at a given offset, which is 7, avoid dereferencing NULL, so eax must be at the 7th location from the top of the hardware context stack frame. I modified all of the functions in the assembly to comply with the stack.<br>
+
+**Author** Wu Feiyang <br>
+**Description**: Serial driver associated IRQ4 in loopback mode never executes.<br>
+**Difficulty**: 10 minutes, chaning one line of code<br>
+**Fixing Method**: The example code copied from osdev.com is faulty. It initialzie the wrong port. I looked up the reference table and found the error.<br>
