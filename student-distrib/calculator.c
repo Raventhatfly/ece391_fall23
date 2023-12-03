@@ -36,6 +36,7 @@ int cal(char *buf, int32_t length)
                     else if (op[op_top] == '-') num[num_top - 1] -= num[num_top];
                     else if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
                     else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+                    num[num_top]=0;
                     op_top--;
                     num_top--;
                 }
@@ -62,6 +63,7 @@ int cal(char *buf, int32_t length)
                 {
                     if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
                     else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+                    num[num_top]=0;
                     op_top--;
                     num_top--;
                 }

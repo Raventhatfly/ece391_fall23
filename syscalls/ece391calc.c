@@ -6,14 +6,14 @@
 
 #define BUFSIZE 1024
 
-char op[1000], num[1000];
-int op_top, num_top;
-
 int main()
 {
     char buf[BUFSIZE];
     char output_buf[50];
+    char op[BUFSIZE], num[BUFSIZE];
+    int op_top, num_top;
     int i, result, val;
+    int minus_flag;
     char ch;
     int32_t length;
     
@@ -23,9 +23,12 @@ int main()
     }
     length = ece391_strlen((uint8_t*)buf);
 
-    for(i=0;i<1000;i++){
+    for(i=0;i<BUFSIZE;i++){
         op[i] = 0;
         num[i] = 0;
+    }
+    for(i=0;i<50;i++){
+        output_buf[i] = 0;
     }
     num_top =0;
     op_top = -1;
@@ -45,6 +48,7 @@ int main()
                     else if (op[op_top] == '-') num[num_top - 1] -= num[num_top];
                     else if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
                     else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+                    num[num_top]=0;
                     op_top--;
                     num_top--;
                 }
@@ -71,6 +75,7 @@ int main()
                 {
                     if (op[op_top] == '*') num[num_top - 1] *= num[num_top];
                     else if (op[op_top] == '/') num[num_top - 1] /= num[num_top];
+                    num[num_top]=0;
                     op_top--;
                     num_top--;
                 }
@@ -89,6 +94,11 @@ int main()
         num_top--;
     }
     result = num[0];
+    minus_flag = 0;
+    if(result < 0){
+        result = -result;
+        minus_flag = 1;
+    }
     i = 0;
     while(result > 0){
         val = result - (result / 10) * 10;
@@ -97,7 +107,16 @@ int main()
         i++;
     }
     output_buf[i] = '\n';
+    output_buf[i+1] = '\0';
     ece391_fdputs(1,"The result is:");
-    ece391_fdputs(1, output_buf);
+    if(minus_flag){
+        ece391_fdputs(1,"-");
+    }
+    if(num[0] == 0){
+        ece391_fdputs(1,"0\n");
+    }else{
+        ece391_fdputs(1, output_buf);
+    }
+    
     return 0;
 }

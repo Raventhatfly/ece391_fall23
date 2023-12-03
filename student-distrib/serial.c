@@ -24,17 +24,18 @@ void serial_init(){
     sbuf.tail = 0;
     sbuf.length = 0;
     
-    serial_set_mode(MODE_DIRECT_PRINT);
+    // serial_set_mode(MODE_DIRECT_PRINT);
+    serial_set_mode(MODE_INPUT_BUFFER);
 
     outb(0x00, PORT+1);         // Disable all interrupts
-    outb(0x80, PORT+3);         // Set divisor to 3 (lo byte) 38400 baud
-    outb(0x03, PORT+0);         // Set divisor to 3 (lo byte) 38400 baud
+    outb(0x80, PORT+3);         // Enable DLAB (set baud rate divisor)
+    outb(0x01, PORT+0);         // Set divisor to 1 (lo byte) 115200 baud
     outb(0x00, PORT+1);         //                  (hi byte)
     outb(0x03, PORT+3);         // 8 bits, no parity, one stop bit
     outb(0xc7, PORT+2);         // Enable FIFO, clear them, with 14-byte threshold
-    outb(0x0b, PORT+4);         // IRQs enabled, RTS/DSR set
-    outb(0x0b, PORT+1);         // Enable interrupts (status change)
-    outb(0x1e, PORT+4);         // Set in loopback mode, test the serial chip
+    // outb(0x0b, PORT+4);         // IRQs enabled, RTS/DSR set
+    outb(0x0e, PORT+1);         // Enable interrupts (status change)
+    // outb(0x1e, PORT+4);         // Set in loopback mode, test the serial chip
 
     
     // outb(0xae, PORT+0);         // Test serial chip (send byte 0xAE and check if serial returns same byte)
@@ -54,7 +55,7 @@ void serial_init(){
     
     
     // (not-loopback with IRQs enabled and OUT#1 and OUT#2 bits enabled)
-    // outb(0x0f,PORT+4);
+    outb(0x0f,PORT+4);
 
 }
 
@@ -139,6 +140,7 @@ void serial_off(){
 void serial_send(int8_t byte){
     cli();
     outb(byte, PORT+0);
+    // outb('\n', PORT+0);       
     sti();
 }
 
