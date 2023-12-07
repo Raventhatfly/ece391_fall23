@@ -12,7 +12,7 @@ int main()
     char output_buf[50];
     char op[BUFSIZE], num[BUFSIZE];
     int op_top, num_top;
-    int i, result, val;
+    int i, j, result, val, temp;
     int minus_flag;
     char ch;
     int32_t length;
@@ -106,6 +106,13 @@ int main()
         result = result / 10;
         i++;
     }
+    
+    for(j=0;j<i/2;j++){
+        temp = output_buf[j];
+        output_buf[j] = output_buf[i-1-j];
+        output_buf[i-1-j] = temp;
+    }
+
     output_buf[i] = '\n';
     output_buf[i+1] = '\0';
     ece391_fdputs(1,"The result is:");
